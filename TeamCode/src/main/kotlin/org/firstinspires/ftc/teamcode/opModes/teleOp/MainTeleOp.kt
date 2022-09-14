@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx
 import com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.A
 import com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.B
 import com.arcrobotics.ftclib.hardware.motors.Motor
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.commands.IntakeCommand
 
 @TeleOp
