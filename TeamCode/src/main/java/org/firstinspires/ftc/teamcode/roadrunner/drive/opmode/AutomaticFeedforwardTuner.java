@@ -1,11 +1,4 @@
 package org.firstinspires.ftc.teamcode.roadrunner.drive.opmode;
-<<<<<<< HEAD
-
-import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.MAX_RPM;
-import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.RUN_USING_ENCODER;
-import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.rpmToVelocity;
-=======
->>>>>>> a71f0730726295fcbb2fcaee3809c3a664491091
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -17,11 +10,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.internal.system.Misc;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
-<<<<<<< HEAD
-=======
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
->>>>>>> a71f0730726295fcbb2fcaee3809c3a664491091
+import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.util.LoggingUtil;
 import org.firstinspires.ftc.teamcode.roadrunner.util.RegressionUtil;
 
