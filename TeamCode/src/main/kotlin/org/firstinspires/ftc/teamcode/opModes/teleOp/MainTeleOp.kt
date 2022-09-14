@@ -10,11 +10,17 @@ import com.arcrobotics.ftclib.gamepad.TriggerReader
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.commands.IntakeCommand
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem
 
 @TeleOp
 class MainTeleOp: CommandOpMode() {
-    private val intakeCommand = IntakeCommand(Motor(hardwareMap, "intake"), true)
-    private val outtakeCommand = IntakeCommand(Motor(hardwareMap, "intake"), false)
+    private val intakeMotor = Motor(hardwareMap, "intake")
+
+    private val intakeSubsystem = IntakeSubsystem(intakeMotor)
+
+    private val intakeCommand = IntakeCommand(intakeSubsystem, true)
+    private val outtakeCommand = IntakeCommand(intakeSubsystem, false)
+
     private val driver = GamepadEx(gamepad1)
 
     override fun initialize() {
