@@ -7,7 +7,10 @@ import com.arcrobotics.ftclib.gamepad.TriggerReader
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem
 
-class IntakeCommand(private val subsystem: IntakeSubsystem, private val intake: Boolean) : CommandBase() {
+class IntakeCommand(
+    private val subsystem: IntakeSubsystem,
+    private val intake: Boolean
+) : CommandBase() {
     init { addRequirements(subsystem as Subsystem) }
     override fun execute() = if (intake) subsystem.intake() else subsystem.outtake()
     override fun end(interrupted: Boolean) = subsystem.stop()

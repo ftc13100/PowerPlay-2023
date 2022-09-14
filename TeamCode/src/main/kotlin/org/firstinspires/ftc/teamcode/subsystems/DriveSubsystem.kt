@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.PIDFCoefficients
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive
 
-class MecanumDriveSubsystem(
+class DriveSubsystem(
     private val drive: SampleMecanumDrive,
     private val fieldCentric: Boolean
 ) : SubsystemBase() {
