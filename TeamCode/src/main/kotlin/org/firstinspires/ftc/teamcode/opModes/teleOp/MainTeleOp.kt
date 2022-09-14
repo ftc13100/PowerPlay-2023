@@ -7,6 +7,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.B
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import org.firstinspires.ftc.teamcode.commands.IntakeCommand
 
+@TeleOp
 class MainTeleOp: CommandOpMode() {
     private val intakeCommand = IntakeCommand(Motor(hardwareMap, "intake"), true)
     private val outtakeCommand = IntakeCommand(Motor(hardwareMap, "intake"), false)
