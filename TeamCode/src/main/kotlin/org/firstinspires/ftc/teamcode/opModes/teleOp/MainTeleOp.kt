@@ -3,11 +3,9 @@ package org.firstinspires.ftc.teamcode.opModes.teleOp
 import com.arcrobotics.ftclib.command.CommandOpMode
 import com.arcrobotics.ftclib.command.ConditionalCommand
 import com.arcrobotics.ftclib.gamepad.GamepadEx
-import com.arcrobotics.ftclib.gamepad.GamepadKeys
 import com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.A
 import com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.B
-import com.arcrobotics.ftclib.gamepad.GamepadKeys.Trigger
-import com.arcrobotics.ftclib.gamepad.GamepadKeys.Trigger.*
+import com.arcrobotics.ftclib.gamepad.GamepadKeys.Trigger.LEFT_TRIGGER
 import com.arcrobotics.ftclib.gamepad.TriggerReader
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
