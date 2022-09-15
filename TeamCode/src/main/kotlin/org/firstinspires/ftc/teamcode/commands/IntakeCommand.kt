@@ -12,6 +12,8 @@ class IntakeCommand(
     private val intake: Boolean
 ) : CommandBase() {
     init { addRequirements(subsystem as Subsystem) }
+
     override fun execute() = if (intake) subsystem.intake() else subsystem.outtake()
+
     override fun end(interrupted: Boolean) = subsystem.stop()
 }

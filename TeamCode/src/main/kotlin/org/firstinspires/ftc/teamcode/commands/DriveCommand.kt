@@ -14,14 +14,10 @@ class DriveCommand(
     private val zoneVal: Double,
 ) : CommandBase() {
     override fun execute() {
-        drive.drive(adjustedInput(leftX, zoneVal), adjustedInput(leftY, zoneVal), rightX.asDouble)
+        drive.drive(adjustedInput(leftX), adjustedInput(leftY), rightX.asDouble)
     }
 
-    private fun adjustedInput(input: DoubleSupplier, value: Double): Double {
-        val inputVal = input.asDouble
-        return when {
-            abs(inputVal) < value -> 0.0
-            else -> sign(inputVal) * (abs(inputVal) - value)
-        }
-    }
+    private fun adjustedInput(input: DoubleSupplier): Double =
+        if (abs(input.asDouble) < zoneVal) 0.0
+        else sign(input.asDouble) * (abs(input.asDouble) - zoneVal)
 }
