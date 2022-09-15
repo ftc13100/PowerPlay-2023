@@ -19,6 +19,8 @@ dependencies {
     implementation 'org.tensorflow:tensorflow-lite-task-vision:0.2.0'
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'org.firstinspires.ftc:gameAssets-PowerPlay:1.0.0'
-    implementation 'com.acmerobotics.dashboard:dashboard:0.4.5'
+    // TODO: Update FTC Dashboard to SDK v8.0 compatible version when released (>0.4.4)
+    // https://github.com/acmerobotics/ftc-dashboard/releases
+    implementation 'com.acmerobotics.dashboard:dashboard:0.4.4'
 }
 
