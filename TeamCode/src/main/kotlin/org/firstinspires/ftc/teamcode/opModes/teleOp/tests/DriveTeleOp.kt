@@ -17,8 +17,8 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem
 
-@TeleOp(name = "Intake Test", group = "Test")
-class IntakeTeleOp : CommandOpMode() {
+@TeleOp(name = "Drive w/ Intake ", group = "Test")
+class DriveTeleOp : CommandOpMode() {
     private val driver = GamepadEx(gamepad1)
 
     private val intakeMotor = Motor(hardwareMap, DeviceConfig.INTAKE_MOTOR.deviceName)
