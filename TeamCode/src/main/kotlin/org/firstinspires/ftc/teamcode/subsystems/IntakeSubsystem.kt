@@ -8,5 +8,4 @@ class IntakeSubsystem(private val intake: Motor) {
     fun outtake() = intake.set(-1.0)
 
     fun stop() = intake.stopMotor()
-
 }
