@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.commands.DriveCommand
 import org.firstinspires.ftc.teamcode.commands.IntakeCommand
 import org.firstinspires.ftc.teamcode.constants.DeviceConfig
+import org.firstinspires.ftc.teamcode.constants.DeviceConfig.*
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem
@@ -21,7 +22,7 @@ import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem
 class DriveTeleOp : CommandOpMode() {
     private val driver = GamepadEx(gamepad1)
 
-    private val intakeMotor = Motor(hardwareMap, DeviceConfig.INTAKE_MOTOR.deviceName)
+    private val intakeMotor = Motor(hardwareMap, INTAKE_MOTOR.deviceName)
 
     private val intakeSubsystem = IntakeSubsystem(intakeMotor)
     private val driveSubsystem = DriveSubsystem(SampleMecanumDrive(hardwareMap), false)
