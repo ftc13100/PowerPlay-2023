@@ -9,21 +9,27 @@ import org.openftc.easyopencv.OpenCvCamera.AsyncCameraOpenListener
 import org.openftc.easyopencv.OpenCvCameraFactory
 import org.openftc.easyopencv.OpenCvCameraRotation
 
-class VisionSubsystem<T>(webcam: WebcamName, cameraMonitorViewId: Int, pipeline: OpenCvResultsPipeline<T>, private val telemetry: Telemetry) : SubsystemBase() {
+class VisionSubsystem<T>(
+    webcam: WebcamName,
+    cameraMonitorViewId: Int,
+    private val pipeline: OpenCvResultsPipeline<T>,
+    private val telemetry: Telemetry
+) : SubsystemBase() {
     private val camera: OpenCvCamera
+
     init {
         camera = OpenCvCameraFactory.getInstance().createWebcam(webcam, cameraMonitorViewId)
 
-        camera.openCameraDeviceAsync(object: AsyncCameraOpenListener {
+        camera.openCameraDeviceAsync(object : AsyncCameraOpenListener {
             override fun onOpened() {
                 camera.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT)
             }
 
-            override fun onError(errorCode: Int) {
-                telemetry.addData("Error", "Camera error $errorCode")
-            }
+            override fun onError(errorCode: Int) {}
         })
 
         camera.setPipeline(pipeline)
     }
+
+    fun getLatestResults() = pipeline.getLatestResults()
 }
