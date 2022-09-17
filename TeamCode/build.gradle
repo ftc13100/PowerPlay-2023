@@ -10,7 +10,6 @@
 
 
 // Custom definitions may go here
-apply plugin: 'kotlin-android'
 
 // Include common definitions from above.
 apply from: '../build.common.gradle'
