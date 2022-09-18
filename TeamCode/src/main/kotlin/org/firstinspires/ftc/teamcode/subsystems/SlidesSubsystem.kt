@@ -1,36 +1,56 @@
 package org.firstinspires.ftc.teamcode.subsystems
 
 import com.arcrobotics.ftclib.command.SubsystemBase
-import com.arcrobotics.ftclib.controller.PIDFController
 import com.arcrobotics.ftclib.controller.wpilibcontroller.ElevatorFeedforward
+import com.arcrobotics.ftclib.controller.wpilibcontroller.ProfiledPIDController
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
-import org.firstinspires.ftc.teamcode.constants.SlidesConst.SlidesFeedforward.*
-import org.firstinspires.ftc.teamcode.constants.SlidesConst.SlidesPID.*
-import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.kA
-import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.kV
+import com.arcrobotics.ftclib.trajectory.TrapezoidProfile
 
 class SlidesSubsystem(slidesLeft: Motor, slidesRight: Motor): SubsystemBase() {
-    private val slideMotors = MotorGroup(slidesLeft, slidesRight)
+    private val slidesMotors = MotorGroup(slidesLeft, slidesRight)
 
-    companion object {
-        private val slidesFeedforward = ElevatorFeedforward(
-            Ks.coeff,
-            Kg.coeff,
-            Kv.coeff,
-            Ka.coeff
-        )
-        private val slidesPID = PIDFController(
-            P.coeff,
-            I.coeff,
-            D.coeff,
-            0.0,
-        )
+    private val controller = ProfiledPIDController(
+        0.0 /* P.coeff */,
+        0.0 /* I.coeff */,
+        0.0 /* D.coeff */,
+        TrapezoidProfile.Constraints(0.0, 0.0)
+    )
+
+    private val feedforward = ElevatorFeedforward(
+        0.0 /* Ks.coeff */,
+        0.0 /* Kg.coeff */,
+        0.0 /* Kv.coeff */,
+    )
+
+    @JvmField
+    var kP: Double = 0.0
+
+    @JvmField
+    var kI: Double = 0.0
+
+    @JvmField
+    var kD: Double = 0.0
+
+    @JvmField
+    var maxVelocity = 0.0
+
+    @JvmField
+    var maxAcceleration = 0.0
+
+    @JvmField
+    var goal = 0.0
+
+    fun operateSlides() {
+        val ff = feedforward.calculate(slidesMotors.velocity)
+        val error = controller.calculate(slidesMotors.positions.first())
+
+        slidesMotors.set(error + ff)
     }
 
-    fun slideUp() = slideMotors.set(0.2)
+    fun slideUp() = slidesMotors.set(1.0)
 
-    fun slideDown() = slideMotors.set(-0.2)
+    fun slideDown() = slidesMotors.set(-0.2)
 
-    fun stop() = slideMotors.stopMotor()
+    fun stop() = slidesMotors.stopMotor()
 }
