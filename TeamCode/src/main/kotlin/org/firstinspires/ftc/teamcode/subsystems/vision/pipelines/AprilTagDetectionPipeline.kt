@@ -24,48 +24,48 @@ import org.opencv.core.Mat
 import org.opencv.imgproc.Imgproc
 import org.openftc.apriltag.AprilTagDetection
 import org.openftc.apriltag.AprilTagDetectorJNI
+import org.openftc.easyopencv.OpenCvPipeline
 
-internal class AprilTagDetectionPipeline (
+class AprilTagDetectionPipeline(// UNITS ARE METERS
     private val tagsize: Double,
     private val fx: Double,
     private val fy: Double,
     private val cx: Double,
     private val cy: Double
-) :
-    OpenCvResultsPipeline<AprilTagDetection>() {
+) : OpenCvPipeline() {
     private var nativeApriltagPtr: Long
-    private var gray = Mat()
-    private var detectedTags = ArrayList<AprilTagDetection>()
+    private val gray = Mat()
+    private var latestDetections = ArrayList<AprilTagDetection>()
 
     init {
         nativeApriltagPtr =
-            AprilTagDetectorJNI.createApriltagDetector(AprilTagDetectorJNI.TagFamily.TAG_standard41h12.string, 3f, 3)
+            AprilTagDetectorJNI.createApriltagDetector(
+                AprilTagDetectorJNI.TagFamily.TAG_standard41h12.string, 3f, 3)
     }
 
-    override fun init(mat: Mat) {
+    fun finalize() {
         if (nativeApriltagPtr != 0L) {
             AprilTagDetectorJNI.releaseApriltagDetector(nativeApriltagPtr)
             nativeApriltagPtr = 0
-        } else {
-            println("AprilTagDetectionPipeline.finalize(): nativeApriltagPtr was NULL")
         }
     }
 
     override fun processFrame(input: Mat): Mat {
-        // Convert to greyscale
+        // Convert to grayscale
         Imgproc.cvtColor(input, gray, Imgproc.COLOR_RGBA2GRAY)
 
         // Run AprilTag
-        detectedTags = AprilTagDetectorJNI.runAprilTagDetectorSimple(
-            nativeApriltagPtr, gray, tagsize, fx, fy, cx, cy
+        latestDetections = AprilTagDetectorJNI.runAprilTagDetectorSimple(
+            nativeApriltagPtr, gray,
+            tagsize, fx, fy, cx, cy
         )
 
         return input
     }
 
-    override fun getLatestResults(): ArrayList<AprilTagDetection> {
+    fun getLatestResults(): ArrayList<AprilTagDetection> {
         val results = ArrayList<AprilTagDetection>()
-        results.addAll(detectedTags)
+        results.addAll(latestDetections)
         return results
     }
 }
