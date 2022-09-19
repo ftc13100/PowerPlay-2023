@@ -36,7 +36,7 @@ class DriveTeleOp : CommandOpMode() {
         driver.getGamepadButton(A).whenHeld(intakeCommand)
         driver.getGamepadButton(B).whenHeld(outtakeCommand)
 
-        register(driveSubsystem as Subsystem)
+        register(driveSubsystem)
 
         schedule(
             ConditionalCommand(intakeCommand, outtakeCommand, TriggerReader(driver, LEFT_TRIGGER)::isDown),

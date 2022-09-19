@@ -14,32 +14,13 @@ class SlidesSubsystem(slidesLeft: Motor, slidesRight: Motor): SubsystemBase() {
         0.0 /* P.coeff */,
         0.0 /* I.coeff */,
         0.0 /* D.coeff */,
-        TrapezoidProfile.Constraints(0.0, 0.0)
+        TrapezoidProfile.Constraints(maxVelocity, maxAcceleration)
     )
-
     private val feedforward = ElevatorFeedforward(
         0.0 /* Ks.coeff */,
         0.0 /* Kg.coeff */,
         0.0 /* Kv.coeff */,
     )
-
-    @JvmField
-    var kP: Double = 0.0
-
-    @JvmField
-    var kI: Double = 0.0
-
-    @JvmField
-    var kD: Double = 0.0
-
-    @JvmField
-    var maxVelocity = 0.0
-
-    @JvmField
-    var maxAcceleration = 0.0
-
-    @JvmField
-    var goal = 0.0
 
     fun operateSlides() {
         val ff = feedforward.calculate(slidesMotors.velocity)
@@ -53,4 +34,26 @@ class SlidesSubsystem(slidesLeft: Motor, slidesRight: Motor): SubsystemBase() {
     fun slideDown() = slidesMotors.set(-0.2)
 
     fun stop() = slidesMotors.stopMotor()
+
+    fun getVelocity() = slidesMotors.velocity
+
+    companion object {
+        @JvmField
+        var kP: Double = 0.0
+
+        @JvmField
+        var kI: Double = 0.0
+
+        @JvmField
+        var kD: Double = 0.0
+
+        @JvmField
+        var maxVelocity = 0.0
+
+        @JvmField
+        var maxAcceleration = 0.0
+
+        @JvmField
+        var goal = 0.0
+    }
 }
