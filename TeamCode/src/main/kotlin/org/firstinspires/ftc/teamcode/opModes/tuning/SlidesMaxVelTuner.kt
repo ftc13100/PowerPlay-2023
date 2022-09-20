@@ -44,6 +44,7 @@ class SlidesMaxVelTuner : LinearOpMode() {
             val currentVelocity = subsystem.getVelocity()
             maxVelocity = currentVelocity.coerceAtLeast(maxVelocity)
         }
+        subsystem.stop()
 
         telemetry.addData("Max Velocity", maxVelocity)
         telemetry.update()
