@@ -20,25 +20,25 @@ import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem
 @TeleOp(name = "Drive w/ Intake ", group = "Test")
 class DriveTeleOp : CommandOpMode() {
     override fun initialize() {
-        val intakeMotor = Motor(hardwareMap, DeviceConfig.INTAKE_MOTOR.deviceName)
+//        val intakeMotor = Motor(hardwareMap, DeviceConfig.INTAKE_MOTOR.deviceName)
 
-        val intakeSubsystem = IntakeSubsystem(intakeMotor)
+//        val intakeSubsystem = IntakeSubsystem(intakeMotor)
         val driveSubsystem = DriveSubsystem(SampleMecanumDrive(hardwareMap), false)
 
-        val intakeCommand = IntakeCommand(intakeSubsystem, true)
-        val outtakeCommand = IntakeCommand(intakeSubsystem, false)
+//        val intakeCommand = IntakeCommand(intakeSubsystem, true)
+//        val outtakeCommand = IntakeCommand(intakeSubsystem, false)
 
         val driver = GamepadEx(gamepad1)
 
         val driveCommand = DriveCommand(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX, 0.15)
 
-        driver.getGamepadButton(A).whenHeld(intakeCommand)
-        driver.getGamepadButton(B).whenHeld(outtakeCommand)
+//        driver.getGamepadButton(A).whenHeld(intakeCommand)
+//        driver.getGamepadButton(B).whenHeld(outtakeCommand)
 
-        register(driveSubsystem as Subsystem)
+        register(driveSubsystem)
 
         schedule(
-            ConditionalCommand(intakeCommand, outtakeCommand, TriggerReader(driver, LEFT_TRIGGER)::isDown),
+//            ConditionalCommand(intakeCommand, outtakeCommand, TriggerReader(driver, LEFT_TRIGGER)::isDown),
             driveCommand,
         )
     }
