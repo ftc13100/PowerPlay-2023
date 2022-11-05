@@ -14,7 +14,13 @@ class MainTeleOp : CommandOpMode() {
 
         val driver = GamepadEx(gamepad1)
 
-        val driveCommand = DriveCommand(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX, 0.15)
+        val driveCommand = DriveCommand(
+            drive = driveSubsystem,
+            leftX = driver::getLeftX,
+            leftY = driver::getLeftY,
+            rightX = driver::getRightX,
+            zoneVal = 0.3
+        )
 
         register(driveSubsystem)
         driveSubsystem.defaultCommand = driveCommand
