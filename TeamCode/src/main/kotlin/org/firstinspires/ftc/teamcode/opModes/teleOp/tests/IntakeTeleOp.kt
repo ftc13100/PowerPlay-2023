@@ -9,29 +9,27 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 
 @TeleOp(group = "Test")
 class IntakeTeleOp : CommandOpMode() {
-    private var hex1: Motor? = null
-    private var gamepad: GamepadEx? = null
     override fun initialize() {
-        hex1 = Motor(hardwareMap, "hex1")
-        gamepad = GamepadEx(gamepad1)
+        val hex1 = Motor(hardwareMap, "hex1")
+        val driver = GamepadEx(gamepad1)
 
-        gamepad!!.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenPressed(
+        driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenPressed(
             InstantCommand({
-                hex1!!.set(1.0)
+                hex1.set(1.0)
             })
         ).whenReleased(
             InstantCommand({
-                hex1!!.set(0.0)
+                hex1.set(0.0)
             })
         )
 
-        gamepad!!.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenPressed(
+        driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenPressed(
             InstantCommand({
-                hex1!!.set(-1.0)
+                hex1.set(-1.0)
             })
         ).whenReleased(
             InstantCommand({
-                hex1!!.set(0.0)
+                hex1.set(0.0)
             })
         )
     }
