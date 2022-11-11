@@ -7,6 +7,7 @@ import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.util.ElapsedTime
+import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants
 import org.firstinspires.ftc.teamcode.subsystems.SlidesSubsystem
 
 @Config
@@ -23,6 +24,7 @@ class SlidesMaxVelTuner : LinearOpMode() {
         val slidesLeft = Motor(hardwareMap, "slidesLeft")
         val slidesRight = Motor(hardwareMap, "slidesRight")
 
+        val batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next()
         val subsystem = SlidesSubsystem(slidesLeft, slidesRight)
 
         telemetry = MultipleTelemetry(FtcDashboard.getInstance().telemetry, telemetry)
@@ -40,13 +42,15 @@ class SlidesMaxVelTuner : LinearOpMode() {
         subsystem.slideUp()
         val timer = ElapsedTime()
 
-        while (!isStopRequested && timer.seconds() < Companion.RUNTIME) {
+        while (!isStopRequested && timer.seconds() < RUNTIME) {
             val currentVelocity = subsystem.getVelocity()
             maxVelocity = currentVelocity.coerceAtLeast(maxVelocity)
         }
         subsystem.stop()
+        val effectiveKf: Double = DriveConstants.getMotorVelocityF(maxVelocity)
 
         telemetry.addData("Max Velocity", maxVelocity)
+        telemetry.addData("Voltage Compensated kF", effectiveKf * batteryVoltageSensor.voltage / 12)
         telemetry.update()
 
         while (!isStopRequested && opModeIsActive()) idle()

@@ -1,12 +1,9 @@
 package org.firstinspires.ftc.teamcode.subsystems
 
 import com.arcrobotics.ftclib.command.SubsystemBase
-import com.arcrobotics.ftclib.controller.wpilibcontroller.ArmFeedforward
 import com.arcrobotics.ftclib.controller.wpilibcontroller.ElevatorFeedforward
-import com.arcrobotics.ftclib.controller.wpilibcontroller.ProfiledPIDController
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
-import com.arcrobotics.ftclib.trajectory.TrapezoidProfile
 
 class SlidesSubsystem(slidesLeft: Motor, slidesRight: Motor): SubsystemBase() {
     //TODO Tune Kp, Ki, Kd, and max constraints
@@ -22,10 +19,7 @@ class SlidesSubsystem(slidesLeft: Motor, slidesRight: Motor): SubsystemBase() {
         var kD: Double = 0.0
 
         @JvmField
-        var maxVelocity = 0.0
-
-        @JvmField
-        var maxAcceleration = 0.0
+        var kF: Double = 0.0
 
         @JvmField
         var goal = 0.0
@@ -33,11 +27,11 @@ class SlidesSubsystem(slidesLeft: Motor, slidesRight: Motor): SubsystemBase() {
 
     private val slidesMotors = MotorGroup(slidesLeft, slidesRight)
 
-    private val controller = ProfiledPIDController(
+    private val controller = com.arcrobotics.ftclib.controller.PIDFController(
         0.0 /* P.coeff */,
         0.0 /* I.coeff */,
         0.0 /* D.coeff */,
-        TrapezoidProfile.Constraints(maxVelocity, maxAcceleration)
+        0.0
     )
 
     private val feedforward = ElevatorFeedforward(
@@ -47,10 +41,10 @@ class SlidesSubsystem(slidesLeft: Motor, slidesRight: Motor): SubsystemBase() {
     )
 
     fun operateSlides() {
-        val ff = feedforward.calculate(slidesMotors.velocity)
+        controller.setPIDF(kP, kI, kD, kF)
         val error = controller.calculate(slidesMotors.positions.first())
 
-        slidesMotors.set(error + ff)
+        slidesMotors.set(error)
     }
 
     fun slideUp() = slidesMotors.set(1.0)
