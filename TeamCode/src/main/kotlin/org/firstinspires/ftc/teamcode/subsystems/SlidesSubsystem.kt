@@ -5,8 +5,9 @@ import com.arcrobotics.ftclib.controller.PIDFController
 import com.arcrobotics.ftclib.controller.wpilibcontroller.ElevatorFeedforward
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
+import com.qualcomm.robotcore.hardware.TouchSensor
 
-class SlidesSubsystem(slidesLeft: Motor, slidesRight: Motor): SubsystemBase() {
+class SlidesSubsystem(slidesLeft: Motor, slidesRight: Motor, private val limit: TouchSensor): SubsystemBase() {
     //TODO Tune Kp, Ki, Kd, and max constraints
 
     companion object {
@@ -55,6 +56,8 @@ class SlidesSubsystem(slidesLeft: Motor, slidesRight: Motor): SubsystemBase() {
     }
 
     fun atGoal() : Boolean { return controller.atSetPoint() }
+
+    fun limitReached() : Boolean { return limit.isPressed }
 
     fun stop() = slidesMotors.stopMotor()
 
