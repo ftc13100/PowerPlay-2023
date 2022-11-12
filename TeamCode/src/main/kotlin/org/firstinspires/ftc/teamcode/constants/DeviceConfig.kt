@@ -22,3 +22,4 @@ enum class DeviceConfig(val deviceName: String) {
     SLIDES_LEFT("leftSlide"),
     SLIDES_RIGHT("rightSlide"),
     SLIDES_LIMIT("slidesLimit")
+}
