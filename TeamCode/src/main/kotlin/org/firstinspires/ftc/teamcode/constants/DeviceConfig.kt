@@ -14,9 +14,9 @@ enum class DeviceConfig(val deviceName: String) {
     DRIVE_LEFT_FRONT("leftFront"),
 
     //Odo encoders
-    ODO_STRAFE_ENCODER("strafeEncoder"),
-    ODO_RIGHT_ENCODER("rightRear"),
-    ODO_LEFT_ENCODER("leftRear"),
+    ODO_STRAFE_ENCODER("intake"), //C-HUB 1
+    ODO_RIGHT_ENCODER("rightRear"), //C-HUB 3
+    ODO_LEFT_ENCODER("rightFront"), //C-HUB 0
 
     //Elevator Motors
     SLIDES_LEFT("leftSlide"),

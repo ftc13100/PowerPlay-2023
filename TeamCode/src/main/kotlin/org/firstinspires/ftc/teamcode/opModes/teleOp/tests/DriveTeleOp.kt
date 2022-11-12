@@ -28,8 +28,6 @@ class DriveTeleOp : CommandOpMode() {
 
         register(driveSubsystem)
 
-        schedule(
-            driveCommand,
-        )
+        driveSubsystem.defaultCommand = driveCommand
     }
 }
