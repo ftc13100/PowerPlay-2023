@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems
 
 import com.arcrobotics.ftclib.command.SubsystemBase
+import com.arcrobotics.ftclib.controller.PIDFController
 import com.arcrobotics.ftclib.controller.wpilibcontroller.ElevatorFeedforward
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
@@ -22,12 +23,12 @@ class SlidesSubsystem(slidesLeft: Motor, slidesRight: Motor): SubsystemBase() {
         var kF: Double = 0.0
 
         @JvmField
-        var goal = 0.0
+        var goal: Double = 0.0
     }
 
     private val slidesMotors = MotorGroup(slidesLeft, slidesRight)
 
-    private val controller = com.arcrobotics.ftclib.controller.PIDFController(
+    private val controller = PIDFController(
         0.0 /* P.coeff */,
         0.0 /* I.coeff */,
         0.0 /* D.coeff */,
@@ -41,15 +42,19 @@ class SlidesSubsystem(slidesLeft: Motor, slidesRight: Motor): SubsystemBase() {
     )
 
     fun operateSlides() {
+        controller.setPoint = goal
         controller.setPIDF(kP, kI, kD, kF)
         val error = controller.calculate(slidesMotors.positions.first())
 
         slidesMotors.set(error)
     }
 
-    fun slideUp() = slidesMotors.set(1.0)
+    fun setGoal(newGoal: Double) {
+        goal = newGoal
+        controller.setPoint = goal
+    }
 
-    fun slideDown() = slidesMotors.set(-0.2)
+    fun atGoal() : Boolean { return controller.atSetPoint() }
 
     fun stop() = slidesMotors.stopMotor()
 
