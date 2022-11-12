@@ -53,11 +53,7 @@ android {
         applicationId 'com.qualcomm.ftcrobotcontroller'
         minSdkVersion 24
         //noinspection ExpiredTargetSdkVersion
-<<<<<<< HEAD
         targetSdkVersion 29
-=======
-        targetSdkVersion 28
->>>>>>> feature/slides
         multiDexEnabled true
         /**
          * We keep the versionCode and versionName of robot controller applications in sync with
