@@ -13,8 +13,11 @@ class DriveCommand(
     private val rightX: DoubleSupplier,
     private val zoneVal: Double,
 ) : CommandBase() {
+    init {
+        addRequirements(drive)
+    }
     override fun execute() {
-        drive.drive(adjustedInput(leftX), adjustedInput(leftY), rightX.asDouble)
+        drive.drive(-adjustedInput(leftY), adjustedInput(leftX), rightX.asDouble)
     }
 
     private fun adjustedInput(input: DoubleSupplier): Double =

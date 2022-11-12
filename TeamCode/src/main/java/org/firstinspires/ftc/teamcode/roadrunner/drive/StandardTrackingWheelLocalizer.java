@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.roadrunner.drive;
 
+import static org.firstinspires.ftc.teamcode.constants.DeviceConfig.*;
+
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -29,14 +31,15 @@ import java.util.List;
 @Config
 public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer {
     public static double TICKS_PER_REV = 8192;
-    public static double WHEEL_RADIUS = 0.748031; // in
+    public static double WHEEL_RADIUS = 0.6889764; // in``2
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
-    public static double LATERAL_DISTANCE = 13.844990946966673; // in; distance between the left and right wheels
-    public static double FORWARD_OFFSET = -6.5; // in; offset of the lateral wheel
+    public static double LATERAL_DISTANCE = 12.4; // in; distance between the left and right wheels
+    public static double FORWARD_OFFSET = 1.28125; // in; offset of the lateral wheel
+    // 2.6 in
 
-    public static double X_MULTIPLIER = 0.97947082848; // Multiplier in the X direction
-    public static double Y_MULTIPLIER = 1.01086750364; // Multiplier in the Y direction
+    public static double X_MULTIPLIER = 1.09756098; // Multiplier in the X direction
+    public static double Y_MULTIPLIER = 1.09356015; // Multiplier in the Y direction
 
     private final Encoder leftEncoder;
     private final Encoder rightEncoder;
@@ -49,10 +52,11 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
                 new Pose2d(FORWARD_OFFSET, 0, Math.toRadians(90)) // front
         ));
 
-        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "intake"));
-        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rightFront"));
-        backEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "backEncoder"));
+        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, ODO_LEFT_ENCODER.getDeviceName()));
+        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, ODO_RIGHT_ENCODER.getDeviceName()));
+        backEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, ODO_STRAFE_ENCODER.getDeviceName()));
 
+        //TODO Reverse Encoder directions as needed
         backEncoder.setDirection(Encoder.Direction.REVERSE);
     }
 
