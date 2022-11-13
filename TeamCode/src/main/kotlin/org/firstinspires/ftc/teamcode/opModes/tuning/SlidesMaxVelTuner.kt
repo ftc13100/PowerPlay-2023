@@ -6,7 +6,9 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import com.qualcomm.robotcore.hardware.TouchSensor
 import com.qualcomm.robotcore.util.ElapsedTime
+import org.firstinspires.ftc.teamcode.constants.DeviceConfig
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants
 import org.firstinspires.ftc.teamcode.subsystems.SlidesSubsystem
 
@@ -23,9 +25,10 @@ class SlidesMaxVelTuner : LinearOpMode() {
     override fun runOpMode() {
         val slidesLeft = Motor(hardwareMap, "slidesLeft")
         val slidesRight = Motor(hardwareMap, "slidesRight")
+        val slidesLimit = hardwareMap.get(TouchSensor::class.java, DeviceConfig.SLIDES_LIMIT.deviceName)
 
         val batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next()
-        val subsystem = SlidesSubsystem(slidesLeft, slidesRight)
+        val subsystem = SlidesSubsystem(slidesLeft, slidesRight, slidesLimit, telemetry)
 
         telemetry = MultipleTelemetry(FtcDashboard.getInstance().telemetry, telemetry)
 
