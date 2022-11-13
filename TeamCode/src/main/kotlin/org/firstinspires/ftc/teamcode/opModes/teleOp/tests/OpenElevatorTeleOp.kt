@@ -11,21 +11,17 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.TouchSensor
 import org.firstinspires.ftc.teamcode.commands.ElevatorSpinDownCommand
 import org.firstinspires.ftc.teamcode.commands.ElevatorSpinUpCommand
-import org.firstinspires.ftc.teamcode.constants.DeviceConfig.*
+import org.firstinspires.ftc.teamcode.constants.DeviceConfig.SLIDES_LEFT
+import org.firstinspires.ftc.teamcode.constants.DeviceConfig.SLIDES_RIGHT
 import org.firstinspires.ftc.teamcode.subsystems.OpenElevatorSubsystem
 
 @TeleOp(name = "Open Loop Elevator Test")
-class OpenElevatorTeleOp(): CommandOpMode() {
+class OpenElevatorTeleOp: CommandOpMode() {
     override fun initialize() {
         val leftMotor = Motor(hardwareMap, SLIDES_LEFT.deviceName)
         val rightMotor = Motor(hardwareMap, SLIDES_RIGHT.deviceName)
-<<<<<<< Updated upstream
         val limit = hardwareMap.get(TouchSensor::class.java, "slidesLimit")
         rightMotor.inverted = true
-=======
-        val limit = hardwareMap.get(TouchSensor::class.java, SLIDES_LIMIT.deviceName)
-        leftMotor.inverted = true
->>>>>>> Stashed changes
 
         val subsystem = OpenElevatorSubsystem(leftMotor, rightMotor, limit)
 
