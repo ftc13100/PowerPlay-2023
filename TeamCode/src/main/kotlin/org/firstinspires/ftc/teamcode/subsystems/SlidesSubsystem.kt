@@ -29,10 +29,7 @@ class SlidesSubsystem(
         var kD: Double = 0.0
 
         @JvmField
-        var kF: Double = 0.0
-
-        @JvmField
-        var goal = 0.0
+        var kG: Double = 0.0
     }
 
     private val slidesMotors = MotorGroup(slidesLeft, slidesRight)
@@ -45,7 +42,7 @@ class SlidesSubsystem(
         SlidesConst.SlidesPID.D.coeff,
     )
 
-    private val feedforward = ElevatorFeedforward(
+    private val feedforward = ElevatorFeedforward (
         SlidesConst.SlidesFeedforward.Ks.coeff,
         SlidesConst.SlidesFeedforward.Kg.coeff,
         SlidesConst.SlidesFeedforward.Kv.coeff,
@@ -53,10 +50,13 @@ class SlidesSubsystem(
     )
 
     fun operateSlides() {
-        controller.setPIDF(kP, kI, kD, kF)
-        val error = controller.calculate(slidesMotors.positions.first())
+        controller.setPID(kP, kI, kD)
+
+        val error = controller.calculate(slidesMotors.positions.first()) + kG
+
         telemetry.addData("Current Position", slidesMotors.positions.first())
-//        slidesMotors.set(error)
+
+        slidesMotors.set(error)
     }
 
     fun slideUp() = slidesMotors.set(1.0)
