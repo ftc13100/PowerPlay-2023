@@ -6,9 +6,6 @@ import org.firstinspires.ftc.teamcode.subsystems.SlidesSubsystem
 
 class SlidesCommand(private val subsystem: SlidesSubsystem, private val targetPos: SlidesConst.SlidesPosition) :
     CommandBase() {
-    init {
-        addRequirements(subsystem)
-    }
 
     override fun initialize() = subsystem.setTargetPosition(targetPos)
 
