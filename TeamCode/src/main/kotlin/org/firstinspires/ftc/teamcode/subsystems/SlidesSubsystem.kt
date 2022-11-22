@@ -16,63 +16,61 @@ class SlidesSubsystem(
     private val limit: TouchSensor,
     private val telemetry: Telemetry
 ) : SubsystemBase() {
-    //TODO Tune Kp, Ki, Kd, and max constraints
-
+    // TODO Tune heights
     companion object {
         @JvmField
-        var kP: Double = 0.0
-
+        var P: Double = 0.0
         @JvmField
-        var kI: Double = 0.0
-
+        var I: Double = 0.0
         @JvmField
-        var kD: Double = 0.0
-
-        @JvmField
-        var kG: Double = 0.0
+        var D: Double = 0.0
     }
 
+    // Hardware
     private val slidesMotors = MotorGroup(slidesLeft, slidesRight)
 
-    private var targetPosition = SlidesConst.SlidesPosition.GROUND
-
+    // Controllers
     private val controller = com.arcrobotics.ftclib.controller.PIDController(
         SlidesConst.SlidesPID.P.coeff,
         SlidesConst.SlidesPID.I.coeff,
         SlidesConst.SlidesPID.D.coeff,
     )
 
-    private val feedforward = ElevatorFeedforward (
-        SlidesConst.SlidesFeedforward.Ks.coeff,
-        SlidesConst.SlidesFeedforward.Kg.coeff,
-        SlidesConst.SlidesFeedforward.Kv.coeff,
-        SlidesConst.SlidesFeedforward.Ka.coeff,
-    )
+    // Status
+    private var targetPosition = SlidesConst.SlidesPosition.GROUND
 
-    fun operateSlides() {
-        controller.setPID(kP, kI, kD)
-
-        val error = controller.calculate(slidesMotors.positions.first()) + kG
-
-        telemetry.addData("Current Position", slidesMotors.positions.first())
-
-        slidesMotors.set(error)
+    // Initialization
+    init {
+        slidesRight.inverted = true
+        slidesMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
+        controller.setPoint = slidesMotors.positions.first()
+        slidesMotors.resetEncoder()
     }
 
-    fun slideUp() = slidesMotors.set(1.0)
-
-    fun slideDown() = slidesMotors.set(-0.2)
-
-    fun stop() = slidesMotors.stopMotor()
-
-    fun atTargetPosition() = slidesMotors.atTargetPosition()
-
-    fun getVelocity() = slidesMotors.velocity
-
+    // Methods
     fun setTargetPosition(targetPosition: SlidesConst.SlidesPosition) {
         controller.setPoint = targetPosition.ticks
         this.targetPosition = targetPosition
     }
+
+    fun atTargetPosition() = controller.atSetPoint()
+
+    fun operateSlides() {
+        controller.setPID(P, I, D)
+        var error = 0.0
+        if(targetPosition != SlidesConst.SlidesPosition.GROUND) {
+            error = controller.calculate(slidesMotors.positions.first())
+        }
+
+        telemetry.addData("Current Position", slidesMotors.positions.first())
+        telemetry.addData("Target Position", targetPosition.ticks)
+        telemetry.addData("Error", error)
+        telemetry.update()
+
+        slidesMotors.set(error)
+    }
+
+    fun stop() = slidesMotors.stopMotor()
 
     fun isPressed() = limit.isPressed
 }
