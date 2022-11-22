@@ -8,11 +8,15 @@ import com.qualcomm.robotcore.hardware.TouchSensor
 class OpenElevatorSubsystem(leftMotor: Motor, rightMotor: Motor, private val limit: TouchSensor): SubsystemBase() {
     private val elevatorMotors = MotorGroup(leftMotor, rightMotor)
 
+    init {
+        elevatorMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
+    }
+
     fun spinUp() = elevatorMotors.set(1.0)
 
     fun spinDown() = elevatorMotors.set(-1.0)
 
-    fun isPressed() : Boolean { return limit.isPressed };
+    fun isPressed() : Boolean { return limit.isPressed }
 
     fun stopSpin() = elevatorMotors.stopMotor()
 }
