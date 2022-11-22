@@ -43,7 +43,7 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
 
     private final Encoder leftEncoder;
     private final Encoder rightEncoder;
-    private final Encoder backEncoder;
+    private final Encoder strafeEncoder;
 
     public StandardTrackingWheelLocalizer(HardwareMap hardwareMap) {
         super(Arrays.asList(
@@ -54,7 +54,8 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
 
         leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, ODO_LEFT_ENCODER.getDeviceName()));
         rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, ODO_RIGHT_ENCODER.getDeviceName()));
-        backEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, ODO_STRAFE_ENCODER.getDeviceName()));
+        strafeEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, ODO_STRAFE_ENCODER.getDeviceName()));
+
     }
 
     public static double encoderTicksToInches(double ticks) {
@@ -67,7 +68,7 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
         return Arrays.asList(
                 encoderTicksToInches(leftEncoder.getCurrentPosition()) * X_MULTIPLIER,
                 encoderTicksToInches(rightEncoder.getCurrentPosition()) * X_MULTIPLIER,
-                encoderTicksToInches(backEncoder.getCurrentPosition()) * Y_MULTIPLIER
+                encoderTicksToInches(strafeEncoder.getCurrentPosition()) * Y_MULTIPLIER
         );
     }
 
@@ -77,7 +78,7 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
         return Arrays.asList(
                 encoderTicksToInches(leftEncoder.getCorrectedVelocity()) * X_MULTIPLIER,
                 encoderTicksToInches(rightEncoder.getCorrectedVelocity()) * X_MULTIPLIER,
-                encoderTicksToInches(backEncoder.getCorrectedVelocity()) * Y_MULTIPLIER
+                encoderTicksToInches(strafeEncoder.getCorrectedVelocity()) * Y_MULTIPLIER
         );
     }
 }
