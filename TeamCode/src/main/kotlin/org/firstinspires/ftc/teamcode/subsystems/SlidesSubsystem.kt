@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.subsystems
 
 import com.acmerobotics.dashboard.config.Config
 import com.arcrobotics.ftclib.command.SubsystemBase
-import com.arcrobotics.ftclib.controller.wpilibcontroller.ElevatorFeedforward
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
 import com.qualcomm.robotcore.hardware.TouchSensor
