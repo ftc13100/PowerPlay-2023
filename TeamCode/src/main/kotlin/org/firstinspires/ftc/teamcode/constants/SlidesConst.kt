@@ -12,7 +12,7 @@ class SlidesConst() {
         P(0.008),
         I(0.0),
         D(0.0003),
-        G(0.3)
+        G(0.2)
     }
 
     enum class SlidesFeedforward(val coeff: Double) {
