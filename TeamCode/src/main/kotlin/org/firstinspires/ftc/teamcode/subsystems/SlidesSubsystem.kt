@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.subsystems
 
 import com.acmerobotics.dashboard.config.Config
 import com.arcrobotics.ftclib.command.SubsystemBase
-import com.arcrobotics.ftclib.controller.wpilibcontroller.ElevatorFeedforward
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
 import com.qualcomm.robotcore.hardware.TouchSensor
@@ -24,6 +23,8 @@ class SlidesSubsystem(
         var I: Double = 0.0
         @JvmField
         var D: Double = 0.0
+        @JvmField
+        var goal: Double = 0.0
     }
 
     // Hardware
@@ -43,13 +44,13 @@ class SlidesSubsystem(
     init {
         slidesRight.inverted = true
         slidesMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
-        controller.setPoint = slidesMotors.positions.first()
         slidesMotors.resetEncoder()
+        controller.setPoint = slidesMotors.positions.first()
     }
 
     // Methods
     fun setTargetPosition(targetPosition: SlidesConst.SlidesPosition) {
-        controller.setPoint = targetPosition.ticks
+        controller.setPoint = goal
         this.targetPosition = targetPosition
     }
 
@@ -59,7 +60,7 @@ class SlidesSubsystem(
         controller.setPID(P, I, D)
         var error = 0.0
         if(targetPosition != SlidesConst.SlidesPosition.GROUND) {
-            error = controller.calculate(slidesMotors.positions.first())
+            error = controller.calculate(slidesMotors.positions.first()) + SlidesConst.SlidesPID.G.coeff
         }
 
         telemetry.addData("Current Position", slidesMotors.positions.first())
@@ -69,6 +70,8 @@ class SlidesSubsystem(
 
         slidesMotors.set(error)
     }
+
+    fun stall() = slidesMotors.set(SlidesConst.SlidesPID.G.coeff)
 
     fun stop() = slidesMotors.stopMotor()
 

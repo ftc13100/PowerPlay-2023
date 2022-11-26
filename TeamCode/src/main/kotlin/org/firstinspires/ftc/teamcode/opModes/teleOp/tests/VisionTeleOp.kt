@@ -18,7 +18,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation
 class VisionTeleOp : LinearOpMode() {
     @SuppressLint("DiscouragedApi")
     override fun runOpMode() {
-        telemetry = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
+        val dash = FtcDashboard.getInstance()
+        telemetry = MultipleTelemetry(telemetry, dash.telemetry)
 
         val monitorId: Int = hardwareMap.appContext.resources.getIdentifier(
             "cameraMonitorViewId",
@@ -45,6 +46,8 @@ class VisionTeleOp : LinearOpMode() {
             override fun onError(errorCode: Int) {
             }
         })
+
+        dash.startCameraStream(camera, 0.0)
 
         waitForStart()
 
