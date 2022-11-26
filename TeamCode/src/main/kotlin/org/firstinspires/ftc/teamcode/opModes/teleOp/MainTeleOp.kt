@@ -85,7 +85,7 @@ class MainTeleOp : CommandOpMode() {
         driver!!.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(intakeCommand)
         driver!!.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(outtakeCommand)
 
-        // Register Default Subsystems
+        // Register Subsystems
         register(driveSubsystem)
 
         // Assign Default Commands
