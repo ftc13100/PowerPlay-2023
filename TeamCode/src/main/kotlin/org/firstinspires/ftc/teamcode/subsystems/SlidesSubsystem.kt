@@ -15,18 +15,6 @@ class SlidesSubsystem(
     private val limit: TouchSensor,
     private val telemetry: Telemetry
 ) : SubsystemBase() {
-    // TODO Tune heights
-    companion object {
-        @JvmField
-        var P: Double = 0.0
-        @JvmField
-        var I: Double = 0.0
-        @JvmField
-        var D: Double = 0.0
-        @JvmField
-        var goal: Double = 0.0
-    }
-
     // Hardware
     private val slidesMotors = MotorGroup(slidesLeft, slidesRight)
 
@@ -50,14 +38,13 @@ class SlidesSubsystem(
 
     // Methods
     fun setTargetPosition(targetPosition: SlidesConst.SlidesPosition) {
-        controller.setPoint = goal
+        controller.setPoint = targetPosition.ticks
         this.targetPosition = targetPosition
     }
 
     fun atTargetPosition() = controller.atSetPoint()
 
     fun operateSlides() {
-        controller.setPID(P, I, D)
         var error = 0.0
         if(targetPosition != SlidesConst.SlidesPosition.GROUND) {
             error = controller.calculate(slidesMotors.positions.first()) + SlidesConst.SlidesPID.G.coeff
