@@ -56,6 +56,7 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
         rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, ODO_RIGHT_ENCODER.getDeviceName()));
         strafeEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, ODO_STRAFE_ENCODER.getDeviceName()));
 
+        strafeEncoder.setDirection(Encoder.Direction.REVERSE);
     }
 
     public static double encoderTicksToInches(double ticks) {
