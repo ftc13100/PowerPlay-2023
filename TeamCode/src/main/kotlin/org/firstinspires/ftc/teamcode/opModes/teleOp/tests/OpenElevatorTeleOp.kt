@@ -20,7 +20,7 @@ class OpenElevatorTeleOp(): CommandOpMode() {
         val limit = hardwareMap.get(TouchSensor::class.java, SLIDES_LIMIT.deviceName)
         leftMotor.inverted = true
 
-        val subsystem = OpenElevatorSubsystem(leftMotor, rightMotor, limit)
+        val subsystem = OpenElevatorSubsystem(leftMotor, rightMotor, limit, telemetry)
 
         val spinUpCommand = ElevatorSpinUpCommand(subsystem)
         val spinDownCommand = ElevatorSpinDownCommand(subsystem)

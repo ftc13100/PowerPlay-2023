@@ -45,6 +45,7 @@ class MainTeleOp : CommandOpMode() {
 
     // Gamepads
     private var driver: GamepadEx? = null
+    private var operator: GamepadEx? = null
 
     override fun initialize() {
         // Debug
@@ -64,6 +65,7 @@ class MainTeleOp : CommandOpMode() {
 
         // Gamepads
         driver = GamepadEx(gamepad1)
+        operator = GamepadEx(gamepad2)
 
         // Commands
         driveCommand = DriveCommand(driveSubsystem!!, driver!!::getLeftX, driver!!::getLeftY, driver!!::getRightX, 0.15)
@@ -77,15 +79,15 @@ class MainTeleOp : CommandOpMode() {
         outtakeCommand = IntakeCommand(intakeSubsystem!!, false)
 
         // Assign commands to gamepads
-        driver!!.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenPressed(slidesGroundCommand)
-        driver!!.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(slidesLowCommand)
-        driver!!.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(slidesMidCommand)
-        driver!!.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(slidesHighCommand)
+        operator!!.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenPressed(slidesGroundCommand)
+        operator!!.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(slidesLowCommand)
+        operator!!.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(slidesMidCommand)
+        operator!!.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(slidesHighCommand)
 
-        driver!!.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(intakeCommand)
-        driver!!.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(outtakeCommand)
+        operator!!.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(intakeCommand)
+        operator!!.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(outtakeCommand)
 
-        // Register Default Subsystems
+        // Register Subsystems
         register(driveSubsystem)
 
         // Assign Default Commands
