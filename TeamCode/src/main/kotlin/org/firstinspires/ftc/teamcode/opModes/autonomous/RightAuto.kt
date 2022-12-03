@@ -17,8 +17,8 @@ import org.openftc.easyopencv.OpenCvCamera
 import org.openftc.easyopencv.OpenCvCameraFactory
 import org.openftc.easyopencv.OpenCvCameraRotation
 
-@Autonomous(name = "Red Right Auto")
-class RedRightAuto : OpMode() {
+@Autonomous(name = "Right Auto")
+class RightAuto : OpMode() {
     private val startPose = Pose2d(35.25, -62.0, Math.toRadians(90.0))
     private val loc1 = Pose2d(11.75, -23.5, Math.toRadians(-90.0))
     private val loc2 = Pose2d(35.25, -23.5, Math.toRadians(-90.0))
