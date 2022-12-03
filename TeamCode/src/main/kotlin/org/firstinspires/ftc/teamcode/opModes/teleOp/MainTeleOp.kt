@@ -36,6 +36,7 @@ class MainTeleOp : CommandOpMode() {
     private var driveCommand: DriveCommand? = null
 
     private var slidesGroundCommand: SlidesCommand? = null
+    private var slidesIntakeCommand: SlidesCommand? = null
     private var slidesLowCommand: SlidesCommand? = null
     private var slidesMidCommand: SlidesCommand? = null
     private var slidesHighCommand: SlidesCommand? = null
@@ -71,6 +72,7 @@ class MainTeleOp : CommandOpMode() {
         driveCommand = DriveCommand(driveSubsystem!!, driver!!::getLeftX, driver!!::getLeftY, driver!!::getRightX, 0.15)
 
         slidesGroundCommand = SlidesCommand(slidesSubsystem!!, SlidesConst.SlidesPosition.GROUND)
+        slidesIntakeCommand = SlidesCommand(slidesSubsystem!!, SlidesConst.SlidesPosition.INTAKE)
         slidesLowCommand = SlidesCommand(slidesSubsystem!!, SlidesConst.SlidesPosition.LOW)
         slidesMidCommand = SlidesCommand(slidesSubsystem!!, SlidesConst.SlidesPosition.MIDDLE)
         slidesHighCommand = SlidesCommand(slidesSubsystem!!, SlidesConst.SlidesPosition.HIGH)
@@ -79,13 +81,21 @@ class MainTeleOp : CommandOpMode() {
         outtakeCommand = IntakeCommand(intakeSubsystem!!, false)
 
         // Assign commands to gamepads
-        operator!!.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenPressed(slidesGroundCommand)
+        driver!!.getGamepadButton(GamepadKeys.Button.X).whenPressed(slidesGroundCommand)
+        driver!!.getGamepadButton(GamepadKeys.Button.B).whenPressed(slidesIntakeCommand)
+
+        driver!!.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(intakeCommand)
+        driver!!.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(intakeCommand)
+
+        operator!!.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(outtakeCommand)
+        operator!!.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(outtakeCommand)
+
+        operator!!.getGamepadButton(GamepadKeys.Button.X).whenPressed(slidesGroundCommand)
         operator!!.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(slidesLowCommand)
         operator!!.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(slidesMidCommand)
         operator!!.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(slidesHighCommand)
 
-        operator!!.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(intakeCommand)
-        operator!!.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(outtakeCommand)
+
 
         // Register Subsystems
         register(driveSubsystem)
