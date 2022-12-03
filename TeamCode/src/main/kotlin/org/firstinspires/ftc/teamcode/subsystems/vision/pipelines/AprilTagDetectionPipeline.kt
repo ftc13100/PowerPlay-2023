@@ -63,7 +63,7 @@ class AprilTagDetectionPipeline(// UNITS ARE METERS
         return input
     }
 
-    fun getLatestResults(): ArrayList<AprilTagDetection> {
+    fun getLatestResults(): List<AprilTagDetection> {
         val results = ArrayList<AprilTagDetection>()
         results.addAll(latestDetections)
         return results
