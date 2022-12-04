@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 /*
  * This is a simple routine to test translational drive capabilities.
  */
+@SuppressWarnings("StatementWithEmptyBody")
 @Config
 @Autonomous(group = "drive")
 public class StrafeTest extends LinearOpMode {
