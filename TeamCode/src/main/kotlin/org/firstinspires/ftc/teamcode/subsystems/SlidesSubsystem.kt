@@ -1,57 +1,65 @@
 package org.firstinspires.ftc.teamcode.subsystems
 
 import com.arcrobotics.ftclib.command.SubsystemBase
-import com.arcrobotics.ftclib.controller.wpilibcontroller.ElevatorFeedforward
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
+import com.qualcomm.robotcore.hardware.TouchSensor
+import org.firstinspires.ftc.robotcore.external.Telemetry
+import org.firstinspires.ftc.teamcode.constants.SlidesConst
 
-class SlidesSubsystem(slidesLeft: Motor, slidesRight: Motor): SubsystemBase() {
-    //TODO Tune Kp, Ki, Kd, and max constraints
-
-    companion object {
-        @JvmField
-        var kP: Double = 0.0
-
-        @JvmField
-        var kI: Double = 0.0
-
-        @JvmField
-        var kD: Double = 0.0
-
-        @JvmField
-        var kF: Double = 0.0
-
-        @JvmField
-        var goal = 0.0
-    }
-
+//@Config
+class SlidesSubsystem(
+    slidesLeft: Motor,
+    slidesRight: Motor,
+    private val limit: TouchSensor,
+    private val telemetry: Telemetry
+) : SubsystemBase() {
+    // Hardware
     private val slidesMotors = MotorGroup(slidesLeft, slidesRight)
 
-    private val controller = com.arcrobotics.ftclib.controller.PIDFController(
-        0.0 /* P.coeff */,
-        0.0 /* I.coeff */,
-        0.0 /* D.coeff */,
-        0.0
+    // Controllers
+    private val controller = com.arcrobotics.ftclib.controller.PIDController(
+        SlidesConst.SlidesPID.P.coeff,
+        SlidesConst.SlidesPID.I.coeff,
+        SlidesConst.SlidesPID.D.coeff,
     )
 
-    private val feedforward = ElevatorFeedforward(
-        0.0 /* Ks.coeff */,
-        0.0 /* Kg.coeff */,
-        0.0 /* Kv.coeff */,
-    )
+    // Status
+    private var targetPosition = SlidesConst.SlidesPosition.GROUND
+
+    // Initialization
+    init {
+        slidesRight.inverted = true
+        slidesMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
+        slidesMotors.resetEncoder()
+        controller.setPoint = slidesMotors.positions.first()
+    }
+
+    // Methods
+    fun setTargetPosition(targetPosition: SlidesConst.SlidesPosition) {
+        controller.setPoint = targetPosition.ticks
+        this.targetPosition = targetPosition
+    }
+
+    fun atTargetPosition() = controller.atSetPoint()
 
     fun operateSlides() {
-        controller.setPIDF(kP, kI, kD, kF)
-        val error = controller.calculate(slidesMotors.positions.first())
+        var error = 0.0
+        if(targetPosition != SlidesConst.SlidesPosition.GROUND) {
+            error = controller.calculate(slidesMotors.positions.first()) + SlidesConst.SlidesPID.G.coeff
+        }
+
+        telemetry.addData("Current Position", slidesMotors.positions.first())
+        telemetry.addData("Target Position", targetPosition.ticks)
+        telemetry.addData("Error", error)
+        telemetry.update()
 
         slidesMotors.set(error)
     }
 
-    fun slideUp() = slidesMotors.set(1.0)
-
-    fun slideDown() = slidesMotors.set(-0.2)
+    fun stall() = slidesMotors.set(SlidesConst.SlidesPID.G.coeff)
 
     fun stop() = slidesMotors.stopMotor()
 
-    fun getVelocity() = slidesMotors.velocity
+    fun isPressed() = limit.isPressed
 }
