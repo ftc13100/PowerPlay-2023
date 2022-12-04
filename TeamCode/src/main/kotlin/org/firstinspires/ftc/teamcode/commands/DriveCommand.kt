@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.command.CommandBase
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem
 import java.util.function.DoubleSupplier
 import kotlin.math.abs
+import kotlin.math.pow
 import kotlin.math.sign
 
 class DriveCommand(
@@ -23,5 +24,5 @@ class DriveCommand(
 
     private fun adjustedInput(input: DoubleSupplier): Double =
         if (abs(input.asDouble) < zoneVal) 0.0
-        else sign(input.asDouble) * (abs(input.asDouble) - zoneVal)
+        else (sign(input.asDouble) * (abs(input.asDouble) - zoneVal)).pow(3.0)
 }
