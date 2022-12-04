@@ -41,10 +41,10 @@ class DriveSubsystem(
 
     fun setDrivePower(drivePower: Pose2d?) = drive.setDrivePower(drivePower!!)
 
-    var poseEstimate: Pose2d?
+    var poseEstimate: Pose2d
         get() = drive.poseEstimate
         set(pose) {
-            drive.poseEstimate = pose!!
+            drive.poseEstimate = pose
         }
 
     fun trajectoryBuilder(startPose: Pose2d?): TrajectoryBuilder =
