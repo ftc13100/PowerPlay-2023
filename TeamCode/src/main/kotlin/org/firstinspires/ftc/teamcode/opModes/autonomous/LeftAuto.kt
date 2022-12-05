@@ -18,7 +18,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation
 
 @Autonomous(name = "Left Auto")
 class LeftAuto : OpMode() {
-    private val startPose = Pose2d(35.25, -62.0, Math.toRadians(90.0))
+    private val startPose = Pose2d(-35.25, -62.0, Math.toRadians(90.0))
     private val loc1 = Pose2d(-58.75, -35.25, Math.toRadians(0.0))
     private val loc2 = Pose2d(-35.25, -23.5, Math.toRadians(-90.0))
     private var loc3 = Pose2d(-11.75, -23.5, Math.toRadians(-90.0))
@@ -56,6 +56,7 @@ class LeftAuto : OpMode() {
 
         // Hardware Init
         drive = SampleMecanumDrive(hardwareMap)
+        drive!!.poseEstimate = startPose
 
         // Paths
         val zoneThreePath: TrajectorySequence = drive.trajectorySequenceBuilder(startPose)
@@ -63,7 +64,7 @@ class LeftAuto : OpMode() {
             .splineToConstantHeading(Vector2d(-23.5, -9.5), Math.toRadians(90.0))
             .setReversed(true)
             .splineToConstantHeading(Vector2d(-11.75, -15.0), Math.toRadians(-90.0))
-            .splineToSplineHeading(loc1, Math.toRadians(-90.0))
+            .splineToSplineHeading(loc3, Math.toRadians(-90.0))
             .build()
 
         val zoneTwoPath: TrajectorySequence = drive.trajectorySequenceBuilder(startPose)
@@ -80,12 +81,14 @@ class LeftAuto : OpMode() {
             .setReversed(true)
             .splineToConstantHeading(Vector2d(-35.25, -15.0), Math.toRadians(-90.0))
             .splineToConstantHeading(Vector2d(-35.25, -26.0), Math.toRadians(-90.0))
-            .splineToSplineHeading(loc3, Math.toRadians(180.0))
+            .splineToSplineHeading(loc1, Math.toRadians(180.0))
             .build()
 
         var detectedTags: List<AprilTagDetection> = pipeline.getLatestResults()
-        for (i in 1..200) {
-            if(detectedTags.isEmpty()) {
+        for (i in 1..100000) {
+            telemetry.addData("iteration", i)
+            telemetry.update()
+            if (detectedTags.isEmpty()) {
                 detectedTags = pipeline.getLatestResults()
             } else {
                 break
@@ -93,11 +96,15 @@ class LeftAuto : OpMode() {
         }
 
         // Vision-based path assignment
-        val path: TrajectorySequence = when (detectedTags[0].id) {
-            1213 -> zoneTwoPath
-            301 -> zoneThreePath
-            // 1021 for Zone One
-            else -> zoneOnePath
+        var path: TrajectorySequence = zoneOnePath
+
+        if (detectedTags.isNotEmpty()) {
+            path = when (detectedTags[0].id) {
+                1213 -> zoneTwoPath
+                302 -> zoneThreePath
+                // 1021 for Zone One
+                else -> zoneOnePath
+            }
         }
 
         drive.followTrajectorySequenceAsync(path)

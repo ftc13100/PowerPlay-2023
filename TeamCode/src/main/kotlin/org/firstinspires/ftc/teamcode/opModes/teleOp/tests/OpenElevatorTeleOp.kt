@@ -7,6 +7,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx
 import com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.LEFT_BUMPER
 import com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.RIGHT_BUMPER
 import com.arcrobotics.ftclib.hardware.motors.Motor
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.TouchSensor
 import org.firstinspires.ftc.teamcode.commands.ElevatorSpinDownCommand
@@ -14,6 +15,7 @@ import org.firstinspires.ftc.teamcode.commands.ElevatorSpinUpCommand
 import org.firstinspires.ftc.teamcode.constants.DeviceConfig.*
 import org.firstinspires.ftc.teamcode.subsystems.OpenElevatorSubsystem
 
+@Disabled
 @TeleOp(name = "Open Loop Elevator Test")
 class OpenElevatorTeleOp: CommandOpMode() {
     override fun initialize() {
