@@ -44,7 +44,7 @@ class SlidesSubsystem(
     fun atTargetPosition() = controller.atSetPoint()
 
     fun operateSlides() {
-        var error = 0.0
+        var error = 0.005
         if(targetPosition != SlidesConst.SlidesPosition.GROUND) {
             error = controller.calculate(slidesMotors.positions.first()) + SlidesConst.SlidesPID.G.coeff
         }
