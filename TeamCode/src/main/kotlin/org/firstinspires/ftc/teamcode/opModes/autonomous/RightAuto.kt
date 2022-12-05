@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.constants.DeviceConfig
 import org.firstinspires.ftc.teamcode.constants.SlidesConst
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence
-import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.SlidesSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.vision.pipelines.AprilTagDetectionPipeline
@@ -39,7 +38,7 @@ class RightAuto : OpMode() {
     // Subsystems
     private lateinit var slidesSubsystem: SlidesSubsystem
     private lateinit var intakeSubsystem: IntakeSubsystem
-    private lateinit var drive: DriveSubsystem
+    private lateinit var drive: SampleMecanumDrive
 
     @SuppressLint("DiscouragedApi")
     override fun init() {
@@ -71,7 +70,7 @@ class RightAuto : OpMode() {
         })
 
         // Hardware Init
-        drive = DriveSubsystem(SampleMecanumDrive(hardwareMap))
+        drive = SampleMecanumDrive(hardwareMap)
         slidesSubsystem = SlidesSubsystem(slidesLeft, slidesRight, limit, telemetry)
         intakeSubsystem = IntakeSubsystem(intake)
         drive.poseEstimate = startPose
