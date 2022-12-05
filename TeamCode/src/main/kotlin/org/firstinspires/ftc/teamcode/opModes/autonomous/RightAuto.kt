@@ -153,7 +153,6 @@ class RightAuto : OpMode() {
     override fun loop() {
         drive.update()
 
-
         if (slidesSubsystem.atTargetPosition()) {
             if (slidesSubsystem.getTargetPosition() == SlidesConst.SlidesPosition.GROUND) {
                 slidesSubsystem.stop()
