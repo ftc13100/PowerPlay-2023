@@ -60,7 +60,7 @@ class MainTeleOp : CommandOpMode() {
         intakeMotor = Motor(hardwareMap, DeviceConfig.INTAKE.deviceName)
 
         // Subsystems
-        driveSubsystem = DriveSubsystem(SampleMecanumDrive(hardwareMap), false)
+        driveSubsystem = DriveSubsystem(SampleMecanumDrive(hardwareMap), true)
         slidesSubsystem = SlidesSubsystem(slidesLeft, slidesRight, limit, telemetry)
         intakeSubsystem = IntakeSubsystem(intakeMotor)
 

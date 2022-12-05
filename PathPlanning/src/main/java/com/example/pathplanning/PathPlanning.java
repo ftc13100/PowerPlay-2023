@@ -15,7 +15,7 @@ public class PathPlanning {
                 .setDimensions(15, 15)
                 .setConstraints(38.110287416570166, 38.110287416570166, Math.toRadians(457.2273162437774), Math.toRadians(138.19991297468354), 15.2);
 
-        RoadRunnerBotEntity bot = redAutoTwoCycle(base, startPose);
+        RoadRunnerBotEntity bot = originalRedAuto(base, startPose);
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_POWERPLAY_OFFICIAL)
                 .addEntity(bot)

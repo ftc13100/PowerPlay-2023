@@ -23,7 +23,7 @@ class LeftAuto : OpMode() {
     private val loc2 = Pose2d(-35.25, -23.5, Math.toRadians(-90.0))
     private var loc3 = Pose2d(-11.75, -23.5, Math.toRadians(-90.0))
 
-    private var drive: SampleMecanumDrive? = null
+    private lateinit var drive: SampleMecanumDrive
 
     @SuppressLint("DiscouragedApi")
     override fun init() {
@@ -58,7 +58,7 @@ class LeftAuto : OpMode() {
         drive = SampleMecanumDrive(hardwareMap)
 
         // Paths
-        val zoneThreePath: TrajectorySequence = drive!!.trajectorySequenceBuilder(startPose)
+        val zoneThreePath: TrajectorySequence = drive.trajectorySequenceBuilder(startPose)
             .splineToConstantHeading(Vector2d(-35.25, -15.0), Math.toRadians(90.0))
             .splineToConstantHeading(Vector2d(-23.5, -9.5), Math.toRadians(90.0))
             .setReversed(true)
@@ -66,7 +66,7 @@ class LeftAuto : OpMode() {
             .splineToSplineHeading(loc1, Math.toRadians(-90.0))
             .build()
 
-        val zoneTwoPath: TrajectorySequence = drive!!.trajectorySequenceBuilder(startPose)
+        val zoneTwoPath: TrajectorySequence = drive.trajectorySequenceBuilder(startPose)
             .splineToConstantHeading(Vector2d(-35.25, -15.0), Math.toRadians(90.0))
             .splineToConstantHeading(Vector2d(-23.5, -9.5), Math.toRadians(90.0))
             .setReversed(true)
@@ -74,7 +74,7 @@ class LeftAuto : OpMode() {
             .splineToSplineHeading(loc2, Math.toRadians(-90.0))
             .build()
 
-        val zoneOnePath: TrajectorySequence = drive!!.trajectorySequenceBuilder(startPose)
+        val zoneOnePath: TrajectorySequence = drive.trajectorySequenceBuilder(startPose)
             .splineToConstantHeading(Vector2d(-35.25, -15.0), Math.toRadians(90.0))
             .splineToConstantHeading(Vector2d(-23.5, -9.5), Math.toRadians(90.0))
             .setReversed(true)
@@ -100,10 +100,10 @@ class LeftAuto : OpMode() {
             else -> zoneOnePath
         }
 
-        drive!!.followTrajectorySequenceAsync(path)
+        drive.followTrajectorySequenceAsync(path)
     }
 
     override fun loop() {
-        drive!!.update()
+        drive.update()
     }
 }
