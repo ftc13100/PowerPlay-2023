@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.opModes.autonomous
 import android.annotation.SuppressLint
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.acmerobotics.roadrunner.geometry.Vector2d
-import com.acmerobotics.roadrunner.trajectory.Trajectory
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
@@ -11,8 +10,8 @@ import org.firstinspires.ftc.teamcode.constants.AprilTagCamera
 import org.firstinspires.ftc.teamcode.constants.DeviceConfig
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence
-import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder
 import org.firstinspires.ftc.teamcode.subsystems.vision.pipelines.AprilTagDetectionPipeline
+import org.openftc.apriltag.AprilTagDetection
 import org.openftc.easyopencv.OpenCvCamera
 import org.openftc.easyopencv.OpenCvCameraFactory
 import org.openftc.easyopencv.OpenCvCameraRotation
@@ -57,38 +56,54 @@ class RightAuto : OpMode() {
 
         // Hardware Init
         drive = SampleMecanumDrive(hardwareMap)
+        drive!!.poseEstimate = startPose
 
         // Paths
-        val pathBuilder: TrajectorySequenceBuilder = drive!!.trajectorySequenceBuilder(startPose)
+        val zoneOnePath: TrajectorySequence = drive!!.trajectorySequenceBuilder(startPose)
             .splineToConstantHeading(Vector2d(35.25, -15.0), Math.toRadians(90.0))
             .splineToConstantHeading(Vector2d(23.5, -9.5), Math.toRadians(90.0))
             .setReversed(true)
-
-        val zoneOnePath: Trajectory = drive!!.trajectoryBuilder(Pose2d(23.5, -9.5), Math.toRadians(90.0))
             .splineToConstantHeading(Vector2d(11.75, -15.0), Math.toRadians(-90.0))
             .splineToSplineHeading(loc1, Math.toRadians(-90.0))
             .build()
 
-        val zoneTwoPath: Trajectory = drive!!.trajectoryBuilder(Pose2d(23.5, -9.5), Math.toRadians(90.0))
+        val zoneTwoPath: TrajectorySequence = drive!!.trajectorySequenceBuilder(startPose)
+            .splineToConstantHeading(Vector2d(35.25, -15.0), Math.toRadians(90.0))
+            .splineToConstantHeading(Vector2d(23.5, -9.5), Math.toRadians(90.0))
+            .setReversed(true)
             .splineToConstantHeading(Vector2d(35.25, -15.0), Math.toRadians(-90.0))
             .splineToSplineHeading(loc2, Math.toRadians(-90.0))
             .build()
 
-        val zoneThreePath: Trajectory = drive!!.trajectoryBuilder(Pose2d(23.5, -9.5), Math.toRadians(90.0))
+        val zoneThreePath: TrajectorySequence = drive!!.trajectorySequenceBuilder(startPose)
+            .splineToConstantHeading(Vector2d(35.25, -15.0), Math.toRadians(90.0))
+            .splineToConstantHeading(Vector2d(23.5, -9.5), Math.toRadians(90.0))
+            .setReversed(true)
             .splineToConstantHeading(Vector2d(35.25, -15.0), Math.toRadians(-90.0))
             .splineToConstantHeading(Vector2d(35.25, -26.0), Math.toRadians(-90.0))
             .splineToSplineHeading(loc3, Math.toRadians(0.0))
             .build()
 
-        // Vision-based path assignment
-        val signalPath: Trajectory = when (pipeline.getLatestResults()[0].id) {
-            1213 -> zoneTwoPath
-            301 -> zoneThreePath
-            // 1021 for Zone One
-            else -> zoneOnePath
+        var detectedTags: List<AprilTagDetection> = pipeline.getLatestResults()
+        for (i in 1..100000) {
+            if (detectedTags.isEmpty()) {
+                detectedTags = pipeline.getLatestResults()
+            } else {
+                break
+            }
         }
 
-        val path: TrajectorySequence = pathBuilder.addTrajectory(signalPath).build()
+        // Vision-based path assignment
+        var path: TrajectorySequence = zoneOnePath
+
+        if (detectedTags.isNotEmpty()) {
+            path = when (detectedTags[0].id) {
+                1213 -> zoneTwoPath
+                302 -> zoneThreePath
+                // 1021 for Zone One
+                else -> zoneOnePath
+            }
+        }
 
         drive!!.followTrajectorySequenceAsync(path)
     }
