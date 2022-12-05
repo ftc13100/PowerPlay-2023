@@ -25,7 +25,7 @@ class SlidesSubsystem(
     )
 
     // Status
-    private var targetPosition = SlidesConst.SlidesPosition.GROUND
+    private var targetPosition: SlidesConst.SlidesPosition = SlidesConst.SlidesPosition.GROUND
 
     // Initialization
     init {
@@ -42,6 +42,8 @@ class SlidesSubsystem(
     }
 
     fun atTargetPosition() = controller.atSetPoint()
+
+    fun getTargetPosition(): SlidesConst.SlidesPosition = targetPosition
 
     fun operateSlides() {
         var error = 0.005
