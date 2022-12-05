@@ -56,7 +56,7 @@ class LeftAuto : OpMode() {
 
         // Hardware Init
         drive = SampleMecanumDrive(hardwareMap)
-        drive!!.poseEstimate = startPose
+        drive.poseEstimate = startPose
 
         // Paths
         val zoneThreePath: TrajectorySequence = drive.trajectorySequenceBuilder(startPose)
@@ -96,15 +96,15 @@ class LeftAuto : OpMode() {
         }
 
         // Vision-based path assignment
-        var path: TrajectorySequence = zoneOnePath
-
-        if (detectedTags.isNotEmpty()) {
-            path = when (detectedTags[0].id) {
+        val path = if (detectedTags.isNotEmpty()) {
+            when (detectedTags[0].id) {
                 1213 -> zoneTwoPath
                 302 -> zoneThreePath
                 // 1021 for Zone One
                 else -> zoneOnePath
             }
+        } else {
+            zoneOnePath
         }
 
         drive.followTrajectorySequenceAsync(path)

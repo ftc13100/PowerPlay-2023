@@ -39,7 +39,7 @@ public class PathPlanning {
                                 // loc 2
 //                                .splineToConstantHeading(new Vector2d(-35.25, -15.0), Math.toRadians(-90.0))
 //                                .splineToSplineHeading(loc2, Math.toRadians(-90.0))
-                                // loc 3
+//                                 loc 3
 //                                .splineToConstantHeading(new Vector2d(-11.75, -15.0), Math.toRadians(-90.0))
 //                                .splineToLinearHeading(loc3, Math.toRadians(-90.0))
                                 .build()
