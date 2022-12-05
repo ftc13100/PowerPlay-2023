@@ -9,6 +9,7 @@ import com.arcrobotics.ftclib.command.SubsystemBase
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.PIDFCoefficients
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive
+import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder
 
 class DriveSubsystem(
     private val drive: SampleMecanumDrive,
@@ -57,6 +58,9 @@ class DriveSubsystem(
         drive.trajectoryBuilder(startPose, startHeading)
 
     fun followTrajectory(trajectory: Trajectory?) = drive.followTrajectoryAsync(trajectory)
+
+    fun trajectorySequenceBuilder(startPose: Pose2d): TrajectorySequenceBuilder =
+        drive.trajectorySequenceBuilder(startPose)
 
     fun stop() = drive(0.0, 0.0, 0.0)
 

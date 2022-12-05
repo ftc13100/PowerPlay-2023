@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.constants
 
-class SlidesConst() {
+class SlidesConst {
     enum class SlidesPosition(val ticks: Double) {
         HIGH(1000.0),
         MIDDLE(700.0),

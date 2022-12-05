@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.TouchSensor
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.teamcode.constants.SlidesConst
 
-//@Config
 class SlidesSubsystem(
     slidesLeft: Motor,
     slidesRight: Motor,
@@ -25,7 +24,7 @@ class SlidesSubsystem(
     )
 
     // Status
-    private var targetPosition = SlidesConst.SlidesPosition.GROUND
+    private var targetPosition: SlidesConst.SlidesPosition = SlidesConst.SlidesPosition.GROUND
 
     // Initialization
     init {
@@ -43,9 +42,11 @@ class SlidesSubsystem(
 
     fun atTargetPosition() = controller.atSetPoint()
 
+    fun getTargetPosition(): SlidesConst.SlidesPosition = targetPosition
+
     fun operateSlides() {
         var error = 0.005
-        if(targetPosition != SlidesConst.SlidesPosition.GROUND) {
+        if (targetPosition != SlidesConst.SlidesPosition.GROUND) {
             error = controller.calculate(slidesMotors.positions.first()) + SlidesConst.SlidesPID.G.coeff
         }
 
