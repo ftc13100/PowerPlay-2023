@@ -125,6 +125,7 @@ class RightAuto : OpMode() {
             .splineToSplineHeading(loc3, Math.toRadians(0.0))
             .build()
 
+        // Vision detection
         var detectedTags: List<AprilTagDetection> = pipeline.getLatestResults()
         for (i in 1..100000) {
             if (detectedTags.isEmpty()) {

@@ -40,7 +40,8 @@ class AprilTagDetectionPipeline(// UNITS ARE METERS
     init {
         nativeApriltagPtr =
             AprilTagDetectorJNI.createApriltagDetector(
-                AprilTagDetectorJNI.TagFamily.TAG_standard41h12.string, 3f, 3)
+                AprilTagDetectorJNI.TagFamily.TAG_standard41h12.string, 3f, 3
+            )
     }
 
     fun finalize() {
