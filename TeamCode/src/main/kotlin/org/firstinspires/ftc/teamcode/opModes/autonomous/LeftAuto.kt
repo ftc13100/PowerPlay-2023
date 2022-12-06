@@ -71,6 +71,11 @@ class LeftAuto : OpMode() {
 
         // Hardware Init
         drive = SampleMecanumDrive(hardwareMap)
+        slidesLeft = Motor(hardwareMap, DeviceConfig.SLIDES_LEFT.deviceName)
+        slidesRight = Motor(hardwareMap, DeviceConfig.SLIDES_RIGHT.deviceName)
+        intake = Motor(hardwareMap, DeviceConfig.INTAKE.deviceName)
+        limit = hardwareMap.get(TouchSensor::class.java, DeviceConfig.SLIDES_LIMIT.deviceName)
+
         slidesSubsystem = SlidesSubsystem(slidesLeft, slidesRight, limit, telemetry)
         intakeSubsystem = IntakeSubsystem(intake)
         drive.poseEstimate = startPose
