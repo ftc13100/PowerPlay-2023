@@ -43,6 +43,8 @@ class SlidesSubsystem(
 
     fun getTargetPosition() = targetPosition
 
+    fun increaseTargetPosition(increase: Double) { controller.setPoint += increase }
+
     fun atTargetPosition() = controller.atSetPoint()
 
     fun operateSlides() {

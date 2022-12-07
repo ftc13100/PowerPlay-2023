@@ -8,9 +8,10 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.TouchSensor
-import org.firstinspires.ftc.teamcode.commands.DriveCommand
-import org.firstinspires.ftc.teamcode.commands.IntakeCommand
-import org.firstinspires.ftc.teamcode.commands.SlidesCommand
+import org.firstinspires.ftc.teamcode.commands.drive.DriveCommand
+import org.firstinspires.ftc.teamcode.commands.intake.IntakeCommand
+import org.firstinspires.ftc.teamcode.commands.slides.HeightCommand
+import org.firstinspires.ftc.teamcode.commands.slides.SlidesCommand
 import org.firstinspires.ftc.teamcode.constants.DeviceConfig
 import org.firstinspires.ftc.teamcode.constants.SlidesConst
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive
@@ -23,9 +24,8 @@ class MainTeleOp : CommandOpMode() {
     // Hardware
     private lateinit var slidesLeft: Motor
     private lateinit var slidesRight: Motor
-    private lateinit var limit: TouchSensor
-
     private lateinit var intakeMotor: Motor
+    private lateinit var limit: TouchSensor
 
     // Subsystems
     private lateinit var driveSubsystem: DriveSubsystem
@@ -40,6 +40,7 @@ class MainTeleOp : CommandOpMode() {
     private lateinit var slidesLowCommand: SlidesCommand
     private lateinit var slidesMidCommand: SlidesCommand
     private lateinit var slidesHighCommand: SlidesCommand
+    private lateinit var adjustHeightCommand: HeightCommand
 
     private lateinit var intakeCommand: IntakeCommand
     private lateinit var outtakeCommand: IntakeCommand
@@ -76,6 +77,8 @@ class MainTeleOp : CommandOpMode() {
         slidesLowCommand = SlidesCommand(slidesSubsystem, SlidesConst.SlidesPosition.LOW)
         slidesMidCommand = SlidesCommand(slidesSubsystem, SlidesConst.SlidesPosition.MIDDLE)
         slidesHighCommand = SlidesCommand(slidesSubsystem, SlidesConst.SlidesPosition.HIGH)
+
+        adjustHeightCommand = HeightCommand(slidesSubsystem, operator::getLeftY)
 
         intakeCommand = IntakeCommand(intakeSubsystem, true)
         outtakeCommand = IntakeCommand(intakeSubsystem, false)

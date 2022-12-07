@@ -10,8 +10,8 @@ import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.TouchSensor
-import org.firstinspires.ftc.teamcode.commands.ElevatorSpinDownCommand
-import org.firstinspires.ftc.teamcode.commands.ElevatorSpinUpCommand
+import org.firstinspires.ftc.teamcode.commands.openElevator.ElevatorSpinDownCommand
+import org.firstinspires.ftc.teamcode.commands.openElevator.ElevatorSpinUpCommand
 import org.firstinspires.ftc.teamcode.constants.DeviceConfig.*
 import org.firstinspires.ftc.teamcode.subsystems.OpenElevatorSubsystem
 
