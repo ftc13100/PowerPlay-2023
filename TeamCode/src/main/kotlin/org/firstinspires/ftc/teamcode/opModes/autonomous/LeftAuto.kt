@@ -90,6 +90,7 @@ class LeftAuto : OpMode() {
             .waitSeconds(3.0)
             .addDisplacementMarker { intakeSubsystem.outtake() }
             .waitSeconds(0.5)
+            .addDisplacementMarker { intakeSubsystem.stop() }
             .addDisplacementMarker { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.GROUND) }
             .waitSeconds(1.0)
             .setReversed(true)
@@ -107,6 +108,7 @@ class LeftAuto : OpMode() {
             .waitSeconds(3.0)
             .addDisplacementMarker { intakeSubsystem.outtake() }
             .waitSeconds(0.5)
+            .addDisplacementMarker { intakeSubsystem.stop() }
             .addDisplacementMarker { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.GROUND) }
             .waitSeconds(1.0)
             .setReversed(true)
@@ -123,6 +125,7 @@ class LeftAuto : OpMode() {
             .waitSeconds(3.0)
             .addDisplacementMarker { intakeSubsystem.outtake() }
             .waitSeconds(0.5)
+            .addDisplacementMarker { intakeSubsystem.stop() }
             .addDisplacementMarker { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.GROUND) }
             .waitSeconds(1.0)
             .setReversed(true)
@@ -158,14 +161,14 @@ class LeftAuto : OpMode() {
     override fun loop() {
         drive.update()
 
-        if (slidesSubsystem.atTargetPosition()) {
+        if (!slidesSubsystem.atTargetPosition()) {
+            slidesSubsystem.operateSlides()
+        } else {
             if (slidesSubsystem.getTargetPosition() == SlidesConst.SlidesPosition.GROUND) {
                 slidesSubsystem.stop()
             } else {
                 slidesSubsystem.stall()
             }
-        } else {
-            slidesSubsystem.operateSlides()
         }
     }
 }
