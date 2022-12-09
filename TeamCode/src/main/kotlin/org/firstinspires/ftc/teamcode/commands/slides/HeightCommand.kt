@@ -8,7 +8,8 @@ import java.util.function.DoubleSupplier
 class HeightCommand(
     private val subsystem: SlidesSubsystem,
     private val increase: DoubleSupplier
-): CommandBase() {
+) : CommandBase() {
+
     init {
         addRequirements(subsystem)
     }
@@ -18,20 +19,7 @@ class HeightCommand(
         subsystem.operateSlides()
     }
 
-    override fun isFinished(): Boolean {
-        return if (subsystem.getTargetPosition() == SlidesConst.SlidesPosition.GROUND) {
-            subsystem.atTargetPosition() || subsystem.isPressed()
-        } else {
-            subsystem.atTargetPosition()
-        }
+    override fun isFinished(): Boolean = subsystem.atTargetPosition() && increase.asDouble == 0.0
 
-    }
-
-    override fun end(interrupted: Boolean) {
-        if(subsystem.getTargetPosition() == SlidesConst.SlidesPosition.GROUND) {
-            subsystem.stop()
-        } else {
-            subsystem.stall()
-        }
-    }
+    override fun end(interrupted: Boolean) = subsystem.stall()
 }
