@@ -82,7 +82,7 @@ class LeftAuto : OpMode() {
 
         // Paths
         val zoneOnePath: TrajectorySequence = drive.trajectorySequenceBuilder(startPose)
-            .addDisplacementMarker { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.INTAKE) }
+//            .addDisplacementMarker { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.INTAKE) }
             .waitSeconds(0.5)
             .splineToConstantHeading(Vector2d(-35.25, -15.0), Math.toRadians(90.0))
             .splineToConstantHeading(Vector2d(-23.5, -9.5), Math.toRadians(90.0))
@@ -100,7 +100,7 @@ class LeftAuto : OpMode() {
             .build()
 
         val zoneTwoPath: TrajectorySequence = drive.trajectorySequenceBuilder(startPose)
-            .addDisplacementMarker { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.INTAKE) }
+//            .addDisplacementMarker { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.INTAKE) }
             .waitSeconds(0.5)
             .splineToConstantHeading(Vector2d(-35.25, -15.0), Math.toRadians(90.0))
             .splineToConstantHeading(Vector2d(-23.5, -9.5), Math.toRadians(90.0))
@@ -117,7 +117,7 @@ class LeftAuto : OpMode() {
             .build()
 
         val zoneThreePath: TrajectorySequence = drive.trajectorySequenceBuilder(startPose)
-            .addDisplacementMarker { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.INTAKE) }
+//            .addDisplacementMarker { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.INTAKE) }
             .waitSeconds(0.5)
             .splineToConstantHeading(Vector2d(-35.25, -15.0), Math.toRadians(90.0))
             .splineToConstantHeading(Vector2d(-23.5, -9.5), Math.toRadians(90.0))
@@ -160,7 +160,6 @@ class LeftAuto : OpMode() {
 
     override fun loop() {
         drive.update()
-
         if (!slidesSubsystem.atTargetPosition()) {
             slidesSubsystem.operateSlides()
         } else {

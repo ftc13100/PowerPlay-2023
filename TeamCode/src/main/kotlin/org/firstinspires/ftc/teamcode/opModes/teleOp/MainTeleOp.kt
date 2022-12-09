@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.opModes.teleOp
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.arcrobotics.ftclib.command.CommandOpMode
-import com.arcrobotics.ftclib.command.InstantCommand
+import com.arcrobotics.ftclib.command.button.Trigger
 import com.arcrobotics.ftclib.gamepad.GamepadEx
 import com.arcrobotics.ftclib.gamepad.GamepadKeys
 import com.arcrobotics.ftclib.hardware.motors.Motor
@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor
 import org.firstinspires.ftc.teamcode.commands.drive.DriveCommand
 import org.firstinspires.ftc.teamcode.commands.intake.IntakeCommand
 import org.firstinspires.ftc.teamcode.commands.slides.HeightCommand
+import org.firstinspires.ftc.teamcode.commands.slides.SlidesCommand
 import org.firstinspires.ftc.teamcode.constants.DeviceConfig
 import org.firstinspires.ftc.teamcode.constants.SlidesConst
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive
@@ -35,11 +36,11 @@ class MainTeleOp : CommandOpMode() {
     // Commands
     private lateinit var driveCommand: DriveCommand
 
-    private lateinit var slidesGroundCommand: InstantCommand
-    private lateinit var slidesIntakeCommand: InstantCommand
-    private lateinit var slidesLowCommand: InstantCommand
-    private lateinit var slidesMidCommand: InstantCommand
-    private lateinit var slidesHighCommand: InstantCommand
+    private lateinit var slidesGroundCommand: SlidesCommand
+    private lateinit var slidesIntakeCommand: SlidesCommand
+    private lateinit var slidesLowCommand: SlidesCommand
+    private lateinit var slidesMidCommand: SlidesCommand
+    private lateinit var slidesHighCommand: SlidesCommand
     private lateinit var adjustHeightCommand: HeightCommand
 
     private lateinit var intakeCommand: IntakeCommand
@@ -48,6 +49,7 @@ class MainTeleOp : CommandOpMode() {
     // Gamepads
     private lateinit var driver: GamepadEx
     private lateinit var operator: GamepadEx
+    private lateinit var heightTrigger: Trigger
 
     override fun initialize() {
         // Debug
@@ -69,19 +71,22 @@ class MainTeleOp : CommandOpMode() {
         driver = GamepadEx(gamepad1)
         operator = GamepadEx(gamepad2)
 
+        // Triggers
+        heightTrigger = Trigger { operator.leftY != 0.0 }
+
         // Commands
         driveCommand = DriveCommand(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX, 0.15)
 
-//        slidesGroundCommand = SlidesCommand(slidesSubsystem, SlidesConst.SlidesPosition.GROUND)
-        slidesGroundCommand = InstantCommand({ slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.GROUND) })
-//        slidesIntakeCommand = SlidesCommand(slidesSubsystem, SlidesConst.SlidesPosition.INTAKE)
-        slidesIntakeCommand = InstantCommand({ slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.INTAKE) })
-//        slidesLowCommand = SlidesCommand(slidesSubsystem, SlidesConst.SlidesPosition.LOW)
-        slidesLowCommand = InstantCommand({ slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.LOW) })
-//        slidesMidCommand = SlidesCommand(slidesSubsystem, SlidesConst.SlidesPosition.MIDDLE)
-        slidesMidCommand = InstantCommand({ slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.MIDDLE) })
-//        slidesHighCommand = SlidesCommand(slidesSubsystem, SlidesConst.SlidesPosition.HIGH)
-        slidesHighCommand = InstantCommand({ slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.HIGH) })
+        slidesGroundCommand = SlidesCommand(slidesSubsystem, SlidesConst.SlidesPosition.GROUND)
+//        slidesGroundCommand = InstantCommand({ slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.GROUND) })
+        slidesIntakeCommand = SlidesCommand(slidesSubsystem, SlidesConst.SlidesPosition.INTAKE)
+//        slidesIntakeCommand = InstantCommand({ slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.INTAKE) })
+        slidesLowCommand = SlidesCommand(slidesSubsystem, SlidesConst.SlidesPosition.LOW)
+//        slidesLowCommand = InstantCommand({ slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.LOW) })
+        slidesMidCommand = SlidesCommand(slidesSubsystem, SlidesConst.SlidesPosition.MIDDLE)
+//        slidesMidCommand = InstantCommand({ slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.MIDDLE) })
+        slidesHighCommand = SlidesCommand(slidesSubsystem, SlidesConst.SlidesPosition.HIGH)
+//        slidesHighCommand = InstantCommand({ slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.HIGH) })
 
         adjustHeightCommand = HeightCommand(slidesSubsystem, operator::getLeftY)
 
@@ -98,16 +103,18 @@ class MainTeleOp : CommandOpMode() {
         operator.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenPressed(slidesGroundCommand)
         operator.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(slidesLowCommand)
         operator.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(slidesMidCommand)
-        operator.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(slidesHighCommand)
+        operator.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(slidesHighCommand.withTimeout(3000))
 
         operator.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(outtakeCommand)
         operator.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(intakeCommand)
 
+        heightTrigger.whileActiveContinuous(adjustHeightCommand)
+
         // Register Subsystems
-        register(driveSubsystem, slidesSubsystem)
+        register(driveSubsystem)
 
         // Assign Default Commands
         driveSubsystem.defaultCommand = driveCommand
-        slidesSubsystem.defaultCommand = adjustHeightCommand
+//        slidesSubsystem.defaultCommand = adjustHeightCommand
     }
 }

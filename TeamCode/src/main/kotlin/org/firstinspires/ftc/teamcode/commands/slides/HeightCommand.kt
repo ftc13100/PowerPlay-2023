@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.commands.slides
 
 import com.arcrobotics.ftclib.command.CommandBase
+import org.firstinspires.ftc.teamcode.constants.SlidesConst
 import org.firstinspires.ftc.teamcode.subsystems.SlidesSubsystem
 import java.util.function.DoubleSupplier
 
@@ -14,5 +15,23 @@ class HeightCommand(
 
     override fun execute() {
         subsystem.increaseTargetPosition(increase.asDouble * 10)
+        subsystem.operateSlides()
+    }
+
+    override fun isFinished(): Boolean {
+        return if (subsystem.getTargetPosition() == SlidesConst.SlidesPosition.GROUND) {
+            subsystem.atTargetPosition() || subsystem.isPressed()
+        } else {
+            subsystem.atTargetPosition()
+        }
+
+    }
+
+    override fun end(interrupted: Boolean) {
+        if(subsystem.getTargetPosition() == SlidesConst.SlidesPosition.GROUND) {
+            subsystem.stop()
+        } else {
+            subsystem.stall()
+        }
     }
 }
