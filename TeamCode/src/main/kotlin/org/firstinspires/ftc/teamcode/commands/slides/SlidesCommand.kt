@@ -13,7 +13,7 @@ class SlidesCommand(private val subsystem: SlidesSubsystem, private val targetPo
 
     override fun initialize() = subsystem.setTargetPosition(targetPos)
 
-    override fun execute() = subsystem.operateSlides()
+//    override fun execute() = subsystem.operateSlides()
 
     override fun isFinished(): Boolean {
         return if (targetPos == SlidesConst.SlidesPosition.GROUND) {

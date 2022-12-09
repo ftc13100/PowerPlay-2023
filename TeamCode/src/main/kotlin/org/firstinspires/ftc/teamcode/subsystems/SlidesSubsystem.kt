@@ -26,13 +26,33 @@ class SlidesSubsystem(
     // Status
     private var targetPosition = SlidesConst.SlidesPosition.GROUND
 
-
     // Initialization
     init {
         slidesRight.inverted = true
         slidesMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
         slidesMotors.resetEncoder()
         controller.setPoint = slidesMotors.positions.first()
+    }
+
+    // Periodic method of the subsystem, will get called before commands
+    override fun periodic() {
+        var error = 0.005
+        if (targetPosition != SlidesConst.SlidesPosition.GROUND) {
+            error = controller.calculate(slidesMotors.positions.first()) + SlidesConst.SlidesPID.G.coeff
+        }
+
+        telemetry.addData("Current Position", slidesMotors.positions.first())
+        telemetry.addData("Target Position", targetPosition.ticks)
+        telemetry.addData("Error", error)
+        telemetry.update()
+
+        slidesMotors.set(error)
+
+        if (getTargetPosition() == SlidesConst.SlidesPosition.GROUND && atTargetPosition() || isPressed()) {
+            stop()
+        } else if (atTargetPosition()) {
+            stall()
+        }
     }
 
     // Methods
