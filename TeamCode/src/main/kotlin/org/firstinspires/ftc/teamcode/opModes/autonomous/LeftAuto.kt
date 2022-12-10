@@ -82,17 +82,18 @@ class LeftAuto : OpMode() {
 
         // Paths
         val zoneOnePath: TrajectorySequence = drive.trajectorySequenceBuilder(startPose)
-            .addDisplacementMarker { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.INTAKE) }
+            .addTemporalMarker(0.0) { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.INTAKE) }
             .waitSeconds(0.5)
-            .splineToConstantHeading(Vector2d(-35.25, -15.0), Math.toRadians(90.0))
-            .splineToConstantHeading(Vector2d(-23.5, -9.5), Math.toRadians(90.0))
-            .addDisplacementMarker { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.HIGH) }
-            .waitSeconds(3.0)
-            .addDisplacementMarker { intakeSubsystem.outtake() }
-            .waitSeconds(0.5)
-            .addDisplacementMarker { intakeSubsystem.stop() }
-            .addDisplacementMarker { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.GROUND) }
+            .splineToConstantHeading(Vector2d(-35.25, -17.0), Math.toRadians(90.0))
+            .splineToConstantHeading(Vector2d(-21.0, -11.5), Math.toRadians(90.0))
+            .waitSeconds(1.5)
+            .addTemporalMarker(3.5) { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.HIGH) }
+            .splineToConstantHeading(Vector2d(-21.0, -7.5), Math.toRadians(90.0))
+            .addTemporalMarker (6.0) { intakeSubsystem.outtake() }
+            .addTemporalMarker(6.5) { intakeSubsystem.stop() }
             .waitSeconds(1.0)
+            .splineToConstantHeading(Vector2d(-21.0, -11.5), Math.toRadians(90.0))
+            .addTemporalMarker(7.5) { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.GROUND) }
             .setReversed(true)
             .splineToConstantHeading(Vector2d(-35.25, -15.0), Math.toRadians(-90.0))
             .splineToConstantHeading(Vector2d(-35.25, -26.0), Math.toRadians(-90.0))
@@ -100,34 +101,36 @@ class LeftAuto : OpMode() {
             .build()
 
         val zoneTwoPath: TrajectorySequence = drive.trajectorySequenceBuilder(startPose)
-            .addDisplacementMarker { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.INTAKE) }
+            .addTemporalMarker(0.0) { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.INTAKE) }
             .waitSeconds(0.5)
-            .splineToConstantHeading(Vector2d(-35.25, -15.0), Math.toRadians(90.0))
-            .splineToConstantHeading(Vector2d(-23.5, -9.5), Math.toRadians(90.0))
-            .addDisplacementMarker { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.HIGH) }
-            .waitSeconds(3.0)
-            .addDisplacementMarker { intakeSubsystem.outtake() }
-            .waitSeconds(0.5)
-            .addDisplacementMarker { intakeSubsystem.stop() }
-            .addDisplacementMarker { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.GROUND) }
+            .splineToConstantHeading(Vector2d(-35.25, -17.0), Math.toRadians(90.0))
+            .splineToConstantHeading(Vector2d(-21.0, -11.5), Math.toRadians(90.0))
+            .waitSeconds(1.5)
+            .addTemporalMarker(3.5) { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.HIGH) }
+            .splineToConstantHeading(Vector2d(-21.0, -7.5), Math.toRadians(90.0))
+            .addTemporalMarker (6.0) { intakeSubsystem.outtake() }
+            .addTemporalMarker(6.5) { intakeSubsystem.stop() }
             .waitSeconds(1.0)
+            .splineToConstantHeading(Vector2d(-21.0, -11.5), Math.toRadians(90.0))
+            .addTemporalMarker(7.5) { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.GROUND) }
             .setReversed(true)
             .splineToConstantHeading(Vector2d(-35.25, -15.0), Math.toRadians(-90.0))
             .splineToSplineHeading(loc2, Math.toRadians(-90.0))
             .build()
 
         val zoneThreePath: TrajectorySequence = drive.trajectorySequenceBuilder(startPose)
-            .addDisplacementMarker { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.INTAKE) }
+            .addTemporalMarker(0.0) { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.INTAKE) }
             .waitSeconds(0.5)
-            .splineToConstantHeading(Vector2d(-35.25, -15.0), Math.toRadians(90.0))
-            .splineToConstantHeading(Vector2d(-23.5, -9.5), Math.toRadians(90.0))
-            .addDisplacementMarker { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.HIGH) }
-            .waitSeconds(3.0)
-            .addDisplacementMarker { intakeSubsystem.outtake() }
-            .waitSeconds(0.5)
-            .addDisplacementMarker { intakeSubsystem.stop() }
-            .addDisplacementMarker { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.GROUND) }
+            .splineToConstantHeading(Vector2d(-35.25, -17.0), Math.toRadians(90.0))
+            .splineToConstantHeading(Vector2d(-21.0, -11.5), Math.toRadians(90.0))
+            .waitSeconds(1.5)
+            .addTemporalMarker(3.5) { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.HIGH) }
+            .splineToConstantHeading(Vector2d(-21.0, -7.5), Math.toRadians(90.0))
+            .addTemporalMarker (6.0) { intakeSubsystem.outtake() }
+            .addTemporalMarker(6.5) { intakeSubsystem.stop() }
             .waitSeconds(1.0)
+            .splineToConstantHeading(Vector2d(-21.0, -11.5), Math.toRadians(90.0))
+            .addTemporalMarker(7.5) { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.GROUND) }
             .setReversed(true)
             .splineToConstantHeading(Vector2d(-11.75, -15.0), Math.toRadians(-90.0))
             .splineToSplineHeading(loc3, Math.toRadians(-90.0))
@@ -161,14 +164,14 @@ class LeftAuto : OpMode() {
     override fun loop() {
         drive.update()
 
-        if (!slidesSubsystem.atTargetPosition()) {
-            slidesSubsystem.operateSlides()
-        } else {
+        if (slidesSubsystem.atTargetPosition()) {
             if (slidesSubsystem.getTargetPosition() == SlidesConst.SlidesPosition.GROUND) {
                 slidesSubsystem.stop()
             } else {
                 slidesSubsystem.stall()
             }
+        } else {
+            slidesSubsystem.operateSlides()
         }
     }
 }
