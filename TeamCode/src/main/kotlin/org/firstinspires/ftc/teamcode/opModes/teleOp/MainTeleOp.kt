@@ -3,10 +3,6 @@ package org.firstinspires.ftc.teamcode.opModes.teleOp
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.arcrobotics.ftclib.command.CommandOpMode
-<<<<<<< HEAD
-import com.arcrobotics.ftclib.command.button.Trigger
-=======
->>>>>>> 9088d92f23d4e3ec58cd6cf9b09eb514eb717179
 import com.arcrobotics.ftclib.gamepad.GamepadEx
 import com.arcrobotics.ftclib.gamepad.GamepadKeys
 import com.arcrobotics.ftclib.hardware.motors.Motor
@@ -54,11 +50,6 @@ class MainTeleOp : CommandOpMode() {
     private lateinit var intakeCommand: IntakeCommand
     private lateinit var outtakeCommand: IntakeCommand
 
-<<<<<<< HEAD
-    // Gamepads
-    private lateinit var driver: GamepadEx
-    private lateinit var operator: GamepadEx
-
     // Custom Triggers
     private lateinit var joystickTrigger: JoystickTrigger
 
@@ -81,9 +72,6 @@ class MainTeleOp : CommandOpMode() {
         // Gamepads
         driver = GamepadEx(gamepad1)
         operator = GamepadEx(gamepad2)
-
-        // Triggers
-        heightTrigger = Trigger { operator.leftY != 0.0 }
 
         // Commands
         driveCommand = DriveCommand(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX, 0.15)
