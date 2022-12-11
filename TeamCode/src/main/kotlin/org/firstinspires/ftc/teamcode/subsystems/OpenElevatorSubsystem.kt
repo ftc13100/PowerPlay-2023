@@ -6,9 +6,15 @@ import com.arcrobotics.ftclib.hardware.motors.MotorGroup
 import com.qualcomm.robotcore.hardware.TouchSensor
 import org.firstinspires.ftc.robotcore.external.Telemetry
 
-class OpenElevatorSubsystem(leftMotor: Motor, rightMotor: Motor, private val limit: TouchSensor, val telemetry: Telemetry): SubsystemBase() {
+class OpenElevatorSubsystem(
+    leftMotor: Motor,
+    rightMotor: Motor,
+    private val limit: TouchSensor,
+    val telemetry: Telemetry
+) : SubsystemBase() {
     private val elevatorMotors = MotorGroup(leftMotor, rightMotor)
     private var maxVel = 0.0
+
     init {
         elevatorMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
     }
@@ -26,7 +32,9 @@ class OpenElevatorSubsystem(leftMotor: Motor, rightMotor: Motor, private val lim
 
     fun spinDown() = elevatorMotors.set(-1.0)
 
-    fun isPressed() : Boolean { return limit.isPressed }
+    fun isPressed(): Boolean {
+        return limit.isPressed
+    }
 
     fun stopSpin() = elevatorMotors.stopMotor()
 }

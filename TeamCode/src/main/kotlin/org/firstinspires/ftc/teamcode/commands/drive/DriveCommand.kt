@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.commands
+package org.firstinspires.ftc.teamcode.commands.drive
 
 import com.arcrobotics.ftclib.command.CommandBase
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem
@@ -24,5 +24,5 @@ class DriveCommand(
 
     private fun adjustedInput(input: DoubleSupplier): Double =
         if (abs(input.asDouble) < zoneVal) 0.0
-        else (sign(input.asDouble) * (abs(input.asDouble) - zoneVal)).pow(3.0)
+        else (sign(input.asDouble) * abs(input.asDouble)).pow(3.0)
 }

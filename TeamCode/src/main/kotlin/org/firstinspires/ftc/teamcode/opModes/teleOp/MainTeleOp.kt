@@ -8,29 +8,34 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.TouchSensor
-import org.firstinspires.ftc.teamcode.commands.DriveCommand
-import org.firstinspires.ftc.teamcode.commands.IntakeCommand
-import org.firstinspires.ftc.teamcode.commands.SlidesCommand
+import org.firstinspires.ftc.teamcode.commands.drive.DriveCommand
+import org.firstinspires.ftc.teamcode.commands.intake.IntakeCommand
+import org.firstinspires.ftc.teamcode.commands.slides.HeightCommand
+import org.firstinspires.ftc.teamcode.commands.slides.SlidesCommand
 import org.firstinspires.ftc.teamcode.constants.DeviceConfig
 import org.firstinspires.ftc.teamcode.constants.SlidesConst
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.SlidesSubsystem
+import org.firstinspires.ftc.teamcode.triggers.JoystickTrigger
 
 @TeleOp(name = "Main")
 class MainTeleOp : CommandOpMode() {
     // Hardware
     private lateinit var slidesLeft: Motor
     private lateinit var slidesRight: Motor
-    private lateinit var limit: TouchSensor
-
     private lateinit var intakeMotor: Motor
+    private lateinit var limit: TouchSensor
 
     // Subsystems
     private lateinit var driveSubsystem: DriveSubsystem
     private lateinit var slidesSubsystem: SlidesSubsystem
     private lateinit var intakeSubsystem: IntakeSubsystem
+
+    // Gamepads
+    private lateinit var driver: GamepadEx
+    private lateinit var operator: GamepadEx
 
     // Commands
     private lateinit var driveCommand: DriveCommand
@@ -40,13 +45,13 @@ class MainTeleOp : CommandOpMode() {
     private lateinit var slidesLowCommand: SlidesCommand
     private lateinit var slidesMidCommand: SlidesCommand
     private lateinit var slidesHighCommand: SlidesCommand
+    private lateinit var adjustHeightCommand: HeightCommand
 
     private lateinit var intakeCommand: IntakeCommand
     private lateinit var outtakeCommand: IntakeCommand
 
-    // Gamepads
-    private lateinit var driver: GamepadEx
-    private lateinit var operator: GamepadEx
+    // Custom Triggers
+    private lateinit var joystickTrigger: JoystickTrigger
 
     override fun initialize() {
         // Debug
@@ -60,7 +65,7 @@ class MainTeleOp : CommandOpMode() {
         intakeMotor = Motor(hardwareMap, DeviceConfig.INTAKE.deviceName)
 
         // Subsystems
-        driveSubsystem = DriveSubsystem(SampleMecanumDrive(hardwareMap), false)
+        driveSubsystem = DriveSubsystem(SampleMecanumDrive(hardwareMap), true)
         slidesSubsystem = SlidesSubsystem(slidesLeft, slidesRight, limit, telemetry)
         intakeSubsystem = IntakeSubsystem(intakeMotor)
 
@@ -77,8 +82,13 @@ class MainTeleOp : CommandOpMode() {
         slidesMidCommand = SlidesCommand(slidesSubsystem, SlidesConst.SlidesPosition.MIDDLE)
         slidesHighCommand = SlidesCommand(slidesSubsystem, SlidesConst.SlidesPosition.HIGH)
 
+        adjustHeightCommand = HeightCommand(slidesSubsystem, operator::getLeftY)
+
         intakeCommand = IntakeCommand(intakeSubsystem, true)
         outtakeCommand = IntakeCommand(intakeSubsystem, false)
+
+        // Custom Triggers
+        joystickTrigger = JoystickTrigger(operator::getLeftY)
 
         // Assign commands to gamepads
         driver.getGamepadButton(GamepadKeys.Button.X).whenPressed(slidesGroundCommand)
@@ -87,13 +97,15 @@ class MainTeleOp : CommandOpMode() {
         driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(intakeCommand)
         driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(intakeCommand)
 
-        operator.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(outtakeCommand)
-        operator.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(outtakeCommand)
-
-        operator.getGamepadButton(GamepadKeys.Button.X).whenPressed(slidesGroundCommand)
+        operator.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenPressed(slidesGroundCommand)
         operator.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(slidesLowCommand)
         operator.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(slidesMidCommand)
-        operator.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(slidesHighCommand)
+        operator.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(slidesHighCommand.withTimeout(3000))
+
+        operator.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(outtakeCommand)
+        operator.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(intakeCommand)
+
+        joystickTrigger.whenActive(adjustHeightCommand)
 
         // Register Subsystems
         register(driveSubsystem)

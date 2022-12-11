@@ -40,7 +40,8 @@ class AprilTagDetectionPipeline(// UNITS ARE METERS
     init {
         nativeApriltagPtr =
             AprilTagDetectorJNI.createApriltagDetector(
-                AprilTagDetectorJNI.TagFamily.TAG_standard41h12.string, 3f, 3)
+                AprilTagDetectorJNI.TagFamily.TAG_standard41h12.string, 3f, 3
+            )
     }
 
     fun finalize() {
@@ -63,7 +64,7 @@ class AprilTagDetectionPipeline(// UNITS ARE METERS
         return input
     }
 
-    fun getLatestResults(): ArrayList<AprilTagDetection> {
+    fun getLatestResults(): List<AprilTagDetection> {
         val results = ArrayList<AprilTagDetection>()
         results.addAll(latestDetections)
         return results

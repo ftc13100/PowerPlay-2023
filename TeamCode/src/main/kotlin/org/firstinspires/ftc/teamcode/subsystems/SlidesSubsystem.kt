@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.TouchSensor
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.teamcode.constants.SlidesConst
 
-//@Config
 class SlidesSubsystem(
     slidesLeft: Motor,
     slidesRight: Motor,
@@ -36,16 +35,20 @@ class SlidesSubsystem(
     }
 
     // Methods
-    fun setTargetPosition(targetPosition: SlidesConst.SlidesPosition) {
-        controller.setPoint = targetPosition.ticks
-        this.targetPosition = targetPosition
+    fun setTargetPosition(value: SlidesConst.SlidesPosition){
+        controller.setPoint = value.ticks
+        targetPosition = value
     }
+
+    fun getTargetPosition() = targetPosition
+
+    fun increaseTargetPosition(increase: Double) { controller.setPoint += increase }
 
     fun atTargetPosition() = controller.atSetPoint()
 
     fun operateSlides() {
-        var error = 0.0
-        if(targetPosition != SlidesConst.SlidesPosition.GROUND) {
+        var error = 0.005
+        if (targetPosition != SlidesConst.SlidesPosition.GROUND) {
             error = controller.calculate(slidesMotors.positions.first()) + SlidesConst.SlidesPID.G.coeff
         }
 

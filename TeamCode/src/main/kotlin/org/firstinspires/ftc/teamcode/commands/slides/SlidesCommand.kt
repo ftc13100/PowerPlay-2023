@@ -1,12 +1,13 @@
-package org.firstinspires.ftc.teamcode.commands
+package org.firstinspires.ftc.teamcode.commands.slides
 
-import android.transition.Slide
 import com.arcrobotics.ftclib.command.CommandBase
 import org.firstinspires.ftc.teamcode.constants.SlidesConst
 import org.firstinspires.ftc.teamcode.subsystems.SlidesSubsystem
 
-class SlidesCommand(private val subsystem: SlidesSubsystem, private val targetPos: SlidesConst.SlidesPosition) :
-    CommandBase() {
+class SlidesCommand(
+    private val subsystem: SlidesSubsystem,
+    private val targetPos: SlidesConst.SlidesPosition
+) : CommandBase() {
 
     init {
         addRequirements(subsystem)
@@ -22,11 +23,10 @@ class SlidesCommand(private val subsystem: SlidesSubsystem, private val targetPo
         } else {
             subsystem.atTargetPosition()
         }
-
     }
 
     override fun end(interrupted: Boolean) {
-        if(targetPos == SlidesConst.SlidesPosition.GROUND) {
+        if (targetPos == SlidesConst.SlidesPosition.GROUND) {
             subsystem.stop()
         } else {
             subsystem.stall()
