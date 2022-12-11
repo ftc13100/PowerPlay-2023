@@ -25,7 +25,7 @@ class DriveSubsystem(
     fun updatePoseEstimate() = drive.updatePoseEstimate()
 
     fun drive(leftY: Double, leftX: Double, rightX: Double) {
-        val (_, _, heading) = poseEstimate!!
+        val (_, _, heading) = poseEstimate
         val (x, y) = Vector2d(-leftY, -leftX).rotated(
             if (fieldCentric) -heading else 0.0
         )

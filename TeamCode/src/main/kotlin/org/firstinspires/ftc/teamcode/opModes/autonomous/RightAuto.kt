@@ -138,7 +138,7 @@ class RightAuto : OpMode() {
 
         // Vision detection
         var detectedTags: List<AprilTagDetection> = pipeline.getLatestResults()
-        for (i in 1..100000) {
+        for (i in 1..1_000_000) {
             if (detectedTags.isEmpty()) {
                 detectedTags = pipeline.getLatestResults()
             } else {
@@ -149,14 +149,22 @@ class RightAuto : OpMode() {
         // Vision-based path assignment
         val path = if (detectedTags.isNotEmpty()) {
             when (detectedTags[0].id) {
-                1213 -> zoneTwoPath
+                1021 -> zoneOnePath
                 302 -> zoneThreePath
-                // 1021 for Zone One
-                else -> zoneOnePath
+                // 1213 for Zone One
+                else -> zoneTwoPath
             }
         } else {
-            zoneOnePath
+            zoneTwoPath
         }
+
+        telemetry.addData("Path",
+            if(detectedTags.isNotEmpty())
+                detectedTags[0].id
+            else
+                "Empty"
+        )
+        telemetry.update()
 
         drive.followTrajectorySequenceAsync(path)
     }
