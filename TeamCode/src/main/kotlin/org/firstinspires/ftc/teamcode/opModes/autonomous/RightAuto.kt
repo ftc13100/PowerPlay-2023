@@ -151,7 +151,7 @@ class RightAuto : OpMode() {
             when (detectedTags[0].id) {
                 1021 -> zoneOnePath
                 302 -> zoneThreePath
-                // 1213 for Zone One
+                // 1213 for Zone Two
                 else -> zoneTwoPath
             }
         } else {
