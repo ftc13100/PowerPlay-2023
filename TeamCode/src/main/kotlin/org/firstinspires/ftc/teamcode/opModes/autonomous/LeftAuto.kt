@@ -40,6 +40,14 @@ class LeftAuto : OpMode() {
     private lateinit var intakeSubsystem: IntakeSubsystem
     private lateinit var drive: SampleMecanumDrive
 
+    // Paths
+    private lateinit var zoneOnePath: TrajectorySequence
+    private lateinit var zoneTwoPath: TrajectorySequence
+    private lateinit var zoneThreePath: TrajectorySequence
+
+    private lateinit var detectedTags: List<AprilTagDetection>
+    private lateinit var pipeline: AprilTagDetectionPipeline
+
     @SuppressLint("DiscouragedApi")
     override fun init() {
         // Vision Init
@@ -50,7 +58,7 @@ class LeftAuto : OpMode() {
         )
         val webcamName: WebcamName = hardwareMap.get(WebcamName::class.java, DeviceConfig.VISION_CAMERA.deviceName)
         val camera: OpenCvCamera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, monitorId)
-        val pipeline = AprilTagDetectionPipeline(
+        pipeline = AprilTagDetectionPipeline(
             AprilTagCamera.TAGSIZE.value,
             AprilTagCamera.FX.value,
             AprilTagCamera.FY.value,
@@ -81,84 +89,83 @@ class LeftAuto : OpMode() {
         drive.poseEstimate = startPose
 
         // Paths
-        val zoneOnePath: TrajectorySequence = drive.trajectorySequenceBuilder(startPose)
-//            .addDisplacementMarker { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.INTAKE) }
+        zoneOnePath = drive.trajectorySequenceBuilder(startPose)
             .addTemporalMarker(0.0) { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.INTAKE) }
             .waitSeconds(0.5)
-            .splineToConstantHeading(Vector2d(-35.25, -17.0), Math.toRadians(90.0))
+            .splineToConstantHeading(Vector2d(-35.25, -16.0), Math.toRadians(90.0))
             .splineToConstantHeading(Vector2d(-21.0, -11.5), Math.toRadians(90.0))
             .waitSeconds(1.5)
             .addTemporalMarker(3.5) { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.HIGH) }
             .splineToConstantHeading(Vector2d(-21.0, -7.5), Math.toRadians(90.0))
-            .addTemporalMarker (6.0) { intakeSubsystem.outtake() }
+            .addTemporalMarker(6.0) { intakeSubsystem.outtake() }
             .addTemporalMarker(6.5) { intakeSubsystem.stop() }
             .waitSeconds(1.0)
             .splineToConstantHeading(Vector2d(-21.0, -11.5), Math.toRadians(90.0))
             .addTemporalMarker(7.5) { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.GROUND) }
+            .waitSeconds(3.0)
             .setReversed(true)
             .splineToConstantHeading(Vector2d(-35.25, -15.0), Math.toRadians(-90.0))
             .splineToConstantHeading(Vector2d(-35.25, -26.0), Math.toRadians(-90.0))
             .splineToSplineHeading(loc1, Math.toRadians(180.0))
             .build()
 
-        val zoneTwoPath: TrajectorySequence = drive.trajectorySequenceBuilder(startPose)
-//            .addDisplacementMarker { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.INTAKE) }
+        zoneTwoPath = drive.trajectorySequenceBuilder(startPose)
             .addTemporalMarker(0.0) { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.INTAKE) }
             .waitSeconds(0.5)
-            .splineToConstantHeading(Vector2d(-35.25, -17.0), Math.toRadians(90.0))
+            .splineToConstantHeading(Vector2d(-35.25, -16.0), Math.toRadians(90.0))
             .splineToConstantHeading(Vector2d(-21.0, -11.5), Math.toRadians(90.0))
             .waitSeconds(1.5)
             .addTemporalMarker(3.5) { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.HIGH) }
             .splineToConstantHeading(Vector2d(-21.0, -7.5), Math.toRadians(90.0))
-            .addTemporalMarker (6.0) { intakeSubsystem.outtake() }
+            .addTemporalMarker(6.0) { intakeSubsystem.outtake() }
             .addTemporalMarker(6.5) { intakeSubsystem.stop() }
             .waitSeconds(1.0)
             .splineToConstantHeading(Vector2d(-21.0, -11.5), Math.toRadians(90.0))
             .addTemporalMarker(7.5) { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.GROUND) }
+            .waitSeconds(3.0)
             .setReversed(true)
-            .splineToConstantHeading(Vector2d(-35.25, -15.0), Math.toRadians(-90.0))
+            .splineToConstantHeading(Vector2d(-35.25, -16.0), Math.toRadians(-90.0))
             .splineToSplineHeading(loc2, Math.toRadians(-90.0))
             .build()
 
-        val zoneThreePath: TrajectorySequence = drive.trajectorySequenceBuilder(startPose)
-//            .addDisplacementMarker { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.INTAKE) }
+        zoneThreePath = drive.trajectorySequenceBuilder(startPose)
             .addTemporalMarker(0.0) { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.INTAKE) }
             .waitSeconds(0.5)
-            .splineToConstantHeading(Vector2d(-35.25, -17.0), Math.toRadians(90.0))
+            .splineToConstantHeading(Vector2d(-35.25, -16.0), Math.toRadians(90.0))
             .splineToConstantHeading(Vector2d(-21.0, -11.5), Math.toRadians(90.0))
             .waitSeconds(1.5)
             .addTemporalMarker(3.5) { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.HIGH) }
             .splineToConstantHeading(Vector2d(-21.0, -7.5), Math.toRadians(90.0))
-            .addTemporalMarker (6.0) { intakeSubsystem.outtake() }
+            .addTemporalMarker(6.0) { intakeSubsystem.outtake() }
             .addTemporalMarker(6.5) { intakeSubsystem.stop() }
             .waitSeconds(1.0)
             .splineToConstantHeading(Vector2d(-21.0, -11.5), Math.toRadians(90.0))
             .addTemporalMarker(7.5) { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.GROUND) }
+            .waitSeconds(3.0)
             .setReversed(true)
             .splineToConstantHeading(Vector2d(-11.75, -15.0), Math.toRadians(-90.0))
             .splineToSplineHeading(loc3, Math.toRadians(-90.0))
             .build()
 
         // Vision detection
-        var detectedTags: List<AprilTagDetection> = pipeline.getLatestResults()
-        for (i in 1..1_000_000) {
-            if (detectedTags.isEmpty()) {
-                detectedTags = pipeline.getLatestResults()
-            } else {
-                break
-            }
-        }
+        detectedTags = pipeline.getLatestResults()
+    }
 
+    override fun init_loop() {
+        detectedTags = pipeline.getLatestResults()
+    }
+
+    override fun start() {
         // Vision-based path assignment
         val path = if (detectedTags.isNotEmpty()) {
             when (detectedTags[0].id) {
-                1021 -> zoneOnePath
+                1213 -> zoneTwoPath
                 302 -> zoneThreePath
-                // 1213 for Zone Two
-                else -> zoneTwoPath
+                // 1021 for Zone One
+                else -> zoneOnePath
             }
         } else {
-            zoneTwoPath
+            zoneOnePath
         }
 
         drive.followTrajectorySequenceAsync(path)
@@ -166,6 +173,7 @@ class LeftAuto : OpMode() {
 
     override fun loop() {
         drive.update()
+
         if (slidesSubsystem.atTargetPosition()) {
             if (slidesSubsystem.getTargetPosition() == SlidesConst.SlidesPosition.GROUND) {
                 slidesSubsystem.stop()
