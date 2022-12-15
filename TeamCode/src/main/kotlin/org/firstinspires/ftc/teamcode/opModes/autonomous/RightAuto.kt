@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.acmerobotics.roadrunner.geometry.Vector2d
 import com.arcrobotics.ftclib.hardware.motors.Motor
+import com.arcrobotics.ftclib.hardware.motors.MotorEx
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.hardware.TouchSensor
@@ -32,7 +33,7 @@ class RightAuto : OpMode() {
     // Hardware
     private lateinit var slidesLeft: Motor
     private lateinit var slidesRight: Motor
-    private lateinit var intake: Motor
+    private lateinit var intake: MotorEx
     private lateinit var limit: TouchSensor
 
     // Subsystems
@@ -81,7 +82,7 @@ class RightAuto : OpMode() {
         drive = SampleMecanumDrive(hardwareMap)
         slidesLeft = Motor(hardwareMap, DeviceConfig.SLIDES_LEFT.deviceName)
         slidesRight = Motor(hardwareMap, DeviceConfig.SLIDES_RIGHT.deviceName)
-        intake = Motor(hardwareMap, DeviceConfig.INTAKE.deviceName)
+        intake = MotorEx(hardwareMap, DeviceConfig.INTAKE.deviceName)
         limit = hardwareMap.get(TouchSensor::class.java, DeviceConfig.SLIDES_LIMIT.deviceName)
 
         slidesSubsystem = SlidesSubsystem(slidesLeft, slidesRight, limit, telemetry)

@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.command.CommandOpMode
 import com.arcrobotics.ftclib.gamepad.GamepadEx
 import com.arcrobotics.ftclib.gamepad.GamepadKeys
 import com.arcrobotics.ftclib.hardware.motors.Motor
+import com.arcrobotics.ftclib.hardware.motors.MotorEx
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.TouchSensor
 import org.firstinspires.ftc.teamcode.commands.drive.DriveCommand
@@ -25,7 +26,7 @@ class MainTeleOp : CommandOpMode() {
     // Hardware
     private lateinit var slidesLeft: Motor
     private lateinit var slidesRight: Motor
-    private lateinit var intakeMotor: Motor
+    private lateinit var intakeMotor: MotorEx
     private lateinit var limit: TouchSensor
 
     // Subsystems
@@ -62,7 +63,7 @@ class MainTeleOp : CommandOpMode() {
         slidesRight = Motor(hardwareMap, DeviceConfig.SLIDES_RIGHT.deviceName)
         limit = hardwareMap.get(TouchSensor::class.java, DeviceConfig.SLIDES_LIMIT.deviceName)
 
-        intakeMotor = Motor(hardwareMap, DeviceConfig.INTAKE.deviceName)
+        intakeMotor = MotorEx(hardwareMap, DeviceConfig.INTAKE.deviceName)
 
         // Subsystems
         driveSubsystem = DriveSubsystem(SampleMecanumDrive(hardwareMap), true)

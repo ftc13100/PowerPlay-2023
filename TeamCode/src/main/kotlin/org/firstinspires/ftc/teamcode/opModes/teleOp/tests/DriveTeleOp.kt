@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.opModes.teleOp.tests
 import com.arcrobotics.ftclib.command.CommandOpMode
 import com.arcrobotics.ftclib.gamepad.GamepadEx
 import com.arcrobotics.ftclib.gamepad.GamepadKeys
-import com.arcrobotics.ftclib.hardware.motors.Motor
+import com.arcrobotics.ftclib.hardware.motors.MotorEx
 import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.commands.drive.DriveCommand
@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem
 @TeleOp(name = "Drive w/ Intake ", group = "Test")
 class DriveTeleOp : CommandOpMode() {
     override fun initialize() {
-        val intakeMotor = Motor(hardwareMap, INTAKE.deviceName)
+        val intakeMotor = MotorEx(hardwareMap, INTAKE.deviceName)
 
         val intakeSubsystem = IntakeSubsystem(intakeMotor)
         val driveSubsystem = DriveSubsystem(SampleMecanumDrive(hardwareMap), false)
