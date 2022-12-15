@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems
 
 import com.arcrobotics.ftclib.command.SubsystemBase
+import com.arcrobotics.ftclib.controller.PIDController
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
 import com.qualcomm.robotcore.hardware.TouchSensor
@@ -17,7 +18,7 @@ class SlidesSubsystem(
     private val slidesMotors = MotorGroup(slidesLeft, slidesRight)
 
     // Controllers
-    private val controller = com.arcrobotics.ftclib.controller.PIDController(
+    private val controller = PIDController(
         SlidesConst.SlidesPID.P.coeff,
         SlidesConst.SlidesPID.I.coeff,
         SlidesConst.SlidesPID.D.coeff,
