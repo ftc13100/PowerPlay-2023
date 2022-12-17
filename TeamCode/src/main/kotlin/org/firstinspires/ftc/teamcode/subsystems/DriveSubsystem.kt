@@ -15,9 +15,9 @@ class DriveSubsystem(
     private val drive: SampleMecanumDrive,
     private val fieldCentric: Boolean
 ) : SubsystemBase() {
-    fun setMode(mode: DcMotor.RunMode?) = drive.setMode(mode)
+    fun setMode(mode: DcMotor.RunMode) = drive.setMode(mode)
 
-    fun setPIDFCoefficients(mode: DcMotor.RunMode?, coefficients: PIDFCoefficients?) =
+    fun setPIDFCoefficients(mode: DcMotor.RunMode, coefficients: PIDFCoefficients) =
         drive.setPIDFCoefficients(mode, coefficients)
 
     fun update() = drive.update()
@@ -40,7 +40,7 @@ class DriveSubsystem(
 
     fun turn(radians: Double) = drive.turnAsync(radians)
 
-    fun setDrivePower(drivePower: Pose2d?) = drive.setDrivePower(drivePower!!)
+    fun setDrivePower(drivePower: Pose2d) = drive.setDrivePower(drivePower)
 
     var poseEstimate: Pose2d
         get() = drive.poseEstimate
@@ -48,31 +48,31 @@ class DriveSubsystem(
             drive.poseEstimate = pose
         }
 
-    fun trajectoryBuilder(startPose: Pose2d?): TrajectoryBuilder =
+    fun trajectoryBuilder(startPose: Pose2d): TrajectoryBuilder =
         drive.trajectoryBuilder(startPose)
 
-    fun trajectoryBuilder(startPose: Pose2d?, reversed: Boolean): TrajectoryBuilder =
+    fun trajectoryBuilder(startPose: Pose2d, reversed: Boolean): TrajectoryBuilder =
         drive.trajectoryBuilder(startPose, reversed)
 
-    fun trajectoryBuilder(startPose: Pose2d?, startHeading: Double): TrajectoryBuilder =
+    fun trajectoryBuilder(startPose: Pose2d, startHeading: Double): TrajectoryBuilder =
         drive.trajectoryBuilder(startPose, startHeading)
 
-    fun followTrajectory(trajectory: Trajectory?) = drive.followTrajectoryAsync(trajectory)
+    fun followTrajectory(trajectory: Trajectory) = drive.followTrajectoryAsync(trajectory)
 
     fun trajectorySequenceBuilder(startPose: Pose2d): TrajectorySequenceBuilder =
         drive.trajectorySequenceBuilder(startPose)
 
     fun stop() = drive(0.0, 0.0, 0.0)
 
-    val isBusy: Boolean
+    val isBusy
         get() = drive.isBusy
 
-    val wheelVelocities: List<Double>?
+    val wheelVelocities
         get() = drive.getWheelVelocities()
 
-    val poseVelocity: Pose2d?
+    val poseVelocity
         get() = drive.poseVelocity
 
-    val localizer: Localizer
+    val localizer
         get() = drive.localizer
 }

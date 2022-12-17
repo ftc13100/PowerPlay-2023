@@ -28,8 +28,10 @@ class VisionTeleOp : LinearOpMode() {
             "id",
             hardwareMap.appContext.packageName
         )
-        val webcamName: WebcamName = hardwareMap.get(WebcamName::class.java, DeviceConfig.VISION_CAMERA.deviceName)
-        val camera: OpenCvCamera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, monitorId)
+        val webcamName: WebcamName =
+            hardwareMap.get(WebcamName::class.java, DeviceConfig.VISION_CAMERA.deviceName)
+        val camera: OpenCvCamera =
+            OpenCvCameraFactory.getInstance().createWebcam(webcamName, monitorId)
         val pipeline = AprilTagDetectionPipeline(
             AprilTagCamera.TAGSIZE.value,
             AprilTagCamera.FX.value,

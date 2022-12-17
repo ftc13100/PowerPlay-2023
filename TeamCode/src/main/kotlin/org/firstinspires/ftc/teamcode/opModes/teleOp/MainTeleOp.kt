@@ -75,7 +75,11 @@ class MainTeleOp : CommandOpMode() {
         operator = GamepadEx(gamepad2)
 
         // Commands
-        driveCommand = DriveCommand(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX, 0.15)
+        driveCommand = DriveCommand(driveSubsystem,
+            driver::getLeftX,
+            driver::getLeftY,
+            driver::getRightX,
+            0.15)
 
         slidesGroundCommand = SlidesCommand(slidesSubsystem, SlidesConst.SlidesPosition.GROUND)
         slidesIntakeCommand = SlidesCommand(slidesSubsystem, SlidesConst.SlidesPosition.INTAKE)
@@ -101,7 +105,8 @@ class MainTeleOp : CommandOpMode() {
         operator.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenPressed(slidesGroundCommand)
         operator.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(slidesLowCommand)
         operator.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(slidesMidCommand)
-        operator.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(slidesHighCommand.withTimeout(3000))
+        operator.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+            .whenPressed(slidesHighCommand.withTimeout(3000))
 
         operator.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(outtakeCommand)
         operator.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(intakeCommand)

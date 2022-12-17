@@ -2,11 +2,12 @@ package org.firstinspires.ftc.teamcode.subsystems
 
 import com.arcrobotics.ftclib.command.SubsystemBase
 import com.arcrobotics.ftclib.hardware.motors.MotorEx
+import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit
+import org.firstinspires.ftc.teamcode.constants.DeviceConfig
 
 
-class IntakeSubsystem(private val intake: MotorEx) : SubsystemBase() {
-
+class IntakeSubsystem(private val intake: MotorEx): SubsystemBase() {
     val current
         get() = intake.motorEx.getCurrent(CurrentUnit.AMPS)
 

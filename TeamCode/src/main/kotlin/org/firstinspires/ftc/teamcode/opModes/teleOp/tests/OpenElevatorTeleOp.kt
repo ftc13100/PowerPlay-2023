@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.subsystems.OpenElevatorSubsystem
 
 @Disabled
 @TeleOp(name = "Open Loop Elevator Test")
-class OpenElevatorTeleOp: CommandOpMode() {
+class OpenElevatorTeleOp : CommandOpMode() {
     override fun initialize() {
         val leftMotor = Motor(hardwareMap, SLIDES_LEFT.deviceName)
         val rightMotor = Motor(hardwareMap, SLIDES_RIGHT.deviceName)

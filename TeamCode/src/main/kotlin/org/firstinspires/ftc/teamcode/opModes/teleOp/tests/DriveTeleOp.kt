@@ -27,7 +27,11 @@ class DriveTeleOp : CommandOpMode() {
 
         val driver = GamepadEx(gamepad1)
 
-        val driveCommand = DriveCommand(driveSubsystem, driver::getLeftX, driver::getLeftY, driver::getRightX, 0.15)
+        val driveCommand = DriveCommand(driveSubsystem,
+            driver::getLeftX,
+            driver::getLeftY,
+            driver::getRightX,
+            0.15)
         driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(intakeCommand)
         driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(outtakeCommand)
 

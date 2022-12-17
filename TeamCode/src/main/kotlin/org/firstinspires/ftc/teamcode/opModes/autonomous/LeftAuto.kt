@@ -16,11 +16,12 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.SlidesSubsystem
+import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.vision.pipelines.AprilTagDetectionPipeline
+import org.firstinspires.ftc.teamcode.subsystems.vision.pipelines.PipelineParent
 import org.openftc.apriltag.AprilTagDetection
 import org.openftc.easyopencv.OpenCvCamera
 import org.openftc.easyopencv.OpenCvCameraFactory
-import org.openftc.easyopencv.OpenCvCameraRotation
 
 @Autonomous(name = "Left Auto")
 class LeftAuto : OpMode() {
@@ -57,8 +58,10 @@ class LeftAuto : OpMode() {
             "id",
             hardwareMap.appContext.packageName
         )
-        val webcamName: WebcamName = hardwareMap.get(WebcamName::class.java, DeviceConfig.VISION_CAMERA.deviceName)
-        val camera: OpenCvCamera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, monitorId)
+        val webcamName: WebcamName =
+            hardwareMap.get(WebcamName::class.java, DeviceConfig.VISION_CAMERA.deviceName)
+        val camera: OpenCvCamera =
+            OpenCvCameraFactory.getInstance().createWebcam(webcamName, monitorId)
         pipeline = AprilTagDetectionPipeline(
             AprilTagCamera.TAGSIZE.value,
             AprilTagCamera.FX.value,
@@ -66,17 +69,6 @@ class LeftAuto : OpMode() {
             AprilTagCamera.CX.value,
             AprilTagCamera.CY.value
         )
-
-        camera.setPipeline(pipeline)
-
-        camera.openCameraDeviceAsync(object : OpenCvCamera.AsyncCameraOpenListener {
-            override fun onOpened() {
-                camera.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT)
-            }
-
-            override fun onError(errorCode: Int) {
-            }
-        })
 
         // Hardware Init
         drive = SampleMecanumDrive(hardwareMap)

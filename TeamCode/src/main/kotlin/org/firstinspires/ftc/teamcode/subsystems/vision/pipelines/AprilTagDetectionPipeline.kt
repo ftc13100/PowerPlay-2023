@@ -32,7 +32,7 @@ class AprilTagDetectionPipeline(// UNITS ARE METERS
     private val fy: Double,
     private val cx: Double,
     private val cy: Double
-) : OpenCvPipeline() {
+) : PipelineParent<AprilTagDetection>() {
     private var nativeApriltagPtr: Long
     private val gray = Mat()
     private var latestDetections = ArrayList<AprilTagDetection>()
@@ -64,7 +64,7 @@ class AprilTagDetectionPipeline(// UNITS ARE METERS
         return input
     }
 
-    fun getLatestResults(): List<AprilTagDetection> {
+    override fun getLatestResults(): List<AprilTagDetection> {
         val results = ArrayList<AprilTagDetection>()
         results.addAll(latestDetections)
         return results
