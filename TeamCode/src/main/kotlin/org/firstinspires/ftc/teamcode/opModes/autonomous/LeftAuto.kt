@@ -146,13 +146,24 @@ class LeftAuto : OpMode() {
             .splineToConstantHeading(Vector2d(-11.75, -15.0), Math.toRadians(-90.0))
             .splineToSplineHeading(loc3, Math.toRadians(-90.0))
             .build()
-
-        // Vision detection
-        detectedTags = pipeline.getLatestResults()
     }
 
     override fun init_loop() {
+        // Vision detection
         detectedTags = pipeline.getLatestResults()
+
+        telemetry.addData(
+            "Target Zone:",
+            if(detectedTags.isEmpty())
+                "Unknown"
+            else when(detectedTags[0].id) {
+                1021 -> "Zone 1"
+                1213 -> "Zone 2"
+                302 -> "Zone 3"
+                else -> "Unknown"
+            }
+        )
+        telemetry.update()
     }
 
     override fun start() {
