@@ -26,7 +26,8 @@ import org.openftc.apriltag.AprilTagDetection
 import org.openftc.apriltag.AprilTagDetectorJNI
 import org.openftc.easyopencv.OpenCvPipeline
 
-class AprilTagDetectionPipeline(// UNITS ARE METERS
+class AprilTagDetectionPipeline(
+    // UNITS ARE METERS
     private val tagsize: Double,
     private val fx: Double,
     private val fy: Double,
