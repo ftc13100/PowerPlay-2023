@@ -60,8 +60,7 @@ class LeftAuto : OpMode() {
         )
         val webcamName: WebcamName =
             hardwareMap.get(WebcamName::class.java, DeviceConfig.VISION_CAMERA.deviceName)
-        val camera: OpenCvCamera =
-            OpenCvCameraFactory.getInstance().createWebcam(webcamName, monitorId)
+        OpenCvCameraFactory.getInstance().createWebcam(webcamName, monitorId)
         pipeline = AprilTagDetectionPipeline(
             AprilTagCamera.TAGSIZE.value,
             AprilTagCamera.FX.value,
