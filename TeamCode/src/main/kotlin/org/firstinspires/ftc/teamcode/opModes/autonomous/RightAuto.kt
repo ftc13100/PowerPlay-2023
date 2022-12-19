@@ -90,18 +90,18 @@ class RightAuto : OpMode() {
 
         // Paths
         zoneOnePath = drive.trajectorySequenceBuilder(startPose)
-            .addTemporalMarker(0.0) { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.INTAKE) }
+            .addTemporalMarker(0.0) { slidesSubsystem.setGoal(SlidesConst.SlidesPosition.INTAKE) }
             .waitSeconds(0.5)
             .splineToConstantHeading(Vector2d(35.25, -16.0), Math.toRadians(90.0))
             .splineToConstantHeading(Vector2d(21.0, -11.5), Math.toRadians(90.0))
             .waitSeconds(1.5)
-            .addTemporalMarker(3.5) { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.HIGH) }
+            .addTemporalMarker(3.5) { slidesSubsystem.setGoal(SlidesConst.SlidesPosition.HIGH) }
             .splineToConstantHeading(Vector2d(21.0, -7.5), Math.toRadians(90.0))
             .addTemporalMarker(6.0) { intakeSubsystem.outtake() }
             .addTemporalMarker(6.5) { intakeSubsystem.stop() }
             .waitSeconds(1.0)
             .splineToConstantHeading(Vector2d(21.0, -11.5), Math.toRadians(90.0))
-            .addTemporalMarker(7.5) { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.GROUND) }
+            .addTemporalMarker(7.5) { slidesSubsystem.setGoal(SlidesConst.SlidesPosition.GROUND) }
             .waitSeconds(3.0)
             .setReversed(true)
             .splineToConstantHeading(Vector2d(11.75, -15.0), Math.toRadians(-90.0))
@@ -109,18 +109,18 @@ class RightAuto : OpMode() {
             .build()
 
         zoneTwoPath = drive.trajectorySequenceBuilder(startPose)
-            .addTemporalMarker(0.0) { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.INTAKE) }
+            .addTemporalMarker(0.0) { slidesSubsystem.setGoal(SlidesConst.SlidesPosition.INTAKE) }
             .waitSeconds(0.5)
             .splineToConstantHeading(Vector2d(35.25, -16.0), Math.toRadians(90.0))
             .splineToConstantHeading(Vector2d(21.0, -11.5), Math.toRadians(90.0))
             .waitSeconds(1.5)
-            .addTemporalMarker(3.5) { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.HIGH) }
+            .addTemporalMarker(3.5) { slidesSubsystem.setGoal(SlidesConst.SlidesPosition.HIGH) }
             .splineToConstantHeading(Vector2d(21.0, -7.5), Math.toRadians(90.0))
             .addTemporalMarker(6.0) { intakeSubsystem.outtake() }
             .addTemporalMarker(6.5) { intakeSubsystem.stop() }
             .waitSeconds(1.0)
             .splineToConstantHeading(Vector2d(21.0, -11.5), Math.toRadians(90.0))
-            .addTemporalMarker(7.5) { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.GROUND) }
+            .addTemporalMarker(7.5) { slidesSubsystem.setGoal(SlidesConst.SlidesPosition.GROUND) }
             .waitSeconds(3.0)
             .setReversed(true)
             .splineToConstantHeading(Vector2d(35.25, -15.0), Math.toRadians(-90.0))
@@ -128,18 +128,18 @@ class RightAuto : OpMode() {
             .build()
 
         zoneThreePath = drive.trajectorySequenceBuilder(startPose)
-            .addTemporalMarker(0.0) { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.INTAKE) }
+            .addTemporalMarker(0.0) { slidesSubsystem.setGoal(SlidesConst.SlidesPosition.INTAKE) }
             .waitSeconds(0.5)
             .splineToConstantHeading(Vector2d(35.25, -16.0), Math.toRadians(90.0))
             .splineToConstantHeading(Vector2d(21.0, -11.5), Math.toRadians(90.0))
             .waitSeconds(1.5)
-            .addTemporalMarker(3.5) { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.HIGH) }
+            .addTemporalMarker(3.5) { slidesSubsystem.setGoal(SlidesConst.SlidesPosition.HIGH) }
             .splineToConstantHeading(Vector2d(21.0, -7.5), Math.toRadians(90.0))
             .addTemporalMarker(6.0) { intakeSubsystem.outtake() }
             .addTemporalMarker(6.5) { intakeSubsystem.stop() }
             .waitSeconds(1.0)
             .splineToConstantHeading(Vector2d(21.0, -11.5), Math.toRadians(90.0))
-            .addTemporalMarker(7.5) { slidesSubsystem.setTargetPosition(SlidesConst.SlidesPosition.GROUND) }
+            .addTemporalMarker(7.5) { slidesSubsystem.setGoal(SlidesConst.SlidesPosition.GROUND) }
             .waitSeconds(3.0)
             .setReversed(true)
             .splineToConstantHeading(Vector2d(35.25, -15.0), Math.toRadians(-90.0))
@@ -174,12 +174,8 @@ class RightAuto : OpMode() {
     override fun loop() {
         drive.update()
 
-        if (slidesSubsystem.atTargetPosition()) {
-            if (slidesSubsystem.getTargetPosition() == SlidesConst.SlidesPosition.GROUND) {
-                slidesSubsystem.stop()
-            } else {
-                slidesSubsystem.stall()
-            }
+        if (slidesSubsystem.atGoal()) {
+            slidesSubsystem.stop()
         } else {
             slidesSubsystem.operateSlides()
         }
