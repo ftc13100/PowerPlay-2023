@@ -65,4 +65,9 @@ class SlidesSubsystem(
     }
 
     fun isPressed() = limit.isPressed
+
+    // For tuning purposes ONLY
+    fun spin() = slidesMotors.set(1.0)
+
+    fun getVelocity() = slidesMotors.velocities.first()
 }
