@@ -43,10 +43,7 @@ class SlidesSubsystem(
     fun atGoal() = controller.atGoal()
 
     fun operateSlides() {
-        var error = 0.005
-        if (targetPosition != SlidesConst.SlidesPosition.GROUND) {
-            error = controller.calculate(slidesMotors.positions.first()) + SlidesConst.SlidesPID.G.coeff
-        }
+        val error = controller.calculate(slidesMotors.positions.first()) + SlidesConst.SlidesPID.G.coeff
 
         telemetry.addData("Current Position", slidesMotors.positions.first())
         telemetry.addData("Target Position", controller.setpoint.position)
