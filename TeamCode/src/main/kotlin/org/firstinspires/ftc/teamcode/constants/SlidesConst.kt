@@ -15,4 +15,9 @@ class SlidesConst {
         D(0.0),
         G(0.2)
     }
+
+    enum class SlidesProfile(val coeff: Double) {
+        kV(0.0),
+        kA(0.0)
+    }
 }

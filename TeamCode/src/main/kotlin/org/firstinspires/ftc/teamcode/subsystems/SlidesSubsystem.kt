@@ -17,10 +17,14 @@ class SlidesSubsystem(
     private val slidesMotors = MotorGroup(slidesLeft, slidesRight)
 
     // Controllers
-    private val controller = com.arcrobotics.ftclib.controller.PIDController(
+    private val controller = ProfiledPIDController(
         SlidesConst.SlidesPID.P.coeff,
         SlidesConst.SlidesPID.I.coeff,
         SlidesConst.SlidesPID.D.coeff,
+        TrapezoidProfile.Constraints(
+            SlidesConst.SlidesProfile.kV.coeff,
+            SlidesConst.SlidesProfile.kA.coeff
+        )
     )
 
     // Status
@@ -31,7 +35,7 @@ class SlidesSubsystem(
         slidesRight.inverted = true
         slidesMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
         slidesMotors.resetEncoder()
-        controller.setPoint = slidesMotors.positions.first()
+        controller.setGoal(slidesMotors.positions.first())
     }
 
     // Methods
@@ -42,9 +46,7 @@ class SlidesSubsystem(
 
     fun getTargetPosition() = targetPosition
 
-    fun increaseTargetPosition(increase: Double) { controller.setPoint += increase }
-
-    fun atTargetPosition() = controller.atSetPoint()
+    fun atGoal() = controller.atGoal()
 
     fun operateSlides() {
         var error = 0.005
@@ -53,8 +55,9 @@ class SlidesSubsystem(
         }
 
         telemetry.addData("Current Position", slidesMotors.positions.first())
-        telemetry.addData("Target Position", targetPosition.ticks)
-        telemetry.addData("Error", error)
+        telemetry.addData("Target Position", controller.setpoint.position)
+        telemetry.addData("Goal Position", controller.goal.position)
+        telemetry.addData("Motor Power", error)
         telemetry.update()
 
         slidesMotors.set(error)
