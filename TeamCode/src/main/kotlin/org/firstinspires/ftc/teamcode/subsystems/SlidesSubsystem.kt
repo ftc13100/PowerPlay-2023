@@ -27,9 +27,6 @@ class SlidesSubsystem(
         )
     )
 
-    // Status
-    private var targetPosition = SlidesConst.SlidesPosition.GROUND
-
     // Initialization
     init {
         slidesRight.inverted = true
@@ -39,12 +36,9 @@ class SlidesSubsystem(
     }
 
     // Methods
-    fun setTargetPosition(value: SlidesConst.SlidesPosition){
-        controller.setPoint = value.ticks
-        targetPosition = value
-    }
+    fun setGoal(position: SlidesConst.SlidesPosition) = controller.setGoal(position.ticks)
 
-    fun getTargetPosition() = targetPosition
+    fun increaseTargetPosition(increase: Double) = controller.setGoal(controller.goal.position + increase)
 
     fun atGoal() = controller.atGoal()
 
