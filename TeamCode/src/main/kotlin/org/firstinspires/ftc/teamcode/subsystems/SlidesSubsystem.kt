@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.subsystems
 
 import com.arcrobotics.ftclib.command.SubsystemBase
+import com.arcrobotics.ftclib.controller.wpilibcontroller.ProfiledPIDController
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
+import com.arcrobotics.ftclib.trajectory.TrapezoidProfile
 import com.qualcomm.robotcore.hardware.TouchSensor
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.teamcode.constants.SlidesConst
@@ -54,9 +56,13 @@ class SlidesSubsystem(
         slidesMotors.set(error)
     }
 
-    fun stall() = slidesMotors.set(SlidesConst.SlidesPID.G.coeff)
-
-    fun stop() = slidesMotors.stopMotor()
+    fun stop() {
+        if(controller.goal.position < 20) {
+            slidesMotors.stopMotor()
+        } else {
+            slidesMotors.set(SlidesConst.SlidesPID.G.coeff)
+        }
+    }
 
     fun isPressed() = limit.isPressed
 }
