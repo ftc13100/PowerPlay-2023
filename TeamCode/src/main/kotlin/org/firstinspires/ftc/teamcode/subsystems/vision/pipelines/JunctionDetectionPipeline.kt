@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems.vision.pipelines
 
-import com.acmerobotics.dashboard.config.Config
 import org.opencv.core.*
 import org.opencv.imgproc.Imgproc
 import org.openftc.easyopencv.OpenCvPipeline
