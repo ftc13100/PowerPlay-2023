@@ -30,7 +30,11 @@ class OpenElevatorSubsystem(
 
     fun getPosition(): Double = elevatorMotors.positions.first()
 
-    fun spinDown() = elevatorMotors.set(-1.0)
+    fun spinDown() {
+        if(!isPressed()) {
+            elevatorMotors.set(-1.0)
+        }
+    }
 
     fun isPressed(): Boolean {
         return limit.isPressed

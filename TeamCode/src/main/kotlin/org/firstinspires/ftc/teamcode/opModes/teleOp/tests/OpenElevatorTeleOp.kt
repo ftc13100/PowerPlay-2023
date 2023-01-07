@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode.opModes.teleOp.tests
 
+import com.acmerobotics.dashboard.FtcDashboard
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.arcrobotics.ftclib.command.CommandOpMode
-import com.arcrobotics.ftclib.command.InstantCommand
 import com.arcrobotics.ftclib.command.PerpetualCommand
+import com.arcrobotics.ftclib.command.RunCommand
 import com.arcrobotics.ftclib.gamepad.GamepadEx
 import com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.LEFT_BUMPER
 import com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.RIGHT_BUMPER
 import com.arcrobotics.ftclib.hardware.motors.Motor
-import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.TouchSensor
 import org.firstinspires.ftc.teamcode.commands.openElevator.ElevatorSpinDownCommand
@@ -15,10 +16,13 @@ import org.firstinspires.ftc.teamcode.commands.openElevator.ElevatorSpinUpComman
 import org.firstinspires.ftc.teamcode.constants.DeviceConfig.*
 import org.firstinspires.ftc.teamcode.subsystems.OpenElevatorSubsystem
 
-@Disabled
+//@Disabled
 @TeleOp(name = "Open Loop Elevator Test")
 class OpenElevatorTeleOp: CommandOpMode() {
     override fun initialize() {
+        val dash = FtcDashboard.getInstance()
+        telemetry = MultipleTelemetry(telemetry, dash.telemetry)
+
         val leftMotor = Motor(hardwareMap, SLIDES_LEFT.deviceName)
         val rightMotor = Motor(hardwareMap, SLIDES_RIGHT.deviceName)
         val limit = hardwareMap.get(TouchSensor::class.java, SLIDES_LIMIT.deviceName)
@@ -36,7 +40,8 @@ class OpenElevatorTeleOp: CommandOpMode() {
 
         schedule(
             PerpetualCommand(
-                InstantCommand({
+                RunCommand({
+                    telemetry.clearAll()
                     telemetry.addData("Button pressed", limit.isPressed)
                     telemetry.update()
                 })
