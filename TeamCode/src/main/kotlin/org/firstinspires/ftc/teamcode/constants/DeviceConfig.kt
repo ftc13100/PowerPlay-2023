@@ -1,11 +1,16 @@
 package org.firstinspires.ftc.teamcode.constants
 
 enum class DeviceConfig(val deviceName: String) {
-    // Vision
+    // Sensors
     VISION_CAMERA("lifecam"),
+    COLOR_SENSOR("colorSensor"),
 
     // Intake
     INTAKE("intake"),
+
+    // Claw Intake
+    CLAW_SERVO("clawServo"),
+    ROTATION_SERVO("rotationServo"),
 
     // Drivetrain Motors
     DRIVE_LEFT_REAR("leftRear"),
