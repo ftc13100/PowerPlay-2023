@@ -13,9 +13,9 @@ class ClawIntakeSubsystem(
 
     fun closeClaw() { clawServo.position = 0.0 }
 
-    fun rotateLeft() { rotationServo.position = 0.0 }
+    fun rotateLeft() { rotationServo.position = 1.0 }
 
     fun rotateMid() { rotationServo.position = 0.5 }
 
-    fun rotateRight() { rotationServo.position = 1.0 }
+    fun rotateRight() { rotationServo.position = 0.0 }
 }
