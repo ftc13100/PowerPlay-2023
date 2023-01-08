@@ -4,7 +4,11 @@ import com.arcrobotics.ftclib.command.SubsystemBase
 import com.qualcomm.robotcore.hardware.Servo
 
 // For the sake of consistency, kind of useless, but allows for adaptability later on
-class ClawIntakeSubsystem(private val clawServo: Servo, private val rotationServo: Servo) : SubsystemBase() {
+class ClawIntakeSubsystem(
+    private val clawServo: Servo,
+    private val rotationServo: Servo
+) : SubsystemBase() {
+
     fun openClaw() { clawServo.position = 1.0 }
 
     fun closeClaw() { clawServo.position = 0.0 }
