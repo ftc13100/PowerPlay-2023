@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.hardware.Servo
 import org.firstinspires.ftc.teamcode.constants.DeviceConfig
 import org.firstinspires.ftc.teamcode.subsystems.ClawIntakeSubsystem
 
-@TeleOp(name = "Main")
 class ClawIntakeTeleOp : CommandOpMode() {
     // Hardware
     private lateinit var clawServo: Servo
