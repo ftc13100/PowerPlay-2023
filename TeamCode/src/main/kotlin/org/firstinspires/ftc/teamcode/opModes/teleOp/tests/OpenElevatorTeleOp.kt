@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode.opModes.teleOp.tests
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.arcrobotics.ftclib.command.CommandOpMode
+import com.arcrobotics.ftclib.command.InstantCommand
 import com.arcrobotics.ftclib.command.PerpetualCommand
-import com.arcrobotics.ftclib.command.RunCommand
 import com.arcrobotics.ftclib.gamepad.GamepadEx
 import com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.LEFT_BUMPER
 import com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.RIGHT_BUMPER
@@ -16,7 +16,6 @@ import org.firstinspires.ftc.teamcode.commands.openElevator.ElevatorSpinUpComman
 import org.firstinspires.ftc.teamcode.constants.DeviceConfig.*
 import org.firstinspires.ftc.teamcode.subsystems.OpenElevatorSubsystem
 
-//@Disabled
 @TeleOp(name = "Open Loop Elevator Test")
 class OpenElevatorTeleOp: CommandOpMode() {
     override fun initialize() {
@@ -26,7 +25,7 @@ class OpenElevatorTeleOp: CommandOpMode() {
         val leftMotor = Motor(hardwareMap, SLIDES_LEFT.deviceName)
         val rightMotor = Motor(hardwareMap, SLIDES_RIGHT.deviceName)
         val limit = hardwareMap.get(TouchSensor::class.java, SLIDES_LIMIT.deviceName)
-        leftMotor.inverted = true
+        rightMotor.inverted = true
 
         val subsystem = OpenElevatorSubsystem(leftMotor, rightMotor, limit, telemetry)
 
@@ -35,14 +34,21 @@ class OpenElevatorTeleOp: CommandOpMode() {
 
         val driver = GamepadEx(gamepad1)
 
-        driver.getGamepadButton(RIGHT_BUMPER).whenHeld(spinUpCommand)
-        driver.getGamepadButton(LEFT_BUMPER).whenHeld(spinDownCommand)
+        driver.getGamepadButton(RIGHT_BUMPER).whileHeld(spinUpCommand).whenReleased(
+            InstantCommand({
+                subsystem.stopSpin()
+            }, subsystem)
+        )
+        driver.getGamepadButton(LEFT_BUMPER).whileHeld(spinDownCommand).whenReleased(
+            InstantCommand({
+                subsystem.stopSpin()
+            }, subsystem)
+        )
 
         schedule(
             PerpetualCommand(
-                RunCommand({
-                    telemetry.clearAll()
-                    telemetry.addData("Button pressed", limit.isPressed)
+                InstantCommand({
+                    telemetry.addData("Pos", subsystem.getPosition())
                     telemetry.update()
                 })
             )

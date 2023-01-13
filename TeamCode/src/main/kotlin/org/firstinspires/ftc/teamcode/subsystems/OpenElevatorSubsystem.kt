@@ -17,6 +17,9 @@ class OpenElevatorSubsystem(
 
     init {
         elevatorMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
+//        rightMotor.inverted = true
+//        leftMotor.inverted = true
+//        elevatorMotors.inverted = true
     }
 
     fun spinUp() {
