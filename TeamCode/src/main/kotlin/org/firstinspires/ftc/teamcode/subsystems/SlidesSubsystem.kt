@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems
 
+import android.os.Build.VERSION_CODES.S
 import com.acmerobotics.dashboard.config.Config
 import com.arcrobotics.ftclib.command.SubsystemBase
 import com.arcrobotics.ftclib.controller.wpilibcontroller.ProfiledPIDController
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.teamcode.constants.SlidesConst
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.kA
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.kV
+import kotlin.math.sign
 
 @Config
 class SlidesSubsystem(
@@ -65,7 +67,8 @@ class SlidesSubsystem(
 
     fun operateSlides() {
         controller.setPID(p, i, d)
-        val error = controller.calculate(slidesMotors.positions.first()) + SlidesConst.SlidesPID.G.coeff
+        val basePower = controller.calculate(slidesMotors.positions.first())
+        val error = basePower + sign(basePower) * SlidesConst.SlidesProfile.S.coeff  + SlidesConst.SlidesPID.G.coeff
 
         telemetry.addData("Current Position", slidesMotors.positions.first())
         telemetry.addData("Target Position", controller.setpoint.position)
