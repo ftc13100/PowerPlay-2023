@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems
 
-import android.os.Build.VERSION_CODES.S
 import com.acmerobotics.dashboard.config.Config
 import com.arcrobotics.ftclib.command.SubsystemBase
 import com.arcrobotics.ftclib.controller.wpilibcontroller.ProfiledPIDController
@@ -10,8 +9,6 @@ import com.arcrobotics.ftclib.trajectory.TrapezoidProfile
 import com.qualcomm.robotcore.hardware.TouchSensor
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.teamcode.constants.SlidesConst
-import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.kA
-import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.kV
 import kotlin.math.sign
 
 @Config
