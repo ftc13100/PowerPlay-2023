@@ -9,6 +9,8 @@ import com.arcrobotics.ftclib.trajectory.TrapezoidProfile
 import com.qualcomm.robotcore.hardware.TouchSensor
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.teamcode.constants.SlidesConst
+import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.kA
+import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.kV
 
 @Config
 class SlidesSubsystem(
@@ -41,15 +43,14 @@ class SlidesSubsystem(
         SlidesConst.SlidesPID.I.coeff,
         SlidesConst.SlidesPID.D.coeff,
         TrapezoidProfile.Constraints(
-            SlidesConst.SlidesProfile.kV.coeff,
-            SlidesConst.SlidesProfile.kA.coeff
+            SlidesConst.SlidesProfile.V.coeff,
+            SlidesConst.SlidesProfile.A.coeff
         )
     )
 
     // Initialization
     init {
         slidesRight.inverted = true
-        slidesMotors.inverted = true
         slidesMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
         slidesMotors.resetEncoder()
         controller.setGoal(slidesMotors.positions.first())
@@ -88,5 +89,7 @@ class SlidesSubsystem(
     // For tuning purposes ONLY
     fun spin() = slidesMotors.set(1.0)
 
-    fun getVelocity() = slidesMotors.velocities.first()
+    fun getVelocity(): Double = slidesMotors.velocities.first()
+
+    fun setPower(pow: Double) = slidesMotors.set(pow)
 }

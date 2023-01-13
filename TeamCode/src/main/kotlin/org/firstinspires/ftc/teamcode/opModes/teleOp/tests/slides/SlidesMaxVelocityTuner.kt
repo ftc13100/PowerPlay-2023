@@ -39,11 +39,7 @@ class SlidesMaxVelocityTuner: LinearOpMode() {
         while (opModeIsActive() and (timer.seconds() < TIME_TO_RUN)){
             subsystem.spin()
 
-            val velocity = subsystem.getVelocity()
-
-            if (velocity > MAX_VELOCITY){
-                MAX_VELOCITY = velocity
-            }
+            MAX_VELOCITY = subsystem.getVelocity().coerceAtLeast(MAX_VELOCITY)
 
             telemetry.addData("Max Velocity", MAX_VELOCITY)
             telemetry.update()

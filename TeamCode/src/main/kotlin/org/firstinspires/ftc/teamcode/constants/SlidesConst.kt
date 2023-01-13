@@ -17,7 +17,12 @@ class SlidesConst {
     }
 
     enum class SlidesProfile(val coeff: Double) {
-        kV(0.0),
-        kA(0.0)
+        V(0.0),
+        A(0.0),
+    }
+
+    enum class SlidesConstraints(val value: Double) {
+        MAX_VELOCITY(2140.0),
+        MAX_ACCELERATION(2140.0)
     }
 }
