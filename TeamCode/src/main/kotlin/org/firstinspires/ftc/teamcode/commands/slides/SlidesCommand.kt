@@ -9,27 +9,19 @@ class SlidesCommand(
     private val targetPos: SlidesConst.SlidesPosition
 ) : CommandBase() {
 
-    init {
-        addRequirements(subsystem)
-    }
+    init { addRequirements(subsystem) }
 
-    override fun initialize() = subsystem.setTargetPosition(targetPos)
+    override fun initialize() = subsystem.setGoal(targetPos)
 
     override fun execute() = subsystem.operateSlides()
 
     override fun isFinished(): Boolean {
         return if (targetPos == SlidesConst.SlidesPosition.GROUND) {
-            subsystem.atTargetPosition() || subsystem.isPressed()
+            subsystem.atGoal() || subsystem.isPressed()
         } else {
-            subsystem.atTargetPosition()
+            subsystem.atGoal()
         }
     }
 
-    override fun end(interrupted: Boolean) {
-        if (targetPos == SlidesConst.SlidesPosition.GROUND) {
-            subsystem.stop()
-        } else {
-            subsystem.stall()
-        }
-    }
+    override fun end(interrupted: Boolean) = subsystem.stop()
 }

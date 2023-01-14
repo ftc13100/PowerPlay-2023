@@ -17,20 +17,28 @@ class OpenElevatorSubsystem(
 
     init {
         elevatorMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
+        elevatorMotors.resetEncoder()
+//        rightMotor.inverted = true
+//        leftMotor.inverted = true
+//        elevatorMotors.inverted = true
     }
 
     fun spinUp() {
         elevatorMotors.set(1.0)
-        val current = elevatorMotors.velocities.first()
+        val current = elevatorMotors.positions.first()
         maxVel = current.coerceAtLeast(maxVel)
-        telemetry.addData("Velocity", current)
+        telemetry.addData("Position", current)
         telemetry.update()
 
     }
 
     fun getPosition(): Double = elevatorMotors.positions.first()
 
-    fun spinDown() = elevatorMotors.set(-1.0)
+    fun spinDown() {
+        if(!isPressed()) {
+            elevatorMotors.set(-1.0)
+        }
+    }
 
     fun isPressed(): Boolean {
         return limit.isPressed

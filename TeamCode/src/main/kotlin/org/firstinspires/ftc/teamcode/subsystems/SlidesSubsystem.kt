@@ -1,12 +1,17 @@
 package org.firstinspires.ftc.teamcode.subsystems
 
+import com.acmerobotics.dashboard.config.Config
 import com.arcrobotics.ftclib.command.SubsystemBase
+import com.arcrobotics.ftclib.controller.wpilibcontroller.ProfiledPIDController
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
+import com.arcrobotics.ftclib.trajectory.TrapezoidProfile
 import com.qualcomm.robotcore.hardware.TouchSensor
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.teamcode.constants.SlidesConst
+import kotlin.math.sign
 
+@Config
 class SlidesSubsystem(
     slidesLeft: Motor,
     slidesRight: Motor,
@@ -17,52 +22,56 @@ class SlidesSubsystem(
     private val slidesMotors = MotorGroup(slidesLeft, slidesRight)
 
     // Controllers
-    private val controller = com.arcrobotics.ftclib.controller.PIDController(
+    private val controller = ProfiledPIDController(
         SlidesConst.SlidesPID.P.coeff,
         SlidesConst.SlidesPID.I.coeff,
         SlidesConst.SlidesPID.D.coeff,
+        TrapezoidProfile.Constraints(
+            SlidesConst.SlidesConstraints.MAX_VELOCITY.value,
+            SlidesConst.SlidesConstraints.MAX_ACCELERATION.value
+        )
     )
-
-    // Status
-    private var targetPosition = SlidesConst.SlidesPosition.GROUND
 
     // Initialization
     init {
         slidesRight.inverted = true
         slidesMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
         slidesMotors.resetEncoder()
-        controller.setPoint = slidesMotors.positions.first()
+        controller.setGoal(SlidesConst.SlidesPosition.GROUND.ticks)
     }
 
     // Methods
-    fun setTargetPosition(value: SlidesConst.SlidesPosition){
-        controller.setPoint = value.ticks
-        targetPosition = value
-    }
+    fun setGoal(position: SlidesConst.SlidesPosition) = controller.setGoal(position.ticks)
 
-    fun getTargetPosition() = targetPosition
+    fun increaseTargetPosition(increase: Double) = controller.setGoal(controller.goal.position + increase)
 
-    fun increaseTargetPosition(increase: Double) { controller.setPoint += increase }
-
-    fun atTargetPosition() = controller.atSetPoint()
+    fun atGoal() = controller.atGoal()
 
     fun operateSlides() {
-        var error = 0.005
-        if (targetPosition != SlidesConst.SlidesPosition.GROUND) {
-            error = controller.calculate(slidesMotors.positions.first()) + SlidesConst.SlidesPID.G.coeff
-        }
+        val basePower = controller.calculate(slidesMotors.positions.first())
+        val error = basePower + sign(basePower) * SlidesConst.SlidesProfile.S.coeff
 
         telemetry.addData("Current Position", slidesMotors.positions.first())
-        telemetry.addData("Target Position", targetPosition.ticks)
-        telemetry.addData("Error", error)
+        telemetry.addData("Target Position", controller.setpoint.position)
+        telemetry.addData("Goal Position", controller.goal.position)
+        telemetry.addData("Motor Power", error)
         telemetry.update()
 
         slidesMotors.set(error)
     }
 
-    fun stall() = slidesMotors.set(SlidesConst.SlidesPID.G.coeff)
-
-    fun stop() = slidesMotors.stopMotor()
+    fun stop() {
+        slidesMotors.stopMotor()
+    }
 
     fun isPressed() = limit.isPressed
+
+    fun getVelocity(): Double = slidesMotors.velocities.first()
+
+    fun setPower(pow: Double) =
+        if (sign(pow) == -1.0 && isPressed()) {
+            slidesMotors.stopMotor()
+        } else {
+            slidesMotors.set(pow)
+        }
 }
