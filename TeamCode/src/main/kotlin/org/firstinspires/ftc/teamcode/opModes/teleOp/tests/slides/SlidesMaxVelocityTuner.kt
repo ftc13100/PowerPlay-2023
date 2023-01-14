@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.hardware.TouchSensor
 import com.qualcomm.robotcore.util.ElapsedTime
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.teamcode.constants.DeviceConfig
 import org.firstinspires.ftc.teamcode.subsystems.SlidesSubsystem
 
 @Autonomous(group = "Slides Tuning")
+@Disabled
 @Config
 class SlidesMaxVelocityTuner: LinearOpMode() {
     companion object{
@@ -37,7 +39,7 @@ class SlidesMaxVelocityTuner: LinearOpMode() {
 
         timer.reset()
         while (opModeIsActive() and (timer.seconds() < TIME_TO_RUN)){
-            subsystem.spin()
+            subsystem.setPower(1.0)
 
             MAX_VELOCITY = subsystem.getVelocity().coerceAtLeast(MAX_VELOCITY)
 

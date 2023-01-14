@@ -14,6 +14,7 @@ import com.arcrobotics.ftclib.controller.wpilibcontroller.SimpleMotorFeedforward
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.trajectory.TrapezoidProfile
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.hardware.TouchSensor
 import com.qualcomm.robotcore.util.ElapsedTime
@@ -25,6 +26,7 @@ import org.firstinspires.ftc.teamcode.opModes.teleOp.tests.slides.SlidesFeedforw
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.kV
 import org.firstinspires.ftc.teamcode.subsystems.SlidesSubsystem
 @Autonomous(group = "Slides Tuning")
+@Disabled
 @Config
 class SlidesFeedforwardTuner(): LinearOpMode() {
     companion object {
@@ -90,7 +92,7 @@ class SlidesFeedforwardTuner(): LinearOpMode() {
         if(isStopRequested) return
 
         var forward = true
-        var activeProfile = generateProfile(forward)
+        var activeProfile = generateProfile(true)
         var profileStart = clock.seconds()
 
         while(!isStopRequested) {
