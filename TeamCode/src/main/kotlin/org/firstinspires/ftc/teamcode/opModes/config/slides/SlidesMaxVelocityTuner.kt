@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opModes.teleOp.tests.slides
+package org.firstinspires.ftc.teamcode.opModes.config.slides
 
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.config.Config
