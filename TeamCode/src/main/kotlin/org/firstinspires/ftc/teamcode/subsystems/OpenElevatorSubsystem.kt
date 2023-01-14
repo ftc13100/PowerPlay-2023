@@ -17,6 +17,7 @@ class OpenElevatorSubsystem(
 
     init {
         elevatorMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
+        elevatorMotors.resetEncoder()
 //        rightMotor.inverted = true
 //        leftMotor.inverted = true
 //        elevatorMotors.inverted = true
@@ -24,9 +25,9 @@ class OpenElevatorSubsystem(
 
     fun spinUp() {
         elevatorMotors.set(1.0)
-        val current = elevatorMotors.velocities.first()
+        val current = elevatorMotors.positions.first()
         maxVel = current.coerceAtLeast(maxVel)
-        telemetry.addData("Velocity", current)
+        telemetry.addData("Position", current)
         telemetry.update()
 
     }
