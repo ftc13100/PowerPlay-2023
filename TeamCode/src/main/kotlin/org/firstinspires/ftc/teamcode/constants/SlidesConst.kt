@@ -13,13 +13,13 @@ class SlidesConst {
         P(0.02),
         I(0.01),
         D(0.0),
-        G(0.2)
+        G(0.001)
     }
 
     enum class SlidesProfile(val coeff: Double) {
-        V(0.0),
-        A(0.0),
-        S(0.0)
+        V(0.000467),
+        A(0.000038),
+        S(0.03)
     }
 
     enum class SlidesConstraints(val value: Double) {

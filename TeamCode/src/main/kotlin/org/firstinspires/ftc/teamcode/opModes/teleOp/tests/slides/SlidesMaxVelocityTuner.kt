@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.teamcode.constants.DeviceConfig
 import org.firstinspires.ftc.teamcode.subsystems.SlidesSubsystem
 
-@Autonomous
+@Autonomous(group = "Slides Tuning")
 @Config
 class SlidesMaxVelocityTuner: LinearOpMode() {
     companion object{

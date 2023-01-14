@@ -30,7 +30,7 @@ class SlidesSubsystem(
         var d: Double = 0.0
 
         @JvmField
-        var target: Double = 0.0
+        var target: Double = 3200.0
     }
 
     // Hardware
@@ -52,7 +52,7 @@ class SlidesSubsystem(
         slidesRight.inverted = true
         slidesMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
         slidesMotors.resetEncoder()
-        controller.setGoal(slidesMotors.positions.first())
+        controller.setGoal(target)
     }
 
     // Methods
@@ -91,5 +91,10 @@ class SlidesSubsystem(
 
     fun getVelocity(): Double = slidesMotors.velocities.first()
 
-    fun setPower(pow: Double) = slidesMotors.set(pow)
+    fun setPower(pow: Double) =
+        if (sign(pow) == -1.0 && isPressed()) {
+            slidesMotors.stopMotor()
+        } else {
+            slidesMotors.set(pow)
+        }
 }
