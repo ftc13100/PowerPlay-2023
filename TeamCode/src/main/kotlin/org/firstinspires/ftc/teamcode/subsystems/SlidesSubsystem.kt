@@ -18,21 +18,6 @@ class SlidesSubsystem(
     private val limit: TouchSensor,
     private val telemetry: Telemetry
 ) : SubsystemBase() {
-
-    companion object {
-        @JvmField
-        var p: Double = 0.0
-
-        @JvmField
-        var i: Double = 0.0
-
-        @JvmField
-        var d: Double = 0.0
-
-        @JvmField
-        var target: Double = 3200.0
-    }
-
     // Hardware
     private val slidesMotors = MotorGroup(slidesLeft, slidesRight)
 
@@ -42,8 +27,8 @@ class SlidesSubsystem(
         SlidesConst.SlidesPID.I.coeff,
         SlidesConst.SlidesPID.D.coeff,
         TrapezoidProfile.Constraints(
-            SlidesConst.SlidesProfile.V.coeff,
-            SlidesConst.SlidesProfile.A.coeff
+            SlidesConst.SlidesConstraints.MAX_VELOCITY.value,
+            SlidesConst.SlidesConstraints.MAX_ACCELERATION.value
         )
     )
 
@@ -52,20 +37,19 @@ class SlidesSubsystem(
         slidesRight.inverted = true
         slidesMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
         slidesMotors.resetEncoder()
-        controller.setGoal(target)
+        controller.setGoal(SlidesConst.SlidesPosition.GROUND.ticks)
     }
 
     // Methods
-    fun setGoal(position: SlidesConst.SlidesPosition) = controller.setGoal(/*position.ticks*/ target)
+    fun setGoal(position: SlidesConst.SlidesPosition) = controller.setGoal(position.ticks)
 
     fun increaseTargetPosition(increase: Double) = controller.setGoal(controller.goal.position + increase)
 
     fun atGoal() = controller.atGoal()
 
     fun operateSlides() {
-        controller.setPID(p, i, d)
         val basePower = controller.calculate(slidesMotors.positions.first())
-        val error = basePower + sign(basePower) * SlidesConst.SlidesProfile.S.coeff  + SlidesConst.SlidesPID.G.coeff
+        val error = basePower + sign(basePower) * SlidesConst.SlidesProfile.S.coeff
 
         telemetry.addData("Current Position", slidesMotors.positions.first())
         telemetry.addData("Target Position", controller.setpoint.position)
@@ -77,17 +61,10 @@ class SlidesSubsystem(
     }
 
     fun stop() {
-        if(controller.goal.position < 20) {
-            slidesMotors.stopMotor()
-        } else {
-            slidesMotors.set(SlidesConst.SlidesPID.G.coeff)
-        }
+        slidesMotors.stopMotor()
     }
 
     fun isPressed() = limit.isPressed
-
-    // For tuning purposes ONLY
-    fun spin() = slidesMotors.set(1.0)
 
     fun getVelocity(): Double = slidesMotors.velocities.first()
 
