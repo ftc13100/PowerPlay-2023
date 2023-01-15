@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opModes.teleOp.tests.slides
+package org.firstinspires.ftc.teamcode.opModes.config.slides
 
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.config.Config
@@ -15,10 +15,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.TouchSensor
 import org.firstinspires.ftc.teamcode.constants.DeviceConfig
-import org.firstinspires.ftc.teamcode.constants.SlidesConst.SlidesConstraints.*
+import org.firstinspires.ftc.teamcode.constants.SlidesConst.SlidesConstraints.MAX_ACCELERATION
+import org.firstinspires.ftc.teamcode.constants.SlidesConst.SlidesConstraints.MAX_VELOCITY
 import org.firstinspires.ftc.teamcode.subsystems.SlidesClawSubsystem
-@Autonomous(group = "Slides Tuning")
+
 @Disabled
+@Autonomous(group = "Slides Tuning")
 @Config
 class SlidesFeedforwardTuner(): LinearOpMode() {
     companion object {
