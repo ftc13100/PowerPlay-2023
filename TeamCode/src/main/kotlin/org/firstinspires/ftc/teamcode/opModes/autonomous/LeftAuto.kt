@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opModes.autonomous
 
 import android.annotation.SuppressLint
 import com.acmerobotics.roadrunner.geometry.Pose2d
+import com.acmerobotics.roadrunner.geometry.Vector2d
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
@@ -97,14 +98,16 @@ class LeftAuto : OpMode() {
         telemetry.update()
         zoneOnePath = drive.trajectorySequenceBuilder(startPose)
             .splineToConstantHeading(loc1.vec(), Math.toRadians(90.0))
+            .splineToConstantHeading(Vector2d(-54.75, -23.5), Math.toRadians(90.0))
             .build()
 
         zoneTwoPath = drive.trajectorySequenceBuilder(startPose)
-            .splineToConstantHeading(loc2.vec(), Math.toRadians(90.0))
+            .splineToConstantHeading(Vector2d(-35.25, -23.5), Math.toRadians(90.0))
             .build()
 
         zoneThreePath = drive.trajectorySequenceBuilder(startPose)
             .splineToConstantHeading(loc3.vec(), Math.toRadians(90.0))
+            .splineToConstantHeading(Vector2d(-14.75, -23.5), Math.toRadians(90.0))
             .build()
 
         // Vision detection
