@@ -9,7 +9,7 @@ class RotateClawCommand(
     private val subsystem: SlidesClawSubsystem,
     private val targetPos: ClawPositions
 ): CommandBase() {
-    override fun execute() {
+    override fun initialize() {
         when (targetPos) {
             ClawPositions.LEFT ->
                 if (subsystem.goal == SlidesConst.SlidesPosition.GROUND)

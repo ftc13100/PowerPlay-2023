@@ -47,7 +47,10 @@ class SlidesClawSubsystem(
     }
 
     var goal: SlidesConst.SlidesPosition = SlidesConst.SlidesPosition.GROUND
-        set(targetPos) = controller.setGoal(targetPos.ticks)
+        set(targetPos) {
+            controller.setGoal(targetPos.ticks)
+            field = targetPos
+        }
 
     // Methods
     fun increaseTargetPosition(increase: Double) = controller.setGoal(controller.goal.position + increase)

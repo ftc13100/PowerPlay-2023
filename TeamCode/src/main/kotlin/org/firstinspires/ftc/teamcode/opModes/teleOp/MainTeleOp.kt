@@ -48,9 +48,9 @@ class MainTeleOp : CommandOpMode() {
     private lateinit var slidesHighCommand: SlidesCommand
     private lateinit var adjustHeightCommand: HeightCommand
 
-    private lateinit var rotateMidCommand: RotateClawCommand
-    private lateinit var rotateLeftCommand: RotateClawCommand
-    private lateinit var rotateRightCommand: RotateClawCommand
+    private lateinit var rotateMidCommand: InstantCommand
+    private lateinit var rotateLeftCommand: InstantCommand
+    private lateinit var rotateRightCommand: InstantCommand
 
     private lateinit var openClawCommand: InstantCommand
     private lateinit var closeClawCommand: InstantCommand
@@ -85,9 +85,21 @@ class MainTeleOp : CommandOpMode() {
         slidesMidCommand = SlidesCommand(slidesClawSubsystem, SlidesConst.SlidesPosition.MIDDLE)
         slidesHighCommand = SlidesCommand(slidesClawSubsystem, SlidesConst.SlidesPosition.HIGH)
 
-        rotateLeftCommand = RotateClawCommand(slidesClawSubsystem, SlidesConst.ClawPositions.LEFT)
-        rotateMidCommand = RotateClawCommand(slidesClawSubsystem, SlidesConst.ClawPositions.MIDDLE)
-        rotateRightCommand = RotateClawCommand(slidesClawSubsystem, SlidesConst.ClawPositions.RIGHT)
+        rotateLeftCommand = InstantCommand({
+            if(slidesClawSubsystem.goal != SlidesConst.SlidesPosition.GROUND) {
+                slidesClawSubsystem.rotateLeft()
+            }
+        })
+        rotateMidCommand = InstantCommand({
+            if(slidesClawSubsystem.goal != SlidesConst.SlidesPosition.GROUND) {
+                slidesClawSubsystem.rotateMid()
+            }
+        })
+        rotateRightCommand = InstantCommand({
+            if(slidesClawSubsystem.goal != SlidesConst.SlidesPosition.GROUND) {
+                slidesClawSubsystem.rotateRight()
+            }
+        })
 
         openClawCommand = InstantCommand({ slidesClawSubsystem.openClaw() }, slidesClawSubsystem)
         closeClawCommand = InstantCommand( { slidesClawSubsystem.closeClaw() }, slidesClawSubsystem)
