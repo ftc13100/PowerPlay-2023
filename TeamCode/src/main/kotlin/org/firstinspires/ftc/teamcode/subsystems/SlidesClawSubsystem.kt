@@ -6,15 +6,19 @@ import com.arcrobotics.ftclib.controller.wpilibcontroller.ProfiledPIDController
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
 import com.arcrobotics.ftclib.trajectory.TrapezoidProfile
+import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.TouchSensor
+import org.apache.commons.math3.geometry.euclidean.threed.FieldRotation
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.teamcode.constants.SlidesConst
 import kotlin.math.sign
 
 @Config
-class SlidesSubsystem(
+class SlidesClawSubsystem(
     slidesLeft: Motor,
     slidesRight: Motor,
+    private val clawServo: Servo,
+    private val rotationServo: Servo,
     private val limit: TouchSensor,
     private val telemetry: Telemetry
 ) : SubsystemBase() {
@@ -35,18 +39,23 @@ class SlidesSubsystem(
     // Initialization
     init {
         slidesRight.inverted = true
+        rotateMid()
         slidesMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
         slidesMotors.resetEncoder()
         controller.setGoal(SlidesConst.SlidesPosition.GROUND.ticks)
+        openClaw()
     }
 
-    // Methods
-    fun setGoal(position: SlidesConst.SlidesPosition) = controller.setGoal(position.ticks)
+    var goal: SlidesConst.SlidesPosition = SlidesConst.SlidesPosition.GROUND
+        set(targetPos) {
+            controller.setGoal(targetPos.ticks)
+            field = targetPos
+        }
 
+    // Methods
     fun increaseTargetPosition(increase: Double) = controller.setGoal(controller.goal.position + increase)
 
     fun atGoal() = controller.atGoal()
-
     fun operateSlides() {
         val basePower = controller.calculate(slidesMotors.positions.first())
         val error = basePower + sign(basePower) * SlidesConst.SlidesProfile.S.coeff
@@ -74,4 +83,15 @@ class SlidesSubsystem(
         } else {
             slidesMotors.set(pow)
         }
+
+    fun openClaw() { clawServo.position = 1.0 }
+
+    fun closeClaw() { clawServo.position = 0.0 }
+
+    fun rotateLeft() { rotationServo.position = 1.0 }
+
+    fun rotateNormal() { rotationServo.position = 0.4 }
+    fun rotateMid() { rotationServo.position = 0.5 }
+
+    fun rotateRight() { rotationServo.position = 0.0 }
 }

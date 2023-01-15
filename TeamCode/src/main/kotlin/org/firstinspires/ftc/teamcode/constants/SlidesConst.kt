@@ -15,6 +15,13 @@ class SlidesConst {
         D(0.0001)
     }
 
+    enum class ClawPositions {
+        LEFT,
+        MIDDLE,
+        RIGHT,
+        NORMAL
+    }
+
     enum class SlidesProfile(val coeff: Double) {
         S(0.03)
     }

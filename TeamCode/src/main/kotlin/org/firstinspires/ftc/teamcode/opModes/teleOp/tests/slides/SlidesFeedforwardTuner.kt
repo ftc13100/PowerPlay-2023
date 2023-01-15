@@ -1,30 +1,22 @@
 package org.firstinspires.ftc.teamcode.opModes.teleOp.tests.slides
 
-import android.text.method.Touch
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.acmerobotics.roadrunner.kinematics.Kinematics
 import com.acmerobotics.roadrunner.profile.MotionProfile
-import com.acmerobotics.roadrunner.profile.MotionProfileBuilder
 import com.acmerobotics.roadrunner.profile.MotionProfileGenerator
 import com.acmerobotics.roadrunner.profile.MotionState
 import com.acmerobotics.roadrunner.util.NanoClock
-import com.arcrobotics.ftclib.controller.wpilibcontroller.SimpleMotorFeedforward
 import com.arcrobotics.ftclib.hardware.motors.Motor
-import com.arcrobotics.ftclib.trajectory.TrapezoidProfile
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.TouchSensor
-import com.qualcomm.robotcore.util.ElapsedTime
-import org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry
 import org.firstinspires.ftc.teamcode.constants.DeviceConfig
-import org.firstinspires.ftc.teamcode.constants.SlidesConst
 import org.firstinspires.ftc.teamcode.constants.SlidesConst.SlidesConstraints.*
-import org.firstinspires.ftc.teamcode.opModes.teleOp.tests.slides.SlidesFeedforwardTuner.Companion.generateProfile
-import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.kV
-import org.firstinspires.ftc.teamcode.subsystems.SlidesSubsystem
+import org.firstinspires.ftc.teamcode.subsystems.SlidesClawSubsystem
 @Autonomous(group = "Slides Tuning")
 @Disabled
 @Config
@@ -67,9 +59,10 @@ class SlidesFeedforwardTuner(): LinearOpMode() {
     private lateinit var slidesLeft: Motor
     private lateinit var slidesRight: Motor
     private lateinit var limit: TouchSensor
+    private lateinit var clawServo: Servo
+    private lateinit var rotationServo: Servo
 
-
-    private lateinit var subsystem: SlidesSubsystem
+    private lateinit var subsystem: SlidesClawSubsystem
     private val dashboard = FtcDashboard.getInstance()
 
     override fun runOpMode() {
@@ -78,8 +71,11 @@ class SlidesFeedforwardTuner(): LinearOpMode() {
         slidesLeft = Motor(hardwareMap, DeviceConfig.SLIDES_LEFT.deviceName, Motor.GoBILDA.RPM_1150)
         slidesRight = Motor(hardwareMap, DeviceConfig.SLIDES_RIGHT.deviceName, Motor.GoBILDA.RPM_1150)
         limit = hardwareMap.get(TouchSensor::class.java, DeviceConfig.SLIDES_LIMIT.deviceName)
+        clawServo = hardwareMap.get(Servo::class.java, DeviceConfig.CLAW_SERVO.deviceName)
+        rotationServo = hardwareMap.get(Servo::class.java, DeviceConfig.ROTATION_SERVO.deviceName)
 
-        subsystem = SlidesSubsystem(slidesLeft, slidesRight, limit, telemetry)
+
+        subsystem = SlidesClawSubsystem(slidesLeft, slidesRight, clawServo, rotationServo, limit, telemetry)
 
         val clock = NanoClock.system()
 
