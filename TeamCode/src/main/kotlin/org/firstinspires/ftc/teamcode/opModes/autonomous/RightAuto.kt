@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.opModes.autonomous
 
 import android.annotation.SuppressLint
 import com.acmerobotics.roadrunner.geometry.Pose2d
-import com.acmerobotics.roadrunner.geometry.Vector2d
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
@@ -11,7 +10,6 @@ import com.qualcomm.robotcore.hardware.TouchSensor
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
 import org.firstinspires.ftc.teamcode.constants.AprilTagCamera
 import org.firstinspires.ftc.teamcode.constants.DeviceConfig
-import org.firstinspires.ftc.teamcode.constants.SlidesConst
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence
 import org.firstinspires.ftc.teamcode.subsystems.SlidesClawSubsystem
@@ -26,9 +24,9 @@ class RightAuto : OpMode() {
 
     // Constants
     private val startPose = Pose2d(35.25, -62.0, Math.toRadians(90.0))
-    private val loc1 = Pose2d(11.75, -11.75, Math.toRadians(180.0))
-    private val loc2 = Pose2d(35.25, -11.75, Math.toRadians(180.0))
-    private val loc3 = Pose2d(58.75, -11.75, Math.toRadians(180.0))
+    private val loc1 = Pose2d(14.75, -62.0, Math.toRadians(90.0))
+    private val loc2 = Pose2d(35.25, -60.0, Math.toRadians(90.0))
+    private val loc3 = Pose2d(54.75, -62.0, Math.toRadians(90.0))
 
     // Hardware
     private lateinit var slidesLeft: Motor
@@ -81,6 +79,8 @@ class RightAuto : OpMode() {
         })
 
         // Hardware Init
+        telemetry.addData("Status", "Initializing Hardware")
+        telemetry.update()
         drive = SampleMecanumDrive(hardwareMap)
         slidesLeft = Motor(hardwareMap, DeviceConfig.SLIDES_LEFT.deviceName)
         slidesRight = Motor(hardwareMap, DeviceConfig.SLIDES_RIGHT.deviceName)
@@ -89,48 +89,22 @@ class RightAuto : OpMode() {
         rotationServo = hardwareMap.get(Servo::class.java, DeviceConfig.ROTATION_SERVO.deviceName)
 
         slidesClawSubsystem = SlidesClawSubsystem(slidesLeft, slidesRight, clawServo, rotationServo, limit, telemetry)
+        slidesClawSubsystem.closeClaw()
         drive.poseEstimate = startPose
 
         // Paths
+        telemetry.addData("Status", "Initializing Paths 1")
+        telemetry.update()
         zoneOnePath = drive.trajectorySequenceBuilder(startPose)
-            .addTemporalMarker { slidesClawSubsystem.goal = SlidesConst.SlidesPosition.HIGH }
-            .splineToConstantHeading(Vector2d(35.25, -11.75), Math.toRadians(90.0))
-            .addTemporalMarker { slidesClawSubsystem.rotateLeft() }
-            .splineToConstantHeading(Vector2d(32.25, -8.75), Math.toRadians(90.0))
-            .addTemporalMarker { slidesClawSubsystem.openClaw() }
-            .waitSeconds(0.5)
-            .addTemporalMarker { slidesClawSubsystem.rotateMid() }
-            .waitSeconds(0.5)
-            .addTemporalMarker { slidesClawSubsystem.goal = SlidesConst.SlidesPosition.LOW }
-            .splineToLinearHeading(Pose2d(35.25, -11.75, Math.toRadians(0.0)), Math.toRadians(0.0))
-            .splineToConstantHeading(loc1.vec(), Math.toRadians(0.0))
+            .splineToConstantHeading(loc1.vec(), Math.toRadians(90.0))
             .build()
 
         zoneTwoPath = drive.trajectorySequenceBuilder(startPose)
-            .addTemporalMarker { slidesClawSubsystem.goal = SlidesConst.SlidesPosition.HIGH }
-            .splineToConstantHeading(Vector2d(35.25, -11.75), Math.toRadians(90.0))
-            .addTemporalMarker { slidesClawSubsystem.rotateLeft() }
-            .splineToConstantHeading(Vector2d(32.25, -8.75), Math.toRadians(90.0))
-            .addTemporalMarker { slidesClawSubsystem.openClaw() }
-            .waitSeconds(0.5)
-            .addTemporalMarker { slidesClawSubsystem.rotateMid() }
-            .waitSeconds(0.5)
-            .addTemporalMarker { slidesClawSubsystem.goal = SlidesConst.SlidesPosition.LOW }
-            .splineToLinearHeading(Pose2d(35.25, -11.75, Math.toRadians(0.0)), Math.toRadians(0.0))
+            .splineToConstantHeading(loc2.vec(), Math.toRadians(90.0))
             .build()
 
         zoneThreePath = drive.trajectorySequenceBuilder(startPose)
-            .addTemporalMarker { slidesClawSubsystem.goal = SlidesConst.SlidesPosition.HIGH }
-            .splineToConstantHeading(Vector2d(35.25, -11.75), Math.toRadians(90.0))
-            .addTemporalMarker { slidesClawSubsystem.rotateLeft() }
-            .splineToConstantHeading(Vector2d(32.25, -8.75), Math.toRadians(90.0))
-            .addTemporalMarker { slidesClawSubsystem.openClaw() }
-            .waitSeconds(0.5)
-            .addTemporalMarker { slidesClawSubsystem.rotateMid() }
-            .waitSeconds(0.5)
-            .addTemporalMarker { slidesClawSubsystem.goal = SlidesConst.SlidesPosition.LOW }
-            .splineToLinearHeading(Pose2d(35.25, -11.75, Math.toRadians(0.0)), Math.toRadians(0.0))
-            .splineToConstantHeading(loc3.vec(), Math.toRadians(0.0))
+            .splineToConstantHeading(loc3.vec(), Math.toRadians(90.0))
             .build()
 
         // Vision detection
