@@ -7,10 +7,11 @@ import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.TouchSensor
 import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.teamcode.constants.DeviceConfig
-import org.firstinspires.ftc.teamcode.subsystems.SlidesSubsystem
+import org.firstinspires.ftc.teamcode.subsystems.SlidesClawSubsystem
 
 @Autonomous(group = "Slides Tuning")
 @Disabled
@@ -31,8 +32,10 @@ class SlidesMaxVelocityTuner: LinearOpMode() {
         val slidesLeft = Motor(hardwareMap, DeviceConfig.SLIDES_LEFT.deviceName)
         val slidesRight = Motor(hardwareMap, DeviceConfig.SLIDES_RIGHT.deviceName)
         val limit = hardwareMap.get(TouchSensor::class.java, DeviceConfig.SLIDES_LIMIT.deviceName)
+        val clawServo = hardwareMap.get(Servo::class.java, DeviceConfig.CLAW_SERVO.deviceName)
+        val rotationServo = hardwareMap.get(Servo::class.java, DeviceConfig.ROTATION_SERVO.deviceName)
 
-        val subsystem = SlidesSubsystem(slidesLeft, slidesRight, limit, telemetry)
+        val subsystem = SlidesClawSubsystem(slidesLeft, slidesRight, clawServo, rotationServo, limit, telemetry)
         telemetry = MultipleTelemetry(dashboard.telemetry, telemetry)
 
         waitForStart()

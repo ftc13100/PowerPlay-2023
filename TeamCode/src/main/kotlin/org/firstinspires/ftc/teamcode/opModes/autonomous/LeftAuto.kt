@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
+import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.TouchSensor
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
 import org.firstinspires.ftc.teamcode.constants.AprilTagCamera
@@ -14,7 +15,7 @@ import org.firstinspires.ftc.teamcode.constants.SlidesConst
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem
-import org.firstinspires.ftc.teamcode.subsystems.SlidesSubsystem
+import org.firstinspires.ftc.teamcode.subsystems.SlidesClawSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.vision.pipelines.AprilTagDetectionPipeline
 import org.openftc.apriltag.AprilTagDetection
 import org.openftc.easyopencv.OpenCvCamera
@@ -23,6 +24,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation
 
 @Autonomous(name = "Left Auto")
 class LeftAuto : OpMode() {
+
     // Constants
     private val startPose = Pose2d(-35.25, -62.0, Math.toRadians(90.0))
     private val loc1 = Pose2d(-58.75, -35.25, Math.toRadians(0.0))
@@ -34,9 +36,11 @@ class LeftAuto : OpMode() {
     private lateinit var slidesRight: Motor
     private lateinit var intake: Motor
     private lateinit var limit: TouchSensor
+    private lateinit var rotationServo: Servo
+    private lateinit var clawServo: Servo
 
     // Subsystems
-    private lateinit var slidesSubsystem: SlidesSubsystem
+    private lateinit var slidesClawSubsystem: SlidesClawSubsystem
     private lateinit var intakeSubsystem: IntakeSubsystem
     private lateinit var drive: SampleMecanumDrive
 
@@ -58,6 +62,9 @@ class LeftAuto : OpMode() {
         )
         val webcamName: WebcamName = hardwareMap.get(WebcamName::class.java, DeviceConfig.VISION_CAMERA.deviceName)
         val camera: OpenCvCamera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, monitorId)
+        clawServo = hardwareMap.get(Servo::class.java, DeviceConfig.CLAW_SERVO.deviceName)
+        rotationServo = hardwareMap.get(Servo::class.java, DeviceConfig.ROTATION_SERVO.deviceName)
+
         pipeline = AprilTagDetectionPipeline(
             AprilTagCamera.TAGSIZE.value,
             AprilTagCamera.FX.value,
@@ -83,25 +90,27 @@ class LeftAuto : OpMode() {
         slidesRight = Motor(hardwareMap, DeviceConfig.SLIDES_RIGHT.deviceName)
         intake = Motor(hardwareMap, DeviceConfig.INTAKE.deviceName)
         limit = hardwareMap.get(TouchSensor::class.java, DeviceConfig.SLIDES_LIMIT.deviceName)
+        clawServo = hardwareMap.get(Servo::class.java, DeviceConfig.CLAW_SERVO.deviceName)
+        rotationServo = hardwareMap.get(Servo::class.java, DeviceConfig.ROTATION_SERVO.deviceName)
 
-        slidesSubsystem = SlidesSubsystem(slidesLeft, slidesRight, limit, telemetry)
+        slidesClawSubsystem = SlidesClawSubsystem(slidesLeft, slidesRight, clawServo, rotationServo, limit, telemetry)
         intakeSubsystem = IntakeSubsystem(intake)
         drive.poseEstimate = startPose
 
         // Paths
         zoneOnePath = drive.trajectorySequenceBuilder(startPose)
-            .addTemporalMarker(0.0) { slidesSubsystem.setGoal(SlidesConst.SlidesPosition.INTAKE) }
+            .addTemporalMarker(0.0) { slidesClawSubsystem.goal = SlidesConst.SlidesPosition.INTAKE }
             .waitSeconds(0.5)
             .splineToConstantHeading(Vector2d(-35.25, -16.0), Math.toRadians(90.0))
             .splineToConstantHeading(Vector2d(-21.0, -11.5), Math.toRadians(90.0))
             .waitSeconds(1.5)
-            .addTemporalMarker(3.5) { slidesSubsystem.setGoal(SlidesConst.SlidesPosition.HIGH) }
+            .addTemporalMarker(3.5) { slidesClawSubsystem.goal = SlidesConst.SlidesPosition.HIGH }
             .splineToConstantHeading(Vector2d(-21.0, -7.5), Math.toRadians(90.0))
             .addTemporalMarker(6.0) { intakeSubsystem.outtake() }
             .addTemporalMarker(6.5) { intakeSubsystem.stop() }
             .waitSeconds(1.0)
             .splineToConstantHeading(Vector2d(-21.0, -11.5), Math.toRadians(90.0))
-            .addTemporalMarker(7.5) { slidesSubsystem.setGoal(SlidesConst.SlidesPosition.GROUND) }
+            .addTemporalMarker(7.5) { slidesClawSubsystem.goal = SlidesConst.SlidesPosition.GROUND }
             .waitSeconds(3.0)
             .setReversed(true)
             .splineToConstantHeading(Vector2d(-35.25, -15.0), Math.toRadians(-90.0))
@@ -110,18 +119,18 @@ class LeftAuto : OpMode() {
             .build()
 
         zoneTwoPath = drive.trajectorySequenceBuilder(startPose)
-            .addTemporalMarker(0.0) { slidesSubsystem.setGoal(SlidesConst.SlidesPosition.INTAKE) }
+            .addTemporalMarker(0.0) { slidesClawSubsystem.goal = SlidesConst.SlidesPosition.INTAKE }
             .waitSeconds(0.5)
             .splineToConstantHeading(Vector2d(-35.25, -16.0), Math.toRadians(90.0))
             .splineToConstantHeading(Vector2d(-21.0, -11.5), Math.toRadians(90.0))
             .waitSeconds(1.5)
-            .addTemporalMarker(3.5) { slidesSubsystem.setGoal(SlidesConst.SlidesPosition.HIGH) }
+            .addTemporalMarker(3.5) { slidesClawSubsystem.goal = SlidesConst.SlidesPosition.HIGH }
             .splineToConstantHeading(Vector2d(-21.0, -7.5), Math.toRadians(90.0))
             .addTemporalMarker(6.0) { intakeSubsystem.outtake() }
             .addTemporalMarker(6.5) { intakeSubsystem.stop() }
             .waitSeconds(1.0)
             .splineToConstantHeading(Vector2d(-21.0, -11.5), Math.toRadians(90.0))
-            .addTemporalMarker(7.5) { slidesSubsystem.setGoal(SlidesConst.SlidesPosition.GROUND) }
+            .addTemporalMarker(7.5) { slidesClawSubsystem.goal = SlidesConst.SlidesPosition.GROUND }
             .waitSeconds(3.0)
             .setReversed(true)
             .splineToConstantHeading(Vector2d(-35.25, -16.0), Math.toRadians(-90.0))
@@ -129,18 +138,18 @@ class LeftAuto : OpMode() {
             .build()
 
         zoneThreePath = drive.trajectorySequenceBuilder(startPose)
-            .addTemporalMarker(0.0) { slidesSubsystem.setGoal(SlidesConst.SlidesPosition.INTAKE) }
+            .addTemporalMarker(0.0) { slidesClawSubsystem.goal = SlidesConst.SlidesPosition.INTAKE }
             .waitSeconds(0.5)
             .splineToConstantHeading(Vector2d(-35.25, -16.0), Math.toRadians(90.0))
             .splineToConstantHeading(Vector2d(-21.0, -11.5), Math.toRadians(90.0))
             .waitSeconds(1.5)
-            .addTemporalMarker(3.5) { slidesSubsystem.setGoal(SlidesConst.SlidesPosition.HIGH) }
+            .addTemporalMarker(3.5) { slidesClawSubsystem.goal = SlidesConst.SlidesPosition.HIGH }
             .splineToConstantHeading(Vector2d(-21.0, -7.5), Math.toRadians(90.0))
             .addTemporalMarker(6.0) { intakeSubsystem.outtake() }
             .addTemporalMarker(6.5) { intakeSubsystem.stop() }
             .waitSeconds(1.0)
             .splineToConstantHeading(Vector2d(-21.0, -11.5), Math.toRadians(90.0))
-            .addTemporalMarker(7.5) { slidesSubsystem.setGoal(SlidesConst.SlidesPosition.GROUND) }
+            .addTemporalMarker(7.5) { slidesClawSubsystem.goal = SlidesConst.SlidesPosition.GROUND }
             .waitSeconds(3.0)
             .setReversed(true)
             .splineToConstantHeading(Vector2d(-11.75, -15.0), Math.toRadians(-90.0))
@@ -174,10 +183,10 @@ class LeftAuto : OpMode() {
     override fun loop() {
         drive.update()
 
-        if (slidesSubsystem.atGoal()) {
-            slidesSubsystem.stop()
+        if (slidesClawSubsystem.atGoal()) {
+            slidesClawSubsystem.stop()
         } else {
-            slidesSubsystem.operateSlides()
+            slidesClawSubsystem.operateSlides()
         }
     }
 }
