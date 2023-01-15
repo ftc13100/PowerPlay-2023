@@ -23,15 +23,16 @@ public class PathPlanning {
     }
 
     public static RoadRunnerBotEntity originalRedAuto(DefaultBotBuilder bot, Pose2d startPose) {
-        Pose2d loc3 = new Pose2d(-11.75, -23.5, Math.toRadians(-90.0));
-        Pose2d loc2 = new Pose2d(-35.25, -23.5, Math.toRadians(-90.0));
-        Pose2d loc1 = new Pose2d(-58.75, -35.25, Math.toRadians(0));
+        Pose2d loc3 = new Pose2d(-11.75, -11.75, Math.toRadians(180.0));
+        Pose2d loc2 = new Pose2d(-35.25, -11.75, Math.toRadians(180.0));
+        Pose2d loc1 = new Pose2d(-58.75, -11.75, Math.toRadians(180.0));
 
         return bot.followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(startPose)
-                                .splineToConstantHeading(new Vector2d(-35.25, -15.0), Math.toRadians(90.0))
-                                .splineToConstantHeading(new Vector2d(-23.5, -9.5), Math.toRadians(90.0))
-                                .setReversed(true)
+                                .splineToConstantHeading(new Vector2d(-35.25, -11.75), Math.toRadians(90.0))
+                                .splineToConstantHeading(new Vector2d(-32.25, -8.75), Math.toRadians(90.0))
+                                .splineToLinearHeading(new Pose2d(-35.25, -11.75, Math.toRadians(180.0)), Math.toRadians(180.0))
+                                .splineToConstantHeading(loc3.vec(), Math.toRadians(180.0))
                                 // loc 1
 //                                .splineToConstantHeading(new Vector2d(-35.25, -15.0), Math.toRadians(-90.0))
 //                                .splineToConstantHeading(new Vector2d(-35.25, -26.0), Math.toRadians(-90.0))
