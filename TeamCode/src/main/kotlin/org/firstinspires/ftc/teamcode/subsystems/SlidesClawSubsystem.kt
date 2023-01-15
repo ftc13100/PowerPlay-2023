@@ -42,6 +42,7 @@ class SlidesClawSubsystem(
         slidesMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
         slidesMotors.resetEncoder()
         controller.setGoal(SlidesConst.SlidesPosition.GROUND.ticks)
+        closeClaw()
     }
 
     var goal: SlidesConst.SlidesPosition = SlidesConst.SlidesPosition.GROUND
@@ -82,13 +83,14 @@ class SlidesClawSubsystem(
             slidesMotors.set(pow)
         }
 
-    fun openClaw() { clawServo.position = 1.0 }
+    fun openClaw() { clawServo.position = 0.1 }
 
     fun closeClaw() { clawServo.position = 0.0 }
 
     fun rotateLeft() { rotationServo.position = 1.0 }
 
     fun rotateNormal() { rotationServo.position = 0.4 }
+
     fun rotateMid() { rotationServo.position = 0.5 }
 
     fun rotateRight() { rotationServo.position = 0.0 }
