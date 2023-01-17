@@ -54,6 +54,7 @@ class MainTeleOp : CommandOpMode() {
 
     private lateinit var openClawCommand: InstantCommand
     private lateinit var closeClawCommand: InstantCommand
+
     // Custom Triggers
     private lateinit var joystickTrigger: JoystickTrigger
 

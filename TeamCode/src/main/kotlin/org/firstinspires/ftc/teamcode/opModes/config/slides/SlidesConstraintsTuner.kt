@@ -5,7 +5,6 @@ import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
-import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.TouchSensor
@@ -16,7 +15,7 @@ import org.firstinspires.ftc.teamcode.subsystems.SlidesClawSubsystem
 @Autonomous(group = "Slides Tuning")
 //@Disabled
 @Config
-class SlidesMaxVelocityTuner: LinearOpMode() {
+class SlidesConstraintsTuner: LinearOpMode() {
     companion object{
         @JvmField
         var MAX_ACCELERATION = 0.0
