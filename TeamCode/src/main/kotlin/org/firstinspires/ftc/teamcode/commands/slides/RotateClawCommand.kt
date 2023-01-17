@@ -10,24 +10,13 @@ class RotateClawCommand(
     private val targetPos: ClawPositions
 ): CommandBase() {
     override fun initialize() {
-        when (targetPos) {
-            ClawPositions.LEFT ->
-                if (subsystem.goal == SlidesConst.SlidesPosition.GROUND)
-                    return
-                else
-                    subsystem.rotateLeft()
-            ClawPositions.RIGHT ->
-                if (subsystem.goal == SlidesConst.SlidesPosition.GROUND)
-                    return
-                else
-                    subsystem.rotateRight()
-            ClawPositions.MIDDLE ->
-                subsystem.rotateMid()
-            ClawPositions.NORMAL ->
-                if(subsystem.goal == SlidesConst.SlidesPosition.INTAKE)
-                    subsystem.rotateNormal()
-                else
-                    return
+        if (subsystem.goal != SlidesConst.SlidesPosition.GROUND || targetPos == ClawPositions.MIDDLE) {
+            when (targetPos) {
+                ClawPositions.LEFT -> subsystem.rotateLeft()
+                ClawPositions.RIGHT -> subsystem.rotateRight()
+                ClawPositions.MIDDLE -> subsystem.rotateMid()
+                ClawPositions.NORMAL -> subsystem.rotateNormal()
+            }
         }
     }
 
