@@ -14,15 +14,18 @@ import org.firstinspires.ftc.teamcode.constants.DeviceConfig
 import org.firstinspires.ftc.teamcode.subsystems.SlidesClawSubsystem
 
 @Autonomous(group = "Slides Tuning")
-@Disabled
+//@Disabled
 @Config
 class SlidesMaxVelocityTuner: LinearOpMode() {
     companion object{
         @JvmField
-        var MAX_VELOCITY: Double = 0.0
+        var MAX_ACCELERATION = 0.0
 
         @JvmField
-        var TIME_TO_RUN: Double = 2.0
+        var MAX_VELOCITY = 0.0
+
+        @JvmField
+        var TIME_TO_RUN = 2.0
     }
 
     override fun runOpMode() {
@@ -41,18 +44,30 @@ class SlidesMaxVelocityTuner: LinearOpMode() {
         waitForStart()
 
         timer.reset()
-        while (opModeIsActive() and (timer.seconds() < TIME_TO_RUN)){
-            subsystem.setPower(1.0)
 
-            MAX_VELOCITY = subsystem.getVelocity().coerceAtLeast(MAX_VELOCITY)
+        var dt = 0L
+        var dv = 0.0
 
-            telemetry.addData("Max Velocity", MAX_VELOCITY)
+        while (opModeIsActive()) {
+            while (timer.seconds() < TIME_TO_RUN) {
+                subsystem.setPower(1.0)
+
+                dt = timer.nanoseconds() - dt
+                dv = subsystem.getVelocity() - dv / dt
+
+                MAX_VELOCITY = subsystem.getVelocity().coerceAtLeast(MAX_VELOCITY)
+                MAX_ACCELERATION = dv.coerceAtLeast(MAX_ACCELERATION)
+
+                telemetry.addData("Max Velocity", MAX_VELOCITY)
+                telemetry.addData("Max Acceleration", MAX_ACCELERATION)
+
+                if (isStopRequested) break
+            }
+
+            telemetry.addData("Final Max Velocity", MAX_VELOCITY)
             telemetry.update()
-
-            if(isStopRequested) break
         }
 
-        telemetry.addData("Final Max Velocity", MAX_VELOCITY)
-        telemetry.update()
+
     }
 }
