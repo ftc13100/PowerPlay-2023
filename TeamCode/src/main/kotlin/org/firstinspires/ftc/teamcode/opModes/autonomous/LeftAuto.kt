@@ -20,7 +20,7 @@ import org.openftc.easyopencv.OpenCvCamera
 import org.openftc.easyopencv.OpenCvCameraFactory
 import org.openftc.easyopencv.OpenCvCameraRotation
 
-@Autonomous(name = "Left Auto")
+@Autonomous(name = "Left Auto", preselectTeleOp = "Main" )
 class LeftAuto : OpMode() {
 
     // Constants
