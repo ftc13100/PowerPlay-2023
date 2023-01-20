@@ -15,25 +15,39 @@ public class PathPlanning {
                 .setDimensions(15, 15)
                 .setConstraints(38.110287416570166, 38.110287416570166, Math.toRadians(457.2273162437774), Math.toRadians(138.19991297468354), 15.2);
 
-        RoadRunnerBotEntity bot = originalRedAuto(base, startPose);
+        RoadRunnerBotEntity bot = parkAuto(base, startPose);
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_POWERPLAY_OFFICIAL)
                 .addEntity(bot)
                 .start();
     }
 
-    public static RoadRunnerBotEntity originalRedAuto(DefaultBotBuilder bot, Pose2d startPose) {
-        Pose2d loc3 = new Pose2d(-11.75, -11.75, Math.toRadians(180.0));
-        Pose2d loc2 = new Pose2d(-35.25, -11.75, Math.toRadians(180.0));
-        Pose2d loc1 = new Pose2d(-58.75, -11.75, Math.toRadians(180.0));
+    public static RoadRunnerBotEntity parkAuto(DefaultBotBuilder bot, Pose2d startPose) {
+        Pose2d loc3 = new Pose2d(-14.75, -62.0, Math.toRadians(90.0));
+        Pose2d loc2 = new Pose2d(-35.25, -60.0, Math.toRadians(90.0));
+        Pose2d loc1 = new Pose2d(-54.75, -62.0, Math.toRadians(90.0));
 
         return bot.followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(startPose)
-                                .splineToConstantHeading(new Vector2d(-35.25, -11.75), Math.toRadians(90.0))
-                                .splineToConstantHeading(new Vector2d(-32.25, -8.75), Math.toRadians(90.0))
-                                .splineToLinearHeading(new Pose2d(-35.25, -11.75, Math.toRadians(180.0)), Math.toRadians(180.0))
-                                .splineToConstantHeading(loc3.vec(), Math.toRadians(180.0))
                                 // loc 1
+                                .splineToConstantHeading(loc1.vec(), Math.toRadians(90.0))
+                                .splineToConstantHeading(new Vector2d(-54.75, -23.5), Math.toRadians(90.0))
+
+                                // loc 2
+//                                .splineToConstantHeading(loc2.vec(), Math.toRadians(90.0))
+//                                .splineToConstantHeading(new Vector2d(-35.25, -23.5), Math.toRadians(90.0))
+
+                                // loc 3
+//                                .splineToConstantHeading(loc3.vec(), Math.toRadians(90.0))
+//                                .splineToConstantHeading(new Vector2d(-14.75, -23.5), Math.toRadians(90.0))
+
+
+                                // OLD
+//                                .splineToConstantHeading(new Vector2d(-35.25, -11.75), Math.toRadians(90.0))
+//                                .splineToConstantHeading(new Vector2d(-32.25, -8.75), Math.toRadians(90.0))
+//                                .splineToLinearHeading(new Pose2d(-35.25, -11.75, Math.toRadians(180.0)), Math.toRadians(180.0))
+//                                .splineToConstantHeading(loc3.vec(), Math.toRadians(180.0))
+                               // loc 1
 //                                .splineToConstantHeading(new Vector2d(-35.25, -15.0), Math.toRadians(-90.0))
 //                                .splineToConstantHeading(new Vector2d(-35.25, -26.0), Math.toRadians(-90.0))
 //                                .splineToSplineHeading(loc1, Math.toRadians(180.0))

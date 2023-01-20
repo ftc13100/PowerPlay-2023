@@ -7,7 +7,9 @@ import com.arcrobotics.ftclib.command.InstantCommand
 import com.arcrobotics.ftclib.gamepad.GamepadEx
 import com.arcrobotics.ftclib.gamepad.GamepadKeys
 import com.arcrobotics.ftclib.hardware.motors.Motor
+import com.qualcomm.hardware.rev.RevColorSensorV3
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import com.qualcomm.robotcore.hardware.ColorSensor
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.TouchSensor
 import org.firstinspires.ftc.teamcode.commands.drive.DriveCommand
@@ -19,6 +21,7 @@ import org.firstinspires.ftc.teamcode.constants.SlidesConst
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem
 import org.firstinspires.ftc.teamcode.subsystems.SlidesClawSubsystem
+import org.firstinspires.ftc.teamcode.triggers.ClawSensorTrigger
 import org.firstinspires.ftc.teamcode.triggers.JoystickTrigger
 
 @TeleOp(name = "Main")
@@ -27,6 +30,7 @@ class MainTeleOp : CommandOpMode() {
     private lateinit var slidesLeft: Motor
     private lateinit var slidesRight: Motor
     private lateinit var limit: TouchSensor
+    private lateinit var colorSensor: RevColorSensorV3
     private lateinit var clawServo: Servo
     private lateinit var rotationServo: Servo
 
@@ -48,15 +52,16 @@ class MainTeleOp : CommandOpMode() {
     private lateinit var slidesHighCommand: SlidesCommand
     private lateinit var adjustHeightCommand: HeightCommand
 
-    private lateinit var rotateMidCommand: InstantCommand
-    private lateinit var rotateLeftCommand: InstantCommand
-    private lateinit var rotateRightCommand: InstantCommand
+    private lateinit var rotateMidCommand: RotateClawCommand
+    private lateinit var rotateLeftCommand: RotateClawCommand
+    private lateinit var rotateRightCommand: RotateClawCommand
 
     private lateinit var openClawCommand: InstantCommand
     private lateinit var closeClawCommand: InstantCommand
 
     // Custom Triggers
     private lateinit var joystickTrigger: JoystickTrigger
+    private lateinit var clawTrigger: ClawSensorTrigger
 
     override fun initialize() {
         // Debug
@@ -68,6 +73,7 @@ class MainTeleOp : CommandOpMode() {
         clawServo = hardwareMap.get(Servo::class.java, DeviceConfig.CLAW_SERVO.deviceName)
         rotationServo = hardwareMap.get(Servo::class.java, DeviceConfig.ROTATION_SERVO.deviceName)
         limit = hardwareMap.get(TouchSensor::class.java, DeviceConfig.SLIDES_LIMIT.deviceName)
+        colorSensor = hardwareMap.get(RevColorSensorV3::class.java, DeviceConfig.COLOR_SENSOR.deviceName)
 
         // Subsystems
         driveSubsystem = DriveSubsystem(SampleMecanumDrive(hardwareMap), true)
@@ -86,21 +92,9 @@ class MainTeleOp : CommandOpMode() {
         slidesMidCommand = SlidesCommand(slidesClawSubsystem, SlidesConst.SlidesPosition.MIDDLE)
         slidesHighCommand = SlidesCommand(slidesClawSubsystem, SlidesConst.SlidesPosition.HIGH)
 
-        rotateLeftCommand = InstantCommand({
-            if(slidesClawSubsystem.goal != SlidesConst.SlidesPosition.GROUND) {
-                slidesClawSubsystem.rotateLeft()
-            }
-        })
-        rotateMidCommand = InstantCommand({
-            if(slidesClawSubsystem.goal != SlidesConst.SlidesPosition.GROUND) {
-                slidesClawSubsystem.rotateMid()
-            }
-        })
-        rotateRightCommand = InstantCommand({
-            if(slidesClawSubsystem.goal != SlidesConst.SlidesPosition.GROUND) {
-                slidesClawSubsystem.rotateRight()
-            }
-        })
+        rotateLeftCommand = RotateClawCommand(slidesClawSubsystem, SlidesConst.ClawPositions.LEFT)
+        rotateMidCommand = RotateClawCommand(slidesClawSubsystem, SlidesConst.ClawPositions.MIDDLE)
+        rotateRightCommand = RotateClawCommand(slidesClawSubsystem, SlidesConst.ClawPositions.RIGHT)
 
         openClawCommand = InstantCommand({ slidesClawSubsystem.openClaw() }, slidesClawSubsystem)
         closeClawCommand = InstantCommand( { slidesClawSubsystem.closeClaw() }, slidesClawSubsystem)
@@ -109,6 +103,7 @@ class MainTeleOp : CommandOpMode() {
 
         // Custom Triggers
         joystickTrigger = JoystickTrigger(operator::getLeftY)
+        clawTrigger = ClawSensorTrigger(colorSensor)
 
         // Assign commands to gamepads
         driver.getGamepadButton(GamepadKeys.Button.X).whenPressed(slidesGroundCommand)

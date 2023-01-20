@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.commands.openElevator.ElevatorSpinDownComm
 import org.firstinspires.ftc.teamcode.commands.openElevator.ElevatorSpinUpCommand
 import org.firstinspires.ftc.teamcode.constants.DeviceConfig.*
 import org.firstinspires.ftc.teamcode.subsystems.OpenElevatorSubsystem
-@Disabled
+//@Disabled
 @TeleOp(name = "Open Loop Elevator Test")
 class OpenElevatorTeleOp: CommandOpMode() {
     override fun initialize() {

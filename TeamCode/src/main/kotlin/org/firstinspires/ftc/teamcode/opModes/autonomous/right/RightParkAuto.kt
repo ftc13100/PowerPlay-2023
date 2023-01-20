@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opModes.autonomous
+package org.firstinspires.ftc.teamcode.opModes.autonomous.right
 
 import android.annotation.SuppressLint
 import com.acmerobotics.roadrunner.geometry.Pose2d
@@ -20,14 +20,14 @@ import org.openftc.easyopencv.OpenCvCamera
 import org.openftc.easyopencv.OpenCvCameraFactory
 import org.openftc.easyopencv.OpenCvCameraRotation
 
-@Autonomous(name = "Left Auto", preselectTeleOp = "Main" )
-class LeftAuto : OpMode() {
+@Autonomous(name = "Right Auto")
+class RightParkAuto : OpMode() {
 
     // Constants
-    private val startPose = Pose2d(-35.25, -62.0, Math.toRadians(90.0))
-    private val loc3 = Pose2d(-14.75, -62.0, Math.toRadians(90.0))
-    private val loc2 = Pose2d(-35.25, -60.0, Math.toRadians(90.0))
-    private val loc1 = Pose2d(-54.75, -62.0, Math.toRadians(90.0))
+    private val startPose = Pose2d(35.25, -62.0, Math.toRadians(90.0))
+    private val loc1 = Pose2d(14.75, -62.0, Math.toRadians(90.0))
+    private val loc2 = Pose2d(35.25, -60.0, Math.toRadians(90.0))
+    private val loc3 = Pose2d(54.75, -62.0, Math.toRadians(90.0))
 
     // Hardware
     private lateinit var slidesLeft: Motor
@@ -98,16 +98,16 @@ class LeftAuto : OpMode() {
         telemetry.update()
         zoneOnePath = drive.trajectorySequenceBuilder(startPose)
             .splineToConstantHeading(loc1.vec(), Math.toRadians(90.0))
-            .splineToConstantHeading(Vector2d(-54.75, -23.5), Math.toRadians(90.0))
+            .splineToConstantHeading(Vector2d(14.75, -23.5), Math.toRadians(90.0))
             .build()
 
         zoneTwoPath = drive.trajectorySequenceBuilder(startPose)
-            .splineToConstantHeading(Vector2d(-35.25, -23.5), Math.toRadians(90.0))
+            .splineToConstantHeading(Vector2d(35.25, -23.5), Math.toRadians(90.0))
             .build()
 
         zoneThreePath = drive.trajectorySequenceBuilder(startPose)
             .splineToConstantHeading(loc3.vec(), Math.toRadians(90.0))
-            .splineToConstantHeading(Vector2d(-14.75, -23.5), Math.toRadians(90.0))
+            .splineToConstantHeading(Vector2d(54.75, -23.5), Math.toRadians(90.0))
             .build()
 
         // Vision detection
@@ -126,6 +126,16 @@ class LeftAuto : OpMode() {
                 else -> zoneOnePath
             }
         }
+
+        telemetry.addData("Status", "Initializing Paths ${
+            when(path) {
+                zoneOnePath -> "1"
+                zoneTwoPath -> "2"
+                zoneThreePath -> "3"
+                else -> "Default: 1"
+            }
+        }")
+        telemetry.update()
     }
 
     override fun start() {
