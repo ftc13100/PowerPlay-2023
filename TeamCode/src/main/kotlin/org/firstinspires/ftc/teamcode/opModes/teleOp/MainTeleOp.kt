@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.commands.slides.HeightCommand
 import org.firstinspires.ftc.teamcode.commands.slides.RotateClawCommand
 import org.firstinspires.ftc.teamcode.commands.slides.SlidesCommand
 import org.firstinspires.ftc.teamcode.constants.DeviceConfig
+import org.firstinspires.ftc.teamcode.constants.PoseStorage
 import org.firstinspires.ftc.teamcode.constants.SlidesConst
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem
@@ -104,6 +105,8 @@ class MainTeleOp : CommandOpMode() {
         // Custom Triggers
         joystickTrigger = JoystickTrigger(operator::getLeftY)
         clawTrigger = ClawSensorTrigger(colorSensor)
+
+        driveSubsystem.poseEstimate = PoseStorage.poseEstimate
 
         // Assign commands to gamepads
         driver.getGamepadButton(GamepadKeys.Button.X).whenPressed(slidesGroundCommand)

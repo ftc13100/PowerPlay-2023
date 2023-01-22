@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
 import org.firstinspires.ftc.teamcode.constants.AprilTagCamera
 import org.firstinspires.ftc.teamcode.constants.DeviceConfig
+import org.firstinspires.ftc.teamcode.constants.PoseStorage
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence
 import org.firstinspires.ftc.teamcode.subsystems.SlidesClawSubsystem
@@ -150,5 +151,7 @@ class RightParkAuto : OpMode() {
         } else {
             slidesClawSubsystem.operateSlides()
         }
+
+        PoseStorage.poseEstimate = drive.poseEstimate
     }
 }
