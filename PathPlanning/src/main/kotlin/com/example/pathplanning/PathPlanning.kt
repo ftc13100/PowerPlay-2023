@@ -21,12 +21,13 @@ object PathPlanning {
                 38.110287416570166,
                 Math.toRadians(457.2273162437774),
                 Math.toRadians(138.19991297468354),
-                15.2
+                13.1 // in
+
             )
 
-        val parkBot1 = parkAuto(base, startPose, ParkLocations.LOCATION_1)
-        val parkBot2 = parkAuto(base, startPose, ParkLocations.LOCATION_2)
-        val parkBot3 = parkPreloadAuto(base, startPose, ParkLocations.LOCATION_1)
+        val parkBot1 = base.parkPreloadAuto(startPose, ParkLocations.LOCATION_1)
+        val parkBot2 = base.parkPreloadAuto(startPose, ParkLocations.LOCATION_2)
+        val parkBot3 = base.parkPreloadStackAuto(startPose, ParkLocations.LOCATION_2, 3)
 
         meepMeep.setBackground(Background.FIELD_POWERPLAY_OFFICIAL)
 //            .addEntity(parkBot1)
@@ -35,11 +36,12 @@ object PathPlanning {
             .start()
     }
 
-    private fun parkAuto(bot: DefaultBotBuilder, startPose: Pose2d, loc: ParkLocations): RoadRunnerBotEntity {
 
-
-        return bot.followTrajectorySequence { drive ->
-            drive.trajectorySequenceBuilder(startPose)
+    private fun DefaultBotBuilder.parkAuto(
+        startPose: Pose2d,
+        loc: ParkLocations,
+    ): RoadRunnerBotEntity = followTrajectorySequence {
+            it.trajectorySequenceBuilder(startPose)
                 .splineToConstantHeading(loc.pose.vec(), Math.toRadians(90.0))
                 .splineToConstantHeading(Vector2d(loc.pose.x, -23.5), Math.toRadians(90.0))
                 // OLD
@@ -59,19 +61,57 @@ object PathPlanning {
                 //                                .splineToLinearHeading(loc3, Math.toRadians(-90.0))
                 .build()
         }
-    }
-
-    fun parkPreloadAuto(bot: DefaultBotBuilder, startPose: Pose2d, loc: ParkLocations): RoadRunnerBotEntity {
+    private fun DefaultBotBuilder.parkPreloadAuto(
+        startPose: Pose2d,
+        loc: ParkLocations,
+    ): RoadRunnerBotEntity {
         val (stackX, stackY, stackHeading) = Pose2d(-60.0, -12.0, Math.toRadians(180.0))
         val (startX, startY, startHeading) = startPose
 
-        return bot.followTrajectorySequence {
+        return followTrajectorySequence {
             it.trajectorySequenceBuilder(startPose)
                 .splineToConstantHeading(Vector2d(-34.0, 0.0), 90.0.toRadians())
 //                .splineToConstantHeading(Vector2d(stackX, startY), Math.toRadians(90.0))
-//                .splineToLinearHeading(Pose2d(stackX, stackY, stackHeading), Math.toRadians(90.0))
-//                .waitSeconds(2.0)
-//                .splineToConstantHeading(Vector2d(loc.pose.x, -20.0), Math.toRadians(250.0))
+                .waitSeconds(2.0)
+                .lineToSplineHeading(Pose2d(startX, stackY, stackHeading))
+                .apply {
+                    if (loc != ParkLocations.LOCATION_2) {
+                        lineToConstantHeading(Vector2d(loc.pose.x, stackY))
+                    }
+                }
+                .build()
+        }
+    }
+
+    private fun DefaultBotBuilder.parkPreloadStackAuto(
+        startPose: Pose2d,
+        loc: ParkLocations,
+        cycle: Int,
+    ) : RoadRunnerBotEntity {
+        assert(cycle > 0)
+        val (stackX, stackY, stackHeading) = Pose2d(-60.0, -12.0, Math.toRadians(180.0))
+        val (startX, startY, startHeading) = startPose
+
+        return followTrajectorySequence {
+            it.trajectorySequenceBuilder(startPose)
+                .splineToConstantHeading(Vector2d(-34.0, 0.0), 90.0.toRadians())
+                .apply {
+                    for(i in 1..cycle) {
+                        waitSeconds(0.7)
+                            .lineToSplineHeading(Pose2d(startX, stackY, stackHeading))
+                            .lineToConstantHeading(Vector2d(stackX, stackY))
+                            .waitSeconds(0.7)
+                            .lineToSplineHeading(Pose2d(startX, stackY, startHeading))
+                            .splineToConstantHeading(Vector2d(-34.0, 0.0), 90.0.toRadians())
+                    }
+                }
+                .waitSeconds(1.0)
+                .lineToSplineHeading(Pose2d(startX, stackY, stackHeading))
+                .apply {
+                    if (loc != ParkLocations.LOCATION_2) {
+                        lineToConstantHeading(Vector2d(loc.pose.x, stackY))
+                    }
+                }
                 .build()
         }
     }

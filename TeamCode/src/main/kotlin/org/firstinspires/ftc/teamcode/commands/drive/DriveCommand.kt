@@ -19,10 +19,12 @@ class DriveCommand(
     }
 
     override fun execute() {
-        drive.drive(-adjustedInput(leftY), adjustedInput(leftX), rightX.asDouble)
+        drive.drive(
+            leftY = -adjustedInput(leftY),
+            leftX = adjustedInput(leftX),
+            rightX = rightX.asDouble
+        )
     }
 
-    private fun adjustedInput(input: DoubleSupplier): Double =
-        if (abs(input.asDouble) < zoneVal) 0.0
-        else (sign(input.asDouble) * abs(input.asDouble)).pow(3.0)
+    private fun adjustedInput(input: DoubleSupplier): Double = input.asDouble.pow(5)
 }

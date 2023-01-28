@@ -15,9 +15,7 @@ import org.firstinspires.ftc.teamcode.subsystems.SlidesClawSubsystem
 
 @TeleOp
 @Config
-@Disabled
 class SlidesPIDTuner : CommandOpMode() {
-
     //hardware
     private lateinit var leftMotor: Motor
     private lateinit var rightMotor: Motor
@@ -43,7 +41,6 @@ class SlidesPIDTuner : CommandOpMode() {
 
         register(slidesClawSubsystem)
 
-        slidesClawSubsystem.defaultCommand =
-            RunCommand(slidesClawSubsystem::operateSlides, slidesClawSubsystem)
+        slidesClawSubsystem.defaultCommand = RunCommand(slidesClawSubsystem::operateSlides, slidesClawSubsystem)
     }
 }

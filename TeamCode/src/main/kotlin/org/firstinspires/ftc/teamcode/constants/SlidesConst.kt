@@ -22,6 +22,11 @@ class SlidesConst {
         NORMAL
     }
 
+    enum class ClawState {
+        OPEN,
+        CLOSE
+    }
+
     enum class SlidesProfile(val coeff: Double) {
         S(0.03)
     }
