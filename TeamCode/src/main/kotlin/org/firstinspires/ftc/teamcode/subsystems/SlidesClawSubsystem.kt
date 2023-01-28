@@ -88,7 +88,6 @@ class SlidesClawSubsystem(
         slidesMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
         slidesMotors.resetEncoder()
         controller.setGoal(SlidesConst.SlidesPosition.GROUND.ticks)
-        controller.setTolerance(10.0)
     }
 
     var goal: SlidesConst.SlidesPosition = SlidesConst.SlidesPosition.GROUND
