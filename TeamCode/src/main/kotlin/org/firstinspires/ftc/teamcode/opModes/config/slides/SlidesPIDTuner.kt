@@ -6,7 +6,6 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.arcrobotics.ftclib.command.CommandOpMode
 import com.arcrobotics.ftclib.command.RunCommand
 import com.arcrobotics.ftclib.hardware.motors.Motor
-import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.TouchSensor

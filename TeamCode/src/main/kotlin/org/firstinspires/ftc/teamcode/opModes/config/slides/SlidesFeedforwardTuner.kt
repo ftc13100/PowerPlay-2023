@@ -3,11 +3,11 @@ package org.firstinspires.ftc.teamcode.opModes.config.slides
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
-import com.acmerobotics.roadrunner.kinematics.Kinematics
 import com.acmerobotics.roadrunner.profile.MotionProfile
 import com.acmerobotics.roadrunner.profile.MotionProfileGenerator
 import com.acmerobotics.roadrunner.profile.MotionState
 import com.acmerobotics.roadrunner.util.NanoClock
+import com.arcrobotics.ftclib.controller.wpilibcontroller.ElevatorFeedforward
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.Disabled
@@ -19,13 +19,13 @@ import org.firstinspires.ftc.teamcode.constants.SlidesConst.SlidesConstraints.MA
 import org.firstinspires.ftc.teamcode.constants.SlidesConst.SlidesConstraints.MAX_VELOCITY
 import org.firstinspires.ftc.teamcode.subsystems.SlidesClawSubsystem
 
-@Disabled
+//@Disabled
 @Autonomous(group = "Slides Tuning")
 @Config
 class SlidesFeedforwardTuner(): LinearOpMode() {
     companion object {
         @JvmField
-        var DISTANCE : Double = 3200.0 //encoder ticks
+        var DISTANCE : Double = 2000.0 //encoder ticks
 
         @JvmStatic
         fun generateProfile(forward: Boolean): MotionProfile = MotionProfileGenerator.generateSimpleMotionProfile(
@@ -49,13 +49,16 @@ class SlidesFeedforwardTuner(): LinearOpMode() {
             )
 
         @JvmField
-        var kS: Double = 0.0
+        var kS: Double = 0.006
 
         @JvmField
         var kV: Double = 0.000467
 
         @JvmField
-        var kA: Double = 0.0
+        var kA: Double = 0.001
+
+        @JvmField
+        var kG: Double = 0.05
     }
 
     private lateinit var slidesLeft: Motor
@@ -66,6 +69,8 @@ class SlidesFeedforwardTuner(): LinearOpMode() {
 
     private lateinit var subsystem: SlidesClawSubsystem
     private val dashboard = FtcDashboard.getInstance()
+
+
 
     override fun runOpMode() {
         telemetry = MultipleTelemetry(telemetry, dashboard.telemetry)
@@ -95,6 +100,7 @@ class SlidesFeedforwardTuner(): LinearOpMode() {
 
         while(!isStopRequested) {
             val profileTime = clock.seconds() - profileStart
+            val feedforward = ElevatorFeedforward(kS, kG, kV, kA)
 
             if(profileTime > activeProfile.duration()) {
                 forward = !forward
@@ -103,7 +109,7 @@ class SlidesFeedforwardTuner(): LinearOpMode() {
             }
 
             val motionState = activeProfile[profileTime]
-            val targetPower = Kinematics.calculateMotorFeedforward(motionState.v, motionState.a, kV, kA, kS)
+            val targetPower = feedforward.calculate(motionState.v, motionState.a)
 
             subsystem.setPower(targetPower)
             val currentVelo = subsystem.getVelocity()

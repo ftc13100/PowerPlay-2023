@@ -64,6 +64,7 @@ class SlidesConstraintsTuner: LinearOpMode() {
             }
 
             telemetry.addData("Final Max Velocity", MAX_VELOCITY)
+            telemetry.addData("Final Max Acceleration", MAX_ACCELERATION)
             telemetry.update()
         }
 

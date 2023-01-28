@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems
 
 import com.acmerobotics.dashboard.config.Config
 import com.arcrobotics.ftclib.command.SubsystemBase
+import com.arcrobotics.ftclib.controller.wpilibcontroller.ElevatorFeedforward
 import com.arcrobotics.ftclib.controller.wpilibcontroller.ProfiledPIDController
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup
@@ -29,7 +30,7 @@ class SlidesClawSubsystem(
         var i = 0.0
 
         @JvmField
-        var d = 0.0002
+        var d = 0.0005
 
 //        @JvmField
 //        var goalPos = 0.0 // For Tuning Purposes only
@@ -61,7 +62,18 @@ class SlidesClawSubsystem(
         TrapezoidProfile.Constraints(
             SlidesConst.SlidesConstraints.MAX_VELOCITY.value,
             SlidesConst.SlidesConstraints.MAX_ACCELERATION.value
-        )
+        ),
+    )
+
+    private val feedforward = ElevatorFeedforward(
+        /* ks = */
+        SlidesConst.SlidesProfile.S.coeff,
+        /* kg = */
+        SlidesConst.SlidesProfile.G.coeff,
+        /* kv = */
+        SlidesConst.SlidesProfile.V.coeff,
+        /* ka = */
+        SlidesConst.SlidesProfile.A.coeff,
     )
 
     // Initialization
@@ -76,6 +88,7 @@ class SlidesClawSubsystem(
         slidesMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
         slidesMotors.resetEncoder()
         controller.setGoal(SlidesConst.SlidesPosition.GROUND.ticks)
+        controller.setTolerance(10.0)
     }
 
     var goal: SlidesConst.SlidesPosition = SlidesConst.SlidesPosition.GROUND
@@ -91,7 +104,7 @@ class SlidesClawSubsystem(
 
     fun atGoal() = controller.atGoal()
     fun operateSlides() {
-        controller.setPID(p, i, d)
+//        controller.setPID(p, i, d)
 //        controller.setGoal(goalPos)
 
         val basePower = controller.calculate(slidesMotors.positions.first())
@@ -110,7 +123,7 @@ class SlidesClawSubsystem(
         slidesMotors.stopMotor()
     }
 
-    fun isPressed() = limit.isPressed
+    private fun isPressed() = limit.isPressed
 
     fun getVelocity(): Double = slidesMotors.velocities.first()
 

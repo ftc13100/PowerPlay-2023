@@ -11,9 +11,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.TouchSensor
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
+import org.firstinspires.ftc.teamcode.commands.claw.RotateClawCommand
 import org.firstinspires.ftc.teamcode.commands.drive.DriveCommand
 import org.firstinspires.ftc.teamcode.commands.slides.HeightCommand
-import org.firstinspires.ftc.teamcode.commands.claw.RotateClawCommand
 import org.firstinspires.ftc.teamcode.commands.slides.SlidesCommand
 import org.firstinspires.ftc.teamcode.constants.DeviceConfig
 import org.firstinspires.ftc.teamcode.constants.PoseStorage
@@ -148,7 +148,7 @@ class MainTeleOp : CommandOpMode() {
         )
 
         // Register Subsystems
-        register(driveSubsystem)
+        register(driveSubsystem, slidesClawSubsystem)
 
         // Assign Default Commands
         driveSubsystem.defaultCommand = driveCommand
@@ -158,7 +158,7 @@ class MainTeleOp : CommandOpMode() {
                 RunCommand({
                     telemetry.addData("Red: ", colorSensor.red())
                     telemetry.addData("Distance: ", colorSensor.getDistance(DistanceUnit.CM))
-                    telemetry.update()
+//                    telemetry.update()
                 })
             ),
         )

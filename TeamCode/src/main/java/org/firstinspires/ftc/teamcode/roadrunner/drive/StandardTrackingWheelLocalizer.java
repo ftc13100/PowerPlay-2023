@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.roadrunner.drive;
 
-import static org.firstinspires.ftc.teamcode.constants.DeviceConfig.*;
+import static org.firstinspires.ftc.teamcode.constants.DeviceConfig.ODO_LEFT_ENCODER;
+import static org.firstinspires.ftc.teamcode.constants.DeviceConfig.ODO_RIGHT_ENCODER;
+import static org.firstinspires.ftc.teamcode.constants.DeviceConfig.ODO_STRAFE_ENCODER;
 
 import androidx.annotation.NonNull;
 

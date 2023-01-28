@@ -3,9 +3,7 @@ package org.firstinspires.ftc.teamcode.commands.drive
 import com.arcrobotics.ftclib.command.CommandBase
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem
 import java.util.function.DoubleSupplier
-import kotlin.math.abs
 import kotlin.math.pow
-import kotlin.math.sign
 
 class DriveCommand(
     private val drive: DriveSubsystem,

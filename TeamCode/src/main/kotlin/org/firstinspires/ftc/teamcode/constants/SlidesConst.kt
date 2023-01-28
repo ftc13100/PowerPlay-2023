@@ -12,7 +12,7 @@ class SlidesConst {
     enum class SlidesPID(val coeff: Double) {
         P(0.02),
         I(0.0),
-        D(0.0001)
+        D(0.0005)
     }
 
     enum class ClawPositions {
@@ -28,7 +28,10 @@ class SlidesConst {
     }
 
     enum class SlidesProfile(val coeff: Double) {
-        S(0.03)
+        S(0.006),
+        V(0.000467),
+        G(0.05),
+        A(0.001),
     }
 
     enum class SlidesConstraints(val value: Double) {
