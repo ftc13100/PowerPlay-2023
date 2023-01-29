@@ -31,25 +31,7 @@ class SlidesClawSubsystem(
 
         @JvmField
         var d = 0.0005
-
-//        @JvmField
-//        var goalPos = 0.0 // For Tuning Purposes only
     }
-
-    override fun periodic() {
-        val basePower = controller.calculate(slidesMotors.positions.first())
-        val error = basePower + sign(basePower) * SlidesConst.SlidesProfile.S.coeff
-
-        telemetry.addData("Current Position", slidesMotors.positions.first())
-        telemetry.addData("Target Position", controller.setpoint.position)
-        telemetry.addData("Goal Position", controller.goal.position)
-        telemetry.addData("Motor Power", error)
-        telemetry.update()
-
-        slidesMotors.set(error)
-    }
-
-    var clawState: SlidesConst.ClawState = SlidesConst.ClawState.CLOSE
 
     // Hardware
     private val slidesMotors = MotorGroup(slidesLeft, slidesRight)
@@ -60,8 +42,7 @@ class SlidesClawSubsystem(
         SlidesConst.SlidesPID.I.coeff,
         SlidesConst.SlidesPID.D.coeff,
         TrapezoidProfile.Constraints(
-            SlidesConst.SlidesConstraints.MAX_VELOCITY.value,
-            SlidesConst.SlidesConstraints.MAX_ACCELERATION.value
+            SlidesConst.SlidesConstraints.MAX_VELOCITY.value, SlidesConst.SlidesConstraints.MAX_ACCELERATION.value
         ),
     )
 
@@ -96,18 +77,18 @@ class SlidesClawSubsystem(
             field = targetPos
         }
 
+    var clawState: SlidesConst.ClawState = SlidesConst.ClawState.CLOSE
 
 
     // Methods
     fun increaseTargetPosition(increase: Double) = controller.setGoal(controller.goal.position + increase)
 
     fun atGoal() = controller.atGoal()
-    fun operateSlides() {
-//        controller.setPID(p, i, d)
-//        controller.setGoal(goalPos)
 
-        val basePower = controller.calculate(slidesMotors.positions.first())
-        val error = basePower + sign(basePower) * SlidesConst.SlidesProfile.S.coeff
+    fun operateSlides() {
+        controller.setPID(p, i, d)
+
+        val error = controller.calculate(slidesMotors.positions.first())
 
         telemetry.addData("Current Position", slidesMotors.positions.first())
         telemetry.addData("Target Position", controller.setpoint.position)
@@ -122,28 +103,39 @@ class SlidesClawSubsystem(
         slidesMotors.stopMotor()
     }
 
-    private fun isPressed() = limit.isPressed
+    fun isPressed() = limit.isPressed
 
     fun getVelocity(): Double = slidesMotors.velocities.first()
 
-    fun setPower(pow: Double) =
-        if (sign(pow) == -1.0 && isPressed()) {
-            slidesMotors.stopMotor()
-        } else {
-            slidesMotors.set(pow)
-        }
+    fun setPower(pow: Double) = if (sign(pow) == -1.0 && isPressed()) {
+        slidesMotors.stopMotor()
+    } else {
+        slidesMotors.set(pow)
+    }
 
-    fun closeClaw() { clawServo.position = 1.0 }
+    fun closeClaw() {
+        clawServo.position = 1.0
+    }
 
-    fun openClaw() { clawServo.position = 0.0 }
+    fun openClaw() {
+        clawServo.position = 0.0
+    }
 
-    fun rotateLeft() { rotationServo.position = 1.0 }
+    fun rotateLeft() {
+        rotationServo.position = 1.0
+    }
 
-    fun rotateNormal() { rotationServo.position = 0.4 }
+    fun rotateNormal() {
+        rotationServo.position = 0.4
+    }
 
-    fun rotateMid() { rotationServo.position = 0.45 }
+    fun rotateMid() {
+        rotationServo.position = 0.45
+    }
 
-    fun rotateRight() { rotationServo.position = 0.0 }
+    fun rotateRight() {
+        rotationServo.position = 0.0
+    }
 
     fun isClosed() = when (clawState) {
         SlidesConst.ClawState.CLOSE -> true

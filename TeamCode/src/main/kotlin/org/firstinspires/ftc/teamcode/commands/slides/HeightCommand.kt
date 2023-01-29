@@ -15,7 +15,10 @@ class HeightCommand(
 
     override fun execute() {
         subsystem.increaseTargetPosition(increase.asDouble * 10)
+        subsystem.operateSlides()
     }
 
-    override fun isFinished(): Boolean = increase.asDouble == 0.0
+    override fun isFinished(): Boolean = subsystem.atGoal() && increase.asDouble == 0.0
+
+    override fun end(interrupted: Boolean) = subsystem.stop()
 }

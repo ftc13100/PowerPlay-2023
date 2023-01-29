@@ -13,11 +13,22 @@ class SlidesCommand(
         addRequirements(subsystem)
     }
 
+    override fun initialize() { subsystem.goal = targetPos }
+
     override fun execute() {
-        subsystem.goal = targetPos
+        if (targetPos == SlidesConst.SlidesPosition.GROUND) {
+            subsystem.rotateMid()
+        }
+        subsystem.operateSlides()
     }
 
     override fun isFinished(): Boolean {
-        return targetPos == subsystem.goal
+        return if (targetPos == SlidesConst.SlidesPosition.GROUND) {
+            subsystem.atGoal() || subsystem.isPressed()
+        } else {
+            subsystem.atGoal()
+        }
     }
+
+    override fun end(interrupted: Boolean) = subsystem.stop()
 }
