@@ -100,7 +100,7 @@ class SlidesClawSubsystem(
     }
 
     fun stop() {
-        slidesMotors.stopMotor()
+        slidesMotors.set(0.2)
     }
 
     fun isPressed() = limit.isPressed
