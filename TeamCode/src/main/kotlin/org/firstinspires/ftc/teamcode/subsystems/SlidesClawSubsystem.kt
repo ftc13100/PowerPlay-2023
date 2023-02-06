@@ -65,7 +65,7 @@ class SlidesClawSubsystem(
         rotateMid()
         closeClaw()
 
-        slidesLeft.inverted = true
+        slidesRight.inverted = true
         slidesMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
         slidesMotors.resetEncoder()
         controller.setGoal(SlidesConst.SlidesPosition.GROUND.ticks)
@@ -100,7 +100,7 @@ class SlidesClawSubsystem(
     }
 
     fun stop() {
-        slidesMotors.set(0.2)
+        slidesMotors.stopMotor()
     }
 
     fun isPressed() = limit.isPressed
