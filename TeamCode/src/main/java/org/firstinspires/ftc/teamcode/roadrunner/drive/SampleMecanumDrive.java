@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.roadrunner.drive;
 
-import static org.firstinspires.ftc.teamcode.constants.DeviceConfig.*;
+import static org.firstinspires.ftc.teamcode.constants.DeviceConfig.DRIVE_LEFT_FRONT;
+import static org.firstinspires.ftc.teamcode.constants.DeviceConfig.DRIVE_LEFT_REAR;
+import static org.firstinspires.ftc.teamcode.constants.DeviceConfig.DRIVE_RIGHT_FRONT;
+import static org.firstinspires.ftc.teamcode.constants.DeviceConfig.DRIVE_RIGHT_REAR;
 import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.MAX_ACCEL;
 import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.MAX_ANG_ACCEL;
 import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.MAX_ANG_VEL;
@@ -31,7 +34,12 @@ import com.acmerobotics.roadrunner.trajectory.constraints.ProfileAccelerationCon
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
@@ -48,8 +56,8 @@ import java.util.List;
  */
 @Config
 public class SampleMecanumDrive extends MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 0);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0.0145, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0.0000000451028, 0.00007, 0);
 
     public static double LATERAL_MULTIPLIER = 1.8;
 

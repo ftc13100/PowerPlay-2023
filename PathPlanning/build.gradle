@@ -2,6 +2,8 @@ plugins {
     id 'java-library'
 }
 
+apply plugin: 'kotlin'
+
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
@@ -14,4 +16,5 @@ repositories {
 
 dependencies {
     implementation 'com.github.NoahBres:MeepMeep:2.0.1'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.8.0-RC2'
 }

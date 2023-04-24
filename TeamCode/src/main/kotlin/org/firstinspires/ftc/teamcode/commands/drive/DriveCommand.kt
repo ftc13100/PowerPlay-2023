@@ -3,9 +3,7 @@ package org.firstinspires.ftc.teamcode.commands.drive
 import com.arcrobotics.ftclib.command.CommandBase
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem
 import java.util.function.DoubleSupplier
-import kotlin.math.abs
 import kotlin.math.pow
-import kotlin.math.sign
 
 class DriveCommand(
     private val drive: DriveSubsystem,
@@ -19,10 +17,12 @@ class DriveCommand(
     }
 
     override fun execute() {
-        drive.drive(-adjustedInput(leftY), adjustedInput(leftX), rightX.asDouble)
+        drive.drive(
+            leftY = -adjustedInput(leftY),
+            leftX = adjustedInput(leftX),
+            rightX = rightX.asDouble
+        )
     }
 
-    private fun adjustedInput(input: DoubleSupplier): Double =
-        if (abs(input.asDouble) < zoneVal) 0.0
-        else (sign(input.asDouble) * abs(input.asDouble)).pow(3.0)
+    private fun adjustedInput(input: DoubleSupplier): Double = input.asDouble.pow(5)
 }

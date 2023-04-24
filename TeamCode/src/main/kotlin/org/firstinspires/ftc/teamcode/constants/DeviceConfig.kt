@@ -1,11 +1,16 @@
 package org.firstinspires.ftc.teamcode.constants
 
 enum class DeviceConfig(val deviceName: String) {
-    // Vision
+    // Sensors
     VISION_CAMERA("lifecam"),
+    COLOR_SENSOR("colorSensor"),
 
     // Intake
     INTAKE("intake"),
+
+    // Claw Intake
+    CLAW_SERVO("clawServo"),
+    ROTATION_SERVO("rotationServo"),
 
     // Drivetrain Motors
     DRIVE_LEFT_REAR("leftRear"),
@@ -14,8 +19,8 @@ enum class DeviceConfig(val deviceName: String) {
     DRIVE_LEFT_FRONT("leftFront"),
 
     // Encoders
-    ODO_STRAFE_ENCODER("intake"), // C-HUB 1
-    ODO_RIGHT_ENCODER("rightRear"), // C-HUB 3
+    ODO_STRAFE_ENCODER("rightRear"), // C-HUB 1
+    ODO_RIGHT_ENCODER("leftFront"), // C-HUB 3
     ODO_LEFT_ENCODER("rightFront"), // C-HUB 0
 
     // Lift Motors
