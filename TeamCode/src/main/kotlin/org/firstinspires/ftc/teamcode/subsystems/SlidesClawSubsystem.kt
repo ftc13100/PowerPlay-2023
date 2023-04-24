@@ -31,6 +31,9 @@ class SlidesClawSubsystem(
 
         @JvmField
         var d = 0.0005
+
+        @JvmField
+        var target = 0.0 // For Tuning
     }
 
     // Hardware
@@ -46,17 +49,6 @@ class SlidesClawSubsystem(
         ),
     )
 
-    private val feedforward = ElevatorFeedforward(
-        /* ks = */
-        SlidesConst.SlidesProfile.S.coeff,
-        /* kg = */
-        SlidesConst.SlidesProfile.G.coeff,
-        /* kv = */
-        SlidesConst.SlidesProfile.V.coeff,
-        /* ka = */
-        SlidesConst.SlidesProfile.A.coeff,
-    )
-
     // Initialization
     init {
         rotationServo.scaleRange(0.25, 0.75)
@@ -65,7 +57,7 @@ class SlidesClawSubsystem(
         rotateMid()
         closeClaw()
 
-        slidesLeft.inverted = true
+        slidesRight.inverted = true
         slidesMotors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
         slidesMotors.resetEncoder()
         controller.setGoal(SlidesConst.SlidesPosition.GROUND.ticks)
@@ -88,6 +80,8 @@ class SlidesClawSubsystem(
     fun operateSlides() {
         controller.setPID(p, i, d)
 
+        controller.setGoal(target)
+
         val error = controller.calculate(slidesMotors.positions.first())
 
         telemetry.addData("Current Position", slidesMotors.positions.first())
@@ -96,17 +90,20 @@ class SlidesClawSubsystem(
         telemetry.addData("Motor Power", error)
         telemetry.update()
 
-        slidesMotors.set(error)
+        slidesMotors.set(error + SlidesConst.SlidesProfile.G.coeff)
     }
 
     fun stop() {
-        slidesMotors.set(0.2)
+        slidesMotors.stopMotor()
     }
 
     fun isPressed() = limit.isPressed
 
     fun getVelocity(): Double = slidesMotors.velocities.first()
 
+    fun spinUp() = setPower(0.7)
+
+    fun spinDown() = setPower(-0.7)
     fun setPower(pow: Double) = if (sign(pow) == -1.0 && isPressed()) {
         slidesMotors.stopMotor()
     } else {

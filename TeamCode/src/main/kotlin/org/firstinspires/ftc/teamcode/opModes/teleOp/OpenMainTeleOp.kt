@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.commands.claw.RotateClawCommand
 import org.firstinspires.ftc.teamcode.commands.drive.DriveCommand
 import org.firstinspires.ftc.teamcode.commands.slides.HeightCommand
 import org.firstinspires.ftc.teamcode.commands.slides.SlidesCommand
+import org.firstinspires.ftc.teamcode.commands.slides.SpinCommand
 import org.firstinspires.ftc.teamcode.constants.DeviceConfig
 import org.firstinspires.ftc.teamcode.constants.PoseStorage
 import org.firstinspires.ftc.teamcode.constants.SlidesConst
@@ -24,8 +25,8 @@ import org.firstinspires.ftc.teamcode.subsystems.SlidesClawSubsystem
 import org.firstinspires.ftc.teamcode.triggers.ClawSensorTrigger
 import org.firstinspires.ftc.teamcode.triggers.JoystickTrigger
 
-@TeleOp(name = "Main (PID)")
-class MainTeleOp : CommandOpMode() {
+@TeleOp(name = "Main (Open Loop)")
+class OpenMainTeleOp : CommandOpMode() {
     // Hardware
     private lateinit var slidesLeft: Motor
     private lateinit var slidesRight: Motor
@@ -45,16 +46,8 @@ class MainTeleOp : CommandOpMode() {
     // Commands
     private lateinit var driveCommand: DriveCommand
 
-    private lateinit var slidesGroundCommand: SlidesCommand
-    private lateinit var slidesIntakeCommand: SlidesCommand
-    private lateinit var slidesLowCommand: SlidesCommand
-    private lateinit var slidesMidCommand: SlidesCommand
-    private lateinit var slidesHighCommand: SlidesCommand
-    private lateinit var adjustHeightCommand: HeightCommand
-
-    private lateinit var rotateMidCommand: RotateClawCommand
-    private lateinit var rotateLeftCommand: RotateClawCommand
-    private lateinit var rotateRightCommand: RotateClawCommand
+    private lateinit var spinUpCommand: SpinCommand
+    private lateinit var spinDownCommand: SpinCommand
 
     private lateinit var openClawCommand: InstantCommand
     private lateinit var closeClawCommand: InstantCommand
@@ -91,15 +84,8 @@ class MainTeleOp : CommandOpMode() {
             zoneVal = 0.15
         )
 
-        slidesGroundCommand = SlidesCommand(slidesClawSubsystem, SlidesConst.SlidesPosition.GROUND)
-        slidesIntakeCommand = SlidesCommand(slidesClawSubsystem, SlidesConst.SlidesPosition.INTAKE)
-        slidesLowCommand = SlidesCommand(slidesClawSubsystem, SlidesConst.SlidesPosition.LOW)
-        slidesMidCommand = SlidesCommand(slidesClawSubsystem, SlidesConst.SlidesPosition.MIDDLE)
-        slidesHighCommand = SlidesCommand(slidesClawSubsystem, SlidesConst.SlidesPosition.HIGH)
-
-        rotateLeftCommand = RotateClawCommand(slidesClawSubsystem, SlidesConst.ClawPositions.LEFT, driveSubsystem::poseEstimate)
-        rotateMidCommand = RotateClawCommand(slidesClawSubsystem, SlidesConst.ClawPositions.MIDDLE, driveSubsystem::poseEstimate)
-        rotateRightCommand = RotateClawCommand(slidesClawSubsystem, SlidesConst.ClawPositions.RIGHT, driveSubsystem::poseEstimate)
+        spinUpCommand = SpinCommand(slidesClawSubsystem, true)
+        spinDownCommand = SpinCommand(slidesClawSubsystem, false)
 
         openClawCommand = InstantCommand({
             slidesClawSubsystem.openClaw()
@@ -111,26 +97,15 @@ class MainTeleOp : CommandOpMode() {
             slidesClawSubsystem.clawState = SlidesConst.ClawState.CLOSE
         }, slidesClawSubsystem)
 
-        adjustHeightCommand = HeightCommand(slidesClawSubsystem, operator::getLeftY)
-
         // Custom Triggers
-        joystickTrigger = JoystickTrigger(operator::getLeftY)
         clawTrigger = ClawSensorTrigger(colorSensor, telemetry)
 
         driveSubsystem.poseEstimate = PoseStorage.poseEstimate
 
         // Assign commands to gamepads
-        driver.getGamepadButton(GamepadKeys.Button.X).whenPressed(slidesGroundCommand)
-        driver.getGamepadButton(GamepadKeys.Button.B).whenPressed(slidesIntakeCommand)
+        operator.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whileHeld(spinDownCommand)
+        operator.getGamepadButton(GamepadKeys.Button.DPAD_UP).whileHeld(spinUpCommand)
 
-        operator.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenPressed(slidesGroundCommand)
-        operator.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(slidesLowCommand)
-        operator.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(slidesMidCommand)
-        operator.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(slidesHighCommand)
-
-        operator.getGamepadButton(GamepadKeys.Button.X).whenPressed(rotateLeftCommand)
-        operator.getGamepadButton(GamepadKeys.Button.Y).whenPressed(rotateMidCommand)
-        operator.getGamepadButton(GamepadKeys.Button.B).whenPressed(rotateRightCommand)
         operator.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenPressed(
             ConditionalCommand(
                 openClawCommand,
@@ -139,7 +114,6 @@ class MainTeleOp : CommandOpMode() {
             )
         )
 
-        joystickTrigger.whenActive(adjustHeightCommand)
         clawTrigger.toggleWhenActive(
             InstantCommand({
                 slidesClawSubsystem.closeClaw()

@@ -2,17 +2,17 @@ package org.firstinspires.ftc.teamcode.constants
 
 class SlidesConst {
     enum class SlidesPosition(val ticks: Double) {
-        HIGH(2973.0),
-        MIDDLE(2048.0),
-        LOW(1074.0),
+        HIGH(2850.0),
+        MIDDLE(2000.0),
+        LOW(1200.0),
         INTAKE(250.0),
         GROUND(0.0)
     }
 
     enum class SlidesPID(val coeff: Double) {
         P(0.02),
-        I(0.004),
-        D(0.0006)
+        I(0.0),
+        D(0.0005)
     }
 
     enum class ClawPositions {
@@ -28,14 +28,11 @@ class SlidesConst {
     }
 
     enum class SlidesProfile(val coeff: Double) {
-        S(0.006),
-        V(0.000467),
         G(0.05),
-        A(0.001),
     }
 
     enum class SlidesConstraints(val value: Double) {
-        MAX_VELOCITY(2140.0),
-        MAX_ACCELERATION(2140.0)
+        MAX_VELOCITY(2160.0),
+        MAX_ACCELERATION(2179.9999882429843)
     }
 }
